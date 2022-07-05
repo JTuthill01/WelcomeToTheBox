@@ -9,4 +9,11 @@ class ATheBoxCameraManager : public APlayerCameraManager
 {
 	GENERATED_BODY()
 	
+public:
+	ATheBoxCameraManager();
+
+public:
+	virtual void InitializeFor(APlayerController* PC) override;
+	virtual void UpdateCamera(float DeltaTime) override;
+	virtual void Tick(float DeltaTime) override;
 };

@@ -1,17 +1,26 @@
 #include "Character/PlayerController/PlayerCharacterController.h"
 #include "Character/Player/PlayerCharacter.h"
+#include "Misc/Cameramanager/TheBoxCameraManager.h"
 #include "Interfaces/Player/PlayerCharacterInterface.h"
+#include "Interfaces/Interact/InteractInterface.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Kismet/GameplayStatics.h"
+#include "Camera/CameraComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
-APlayerCharacterController::APlayerCharacterController() = default;
+APlayerCharacterController::APlayerCharacterController() : BaseMovementSpeed(600.F), BaseSprintSpeed(800.F)
+{}
 
 void APlayerCharacterController::BeginPlay()
 {
 	Super::BeginPlay();
 
 	PlayerRef = IPlayerCharacterInterface::Execute_SetPlayerRef(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+
+	CameraManager = Cast<ATheBoxCameraManager>(UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0));
+
+	GetCharacter()->GetCharacterMovement()->MaxWalkSpeed = BaseMovementSpeed;
 }
 
 void APlayerCharacterController::SetupInputComponent()
@@ -33,6 +42,12 @@ void APlayerCharacterController::SetupInputComponent()
 		{
 			PlayerEnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &APlayerCharacterController::Jump);
 			PlayerEnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &APlayerCharacterController::StopJump);
+		}
+
+		if (SprintAction)
+		{
+			PlayerEnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &APlayerCharacterController::Sprint);
+			PlayerEnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &APlayerCharacterController::StopSprinting);
 		}
 
 		if (MovementAction)
@@ -63,25 +78,41 @@ void APlayerCharacterController::Look(const FInputActionValue& Value)
 
 void APlayerCharacterController::Interact()
 {
-}
-
-void APlayerCharacterController::Jump()
-{
-	if (IsValid(PlayerRef))
-		PlayerRef->Jump();
-
-	else
+	if (!IsValid(PlayerRef))
 		return;
+	
+	FHitResult HitResult;
+
+	FVector Start = PlayerRef->GetPlayerCamera()->GetComponentLocation();
+	FVector End = Start + (PlayerRef->GetPlayerCamera()->GetComponentRotation().Vector() * 400.F);
+
+	TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjects;
+	TArray<AActor*> ActorsToIgnore;
+
+	ActorsToIgnore.Add(this);
+	//ActorsToIgnore.Add(CurrentWeapon);
+	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldStatic));
+	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldDynamic));
+
+	const bool bCanInteract = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), Start, End, TraceObjects, true, ActorsToIgnore, EDrawDebugTrace::None, HitResult, true);
+
+	if (bCanInteract)
+	{
+		if (HitResult.GetActor())
+		{
+			if (HitResult.GetActor()->GetClass()->ImplementsInterface(UInteractInterface::StaticClass()))
+				IInteractInterface::Execute_InteractWithObject(HitResult.GetActor());
+		}
+	}
 }
 
-void APlayerCharacterController::StopJump()
-{
-	if (IsValid(PlayerRef))
-		PlayerRef->StopJumping();
+void APlayerCharacterController::Jump() { GetCharacter()->Jump(); }
 
-	else
-		return;
-}
+void APlayerCharacterController::StopJump() { GetCharacter()->StopJumping(); }
+
+void APlayerCharacterController::Sprint() { PlayerRef->GetCharacterMovement()->MaxWalkSpeed = BaseSprintSpeed; }
+
+void APlayerCharacterController::StopSprinting() { PlayerRef->GetCharacterMovement()->MaxWalkSpeed = BaseMovementSpeed; }
 
 APlayerCharacterController* APlayerCharacterController::SetControllerRef_Implementation() { return this; }
 

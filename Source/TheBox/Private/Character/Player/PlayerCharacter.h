@@ -19,6 +19,10 @@ public:
 	//Sets default values for this character's properties
 	APlayerCharacter();
 
+public:
+	FORCEINLINE TObjectPtr<USkeletalMeshComponent> GetPlayerArms() { return Arms; }
+	FORCEINLINE TObjectPtr<class UCameraComponent> GetPlayerCamera() { return Camera; }
+
 public:	
 	//Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -43,7 +47,6 @@ private:
 private:
 	void ScanForInteractables();
 	void Initialize();
-	void Interact();
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -59,7 +62,6 @@ private:
 	FCustomColors UserColors;
 
 private:
-	float BaseMovementSpeed;
 	float InteractableTraceTimer;
 
 	FTimerHandle InteractableTraceTimerHandle;

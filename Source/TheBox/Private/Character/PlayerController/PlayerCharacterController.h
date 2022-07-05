@@ -41,6 +41,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Input)
 	UInputAction* InteractAction;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Input)
+	UInputAction* SprintAction;
+
 	//Mapping Contexts//
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = InputMappings)
 	UInputMappingContext* BaseMappingContext;
@@ -54,10 +57,22 @@ protected:
 	void Interact();
 	void Jump();
 	void StopJump();
+	void Sprint();
+	void StopSprinting();
 
 #pragma endregion
 
 private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CharacterSpeed, meta = (AllowPrivateAccess = "true"))
+	float BaseMovementSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CharacterSpeed, meta = (AllowPrivateAccess = "true"))
+	float BaseSprintSpeed;
+
+private:
 	UPROPERTY();
 	TObjectPtr<class APlayerCharacter> PlayerRef;
+
+	UPROPERTY()
+	TObjectPtr<class ATheBoxCameraManager> CameraManager;
 };
