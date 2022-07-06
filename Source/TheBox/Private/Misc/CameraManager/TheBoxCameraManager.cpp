@@ -1,19 +1,15 @@
 #include "Misc/CameraManager/TheBoxCameraManager.h"
-#include <Kismet/GameplayStatics.h>
 
 ATheBoxCameraManager::ATheBoxCameraManager() = default;
 
-void ATheBoxCameraManager::InitializeFor(APlayerController* PC)
+void ATheBoxCameraManager::BeginPlay()
 {
-	Super::InitializeFor(PC);
+	Super::BeginPlay();
 }
 
-void ATheBoxCameraManager::UpdateCamera(float DeltaTime)
+void ATheBoxCameraManager::ProcessViewRotation(float DeltaTime, FRotator& OutViewRotation, FRotator& OutDeltaRot)
 {
-	Super::UpdateCamera(DeltaTime);
+	Super::ProcessViewRotation(DeltaTime, OutViewRotation, OutDeltaRot);
 }
 
-void ATheBoxCameraManager::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
+

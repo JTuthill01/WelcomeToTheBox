@@ -13,7 +13,9 @@ public:
 	ATheBoxCameraManager();
 
 public:
-	virtual void InitializeFor(APlayerController* PC) override;
-	virtual void UpdateCamera(float DeltaTime) override;
-	virtual void Tick(float DeltaTime) override;
+	virtual void ProcessViewRotation(float DeltaTime, FRotator& OutViewRotation, FRotator& OutDeltaRot) override;
+
+protected:
+	//Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 };

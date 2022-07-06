@@ -1,8 +1,8 @@
 #include "Character/PlayerController/PlayerCharacterController.h"
 #include "Character/Player/PlayerCharacter.h"
-#include "Misc/Cameramanager/TheBoxCameraManager.h"
 #include "Interfaces/Player/PlayerCharacterInterface.h"
 #include "Interfaces/Interact/InteractInterface.h"
+#include "Misc/CameraManager/TheBoxCameraManager.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Kismet/GameplayStatics.h"
@@ -10,7 +10,9 @@
 #include "GameFramework/CharacterMovementComponent.h"
 
 APlayerCharacterController::APlayerCharacterController() : BaseMovementSpeed(600.F), BaseSprintSpeed(800.F)
-{}
+{
+	PlayerCameraManagerClass = ATheBoxCameraManager::StaticClass();
+}
 
 void APlayerCharacterController::BeginPlay()
 {
@@ -18,9 +20,17 @@ void APlayerCharacterController::BeginPlay()
 
 	PlayerRef = IPlayerCharacterInterface::Execute_SetPlayerRef(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 
-	CameraManager = Cast<ATheBoxCameraManager>(UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0));
-
 	GetCharacter()->GetCharacterMovement()->MaxWalkSpeed = BaseMovementSpeed;
+}
+
+void APlayerCharacterController::PlayerTick(float DeltaTime)
+{
+	Super::PlayerTick(DeltaTime);
+}
+
+void APlayerCharacterController::UpdateRotation(float DeltaTime)
+{
+	Super::UpdateRotation(DeltaTime);
 }
 
 void APlayerCharacterController::SetupInputComponent()

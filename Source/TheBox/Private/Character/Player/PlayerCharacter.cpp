@@ -29,8 +29,6 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	Initialize();
-
-	HealthComponent->PlayerDeath.AddDynamic(this, &APlayerCharacter::PlayerDeath);
 }
 
 // Called every frame
@@ -42,6 +40,8 @@ void APlayerCharacter::Tick(float DeltaTime)
 void APlayerCharacter::Initialize()
 {
 	GetWorldTimerManager().SetTimer(InteractableTraceTimerHandle, this, &APlayerCharacter::ScanForInteractables, InteractableTraceTimer, true);
+
+	HealthComponent->PlayerDeath.AddDynamic(this, &APlayerCharacter::PlayerDeath);
 }
 
 void APlayerCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)

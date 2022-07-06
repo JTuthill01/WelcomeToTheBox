@@ -20,7 +20,12 @@ public:
 public:
 	virtual void SetupInputComponent() override;
 
+	virtual void UpdateRotation(float DeltaTime) override;
+
+	virtual void PlayerTick(float DeltaTime) override;
+
 	virtual APlayerCharacterController* SetControllerRef_Implementation() override;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -72,7 +77,4 @@ private:
 private:
 	UPROPERTY();
 	TObjectPtr<class APlayerCharacter> PlayerRef;
-
-	UPROPERTY()
-	TObjectPtr<class ATheBoxCameraManager> CameraManager;
 };
