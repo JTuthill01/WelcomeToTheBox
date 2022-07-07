@@ -22,4 +22,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void InteractWithObject();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void ClearViewport();
 };

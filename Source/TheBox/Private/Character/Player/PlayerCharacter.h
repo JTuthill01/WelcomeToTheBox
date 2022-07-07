@@ -10,6 +10,8 @@
 class UInputAction;
 class UInputMappingContext;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnClearViewport);
+
 UCLASS()
 class APlayerCharacter : public ACharacter, public IPlayerCharacterInterface
 {
@@ -47,6 +49,10 @@ private:
 private:
 	void ScanForInteractables();
 	void Initialize();
+
+public:
+	UPROPERTY(BlueprintAssignable)
+	FOnClearViewport Clear;
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))

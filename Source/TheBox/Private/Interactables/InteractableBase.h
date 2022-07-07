@@ -15,6 +15,10 @@ public:
 	AInteractableBase();
 
 public:
+	UFUNCTION()
+	void OnClearViewport();
+
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -25,6 +29,8 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	bool SetRefs();
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = BaseRoot)
@@ -45,4 +51,10 @@ private:
 
 	UPROPERTY()
 	class APlayerCharacterController* PC;
+
+	UPROPERTY()
+	class APlayerCharacter* PlayerRef;
+
+private:
+	
 };

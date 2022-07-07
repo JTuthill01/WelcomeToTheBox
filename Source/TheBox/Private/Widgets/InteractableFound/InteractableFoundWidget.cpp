@@ -13,6 +13,13 @@ void UInteractableFoundWidget::NativeConstruct()
 	SetPositionInViewport(ScreenSize);
 }
 
+bool UInteractableFoundWidget::Initialize()
+{
+	Super::Initialize();
+
+	return true;
+}
+
 FVector2D UInteractableFoundWidget::GetScreenSize()
 {
 	FVector2D Result = FVector2D(0.F);

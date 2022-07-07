@@ -89,6 +89,9 @@ void APlayerCharacter::ScanForInteractables()
 				IInteractInterface::Execute_InteractableFound(HitResult.GetActor());
 		}
 	}
+
+	else 
+		Clear.Broadcast();
 }
 
 APlayerCharacter* APlayerCharacter::SetPlayerRef_Implementation() { return this; }

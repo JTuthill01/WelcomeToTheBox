@@ -15,6 +15,8 @@ public:
 protected:
 	virtual void NativeConstruct() override;
 
+	virtual bool Initialize() override;
+
 public:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UImage> InteractableIcon;

@@ -1,4 +1,13 @@
 #include "Interactables/InteractableDoors/InteractableDoor.h"
+#include "Engine/Texture2D.h"
+#include "Components/TextBlock.h"
+#include "Components/Image.h"
+#include "Interfaces/Player/PlayerCharacterInterface.h"
+#include "Interfaces/Controller/PlayerControllerInterface.h"
+#include "Widgets/InteractableFound/InteractableFoundWidget.h"
+#include "Character/PlayerController/PlayerCharacterController.h"
+#include "Character/Player/PlayerCharacter.h"
+#include "Kismet/GameplayStatics.h"
 
 AInteractableDoor::AInteractableDoor()
 {

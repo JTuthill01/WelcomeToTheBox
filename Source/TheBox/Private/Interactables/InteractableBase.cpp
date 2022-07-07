@@ -2,16 +2,18 @@
 #include "Engine/Texture2D.h"
 #include "Components/TextBlock.h"
 #include "Components/Image.h"
+#include "Interfaces/Player/PlayerCharacterInterface.h"
 #include "Interfaces/Controller/PlayerControllerInterface.h"
 #include "Widgets/InteractableFound/InteractableFoundWidget.h"
 #include "Character/PlayerController/PlayerCharacterController.h"
+#include "Character/Player/PlayerCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AInteractableBase::AInteractableBase() 
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	BaseRootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Base Root Component"));
 	SetRootComponent(BaseRootComponent);
@@ -22,7 +24,20 @@ void AInteractableBase::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (SetRefs())
+		PlayerRef->Clear.AddDynamic(this, &AInteractableBase::OnClearViewport);
+}
+
+bool AInteractableBase::SetRefs()
+{
 	PC = IPlayerControllerInterface::Execute_SetControllerRef(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+
+	PlayerRef = IPlayerCharacterInterface::Execute_SetPlayerRef(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+	if (IsValid(PC) && IsValid(PlayerRef))
+		return true;
+
+	return false;
 }
 
 // Called every frame
@@ -33,11 +48,10 @@ void AInteractableBase::Tick(float DeltaTime)
 
 void AInteractableBase::InteractableFound_Implementation()
 {
-	if (!IsValid(PC))
-		return;
-
 	if (!IsValid(InteractableFoundWidget))
 	{
+		InteractableFoundWidget = CreateWidget<UInteractableFoundWidget>(GetWorld(), InteractableWidgetSub);
+
 		if (IsValid(InteractableFoundWidget))
 		{
 			InteractableFoundWidget->InteractText->SetText(WidgetText);
@@ -47,11 +61,17 @@ void AInteractableBase::InteractableFound_Implementation()
 	}
 
 	else if (IsValid(InteractableFoundWidget))
-		if (InteractableFoundWidget->IsInViewport())
-			InteractableFoundWidget->SetVisibility(ESlateVisibility::Collapsed);
+		InteractableFoundWidget->SetVisibility(ESlateVisibility::Visible);
 }
 
 void AInteractableBase::InteractWithObject_Implementation()
+{
+	if (IsValid(InteractableFoundWidget))
+		if (InteractableFoundWidget->IsInViewport())
+			InteractableFoundWidget->RemoveFromViewport();
+}
+
+void AInteractableBase::OnClearViewport()
 {
 	if (IsValid(InteractableFoundWidget))
 		if (InteractableFoundWidget->IsInViewport())
