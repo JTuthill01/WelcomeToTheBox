@@ -8,6 +8,7 @@
 #include "Character/PlayerController/PlayerCharacterController.h"
 #include "Character/Player/PlayerCharacter.h"
 #include "Kismet/GameplayStatics.h"
+#include "Blueprint/WidgetLayoutLibrary.h"
 
 // Sets default values
 AInteractableBase::AInteractableBase() 
@@ -56,25 +57,23 @@ void AInteractableBase::InteractableFound_Implementation()
 		{
 			InteractableFoundWidget->InteractText->SetText(WidgetText);
 			InteractableFoundWidget->InteractableIcon->SetBrushFromTexture(IconTexture);
-			InteractableFoundWidget->AddToViewport();
+			InteractableFoundWidget->AddToViewport(-1);
 		}
 	}
 
-	else if (IsValid(InteractableFoundWidget))
-		InteractableFoundWidget->SetVisibility(ESlateVisibility::Visible);
+	else if (!InteractableFoundWidget->IsInViewport())
+		InteractableFoundWidget->AddToViewport(-1);
 }
 
 void AInteractableBase::InteractWithObject_Implementation()
 {
-	if (IsValid(InteractableFoundWidget))
-		if (InteractableFoundWidget->IsInViewport())
-			InteractableFoundWidget->RemoveFromViewport();
+	
 }
 
 void AInteractableBase::OnClearViewport()
 {
 	if (IsValid(InteractableFoundWidget))
 		if (InteractableFoundWidget->IsInViewport())
-			InteractableFoundWidget->SetVisibility(ESlateVisibility::Collapsed);
+			InteractableFoundWidget->RemoveFromViewport();
 }
 

@@ -45,16 +45,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Widgets)
 	FText WidgetText;
 
+	UPROPERTY()
+	class APlayerCharacter* PlayerRef;
+
 private:
 	UPROPERTY()
 	TObjectPtr<class UInteractableFoundWidget> InteractableFoundWidget;
 
 	UPROPERTY()
 	class APlayerCharacterController* PC;
-
-	UPROPERTY()
-	class APlayerCharacter* PlayerRef;
-
-private:
-	
 };

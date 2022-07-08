@@ -94,6 +94,33 @@ void APlayerCharacter::ScanForInteractables()
 		Clear.Broadcast();
 }
 
+void APlayerCharacter::InteractWithObject()
+{
+	FHitResult HitResult;
+
+	FVector Start = Camera->GetComponentLocation();
+	FVector End = Start + (Camera->GetComponentRotation().Vector() * 400.F);
+
+	TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjects;
+	TArray<AActor*> ActorsToIgnore;
+
+	ActorsToIgnore.Add(this);
+	//ActorsToIgnore.Add(CurrentWeapon);
+	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldStatic));
+	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldDynamic));
+
+	const bool bCanInteract = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), Start, End, TraceObjects, true, ActorsToIgnore, EDrawDebugTrace::None, HitResult, true);
+
+	if (bCanInteract)
+	{
+		if (HitResult.GetActor())
+		{
+			if (HitResult.GetActor()->GetClass()->ImplementsInterface(UInteractInterface::StaticClass()))
+				IInteractInterface::Execute_InteractWithObject(HitResult.GetActor());
+		}
+	}
+}
+
 APlayerCharacter* APlayerCharacter::SetPlayerRef_Implementation() { return this; }
 
 

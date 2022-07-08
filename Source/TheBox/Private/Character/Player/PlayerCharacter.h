@@ -38,6 +38,10 @@ public:
 	//Interface function for setting Player Ref throughout code
 	APlayerCharacter* SetPlayerRef_Implementation() override;
 
+public:
+	UFUNCTION()
+	void InteractWithObject();
+
 protected:
 	//Called when the game starts or when spawned
 	virtual void BeginPlay() override;
