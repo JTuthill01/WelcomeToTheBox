@@ -21,4 +21,40 @@ public:
 	
 protected:
 	virtual void BeginPlay() override;
+
+private:
+	UFUNCTION()
+		void ControlDoor();
+
+	UFUNCTION()
+		void ToggleDoor();
+
+	UFUNCTION()
+		void SetState();
+
+	UFUNCTION()
+		void InitializeDoor();
+
+private:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Mesh, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UStaticMeshComponent> BaseMesh;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Mesh, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UStaticMeshComponent> SubMesh;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Timeline, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UTimelineComponent> DoorTimelineComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = FloatCurve, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UCurveFloat> DoorCurve;
+
+private:
+	bool bIsOpen;
+	bool bIsReady;
+
+	float RotateValue;
+	float CurveFloatValue;
+	float TimelineValue;
+
+	FRotator DoorRotation;
 };

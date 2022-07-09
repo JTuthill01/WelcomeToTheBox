@@ -58,6 +58,4 @@ private:
 	float TimelineValue;
 
 	FRotator DoorRotation;
-
-	
 };

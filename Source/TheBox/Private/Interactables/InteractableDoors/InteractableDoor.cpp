@@ -1,5 +1,4 @@
 #include "Interactables/InteractableDoors/InteractableDoor.h"
-#include "Widgets/InteractableFound/InteractableFoundWidget.h"
 #include "Character/Player/PlayerCharacter.h"
 #include "Kismet/KismetMathLibrary.h"
 

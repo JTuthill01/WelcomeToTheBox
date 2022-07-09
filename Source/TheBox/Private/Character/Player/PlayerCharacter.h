@@ -4,7 +4,7 @@
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
 #include "Interfaces/Player/PlayerCharacterInterface.h"
-#include "Structs/Str_CustomColors.h"
+#include "Structs/CustomColors/Str_CustomColors.h"
 #include "PlayerCharacter.generated.h"
 
 class UInputAction;

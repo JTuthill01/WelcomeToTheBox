@@ -48,7 +48,6 @@ protected:
 	UPROPERTY()
 	class APlayerCharacter* PlayerRef;
 
-private:
 	UPROPERTY()
 	TObjectPtr<class UInteractableFoundWidget> InteractableFoundWidget;
 

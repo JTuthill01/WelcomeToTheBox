@@ -65,10 +65,7 @@ void AInteractableBase::InteractableFound_Implementation()
 		InteractableFoundWidget->AddToViewport(-1);
 }
 
-void AInteractableBase::InteractWithObject_Implementation()
-{
-	
-}
+void AInteractableBase::InteractWithObject_Implementation() {}
 
 void AInteractableBase::OnClearViewport()
 {
