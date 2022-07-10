@@ -19,6 +19,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	virtual void OnConstruction(const FTransform& Transform) override;
+
 	virtual void InteractableFound_Implementation() override;
 
 	virtual void InteractWithObject_Implementation() override;
@@ -28,9 +30,33 @@ protected:
 	virtual void BeginPlay() override;
 
 protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Mesh)
+	TObjectPtr<UStaticMeshComponent> BaseMesh;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Data)
 	FPickupData PickupData;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Data)
 	TObjectPtr<UDataTable> PickupDataTable;
+
+private:
+	UFUNCTION()
+	void OnClearViewport();
+
+	UFUNCTION()
+	void Setup();
+
+private:
+	void HealthPickup();
+
+private:
+	UPROPERTY()
+	TObjectPtr<class APlayerCharacter> PlayerRef;
+
+private:
+	EPickupType PickupBaseType;
+	EPickupHealthType BaseHealthType;
+
+	float HealthValue;
+	float ArmorValue;
 };

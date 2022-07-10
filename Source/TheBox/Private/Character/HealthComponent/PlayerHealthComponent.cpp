@@ -22,6 +22,29 @@ void UPlayerHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
+void UPlayerHealthComponent::UpdatePlayerStats_Implementation(float HealthPickupValue, float ArmorPickupValue)
+{
+	if (CurrentArmor > 0.F)
+	{
+		CurrentArmor += ArmorPickupValue;
+
+		if (CurrentArmor >= MaxArmor)
+			CurrentArmor = FMath::Clamp(CurrentArmor, 0.F, MaxArmor);
+
+		PlayerHealthAndArmorUpdate.Broadcast(CurrentArmor, CurrentHealth);
+	}
+
+	else if (CurrentHealth > 0.F)
+	{
+		CurrentHealth += HealthPickupValue;
+
+		if (CurrentHealth >= MaxHealth)
+			CurrentHealth = FMath::Clamp(CurrentHealth, 0.F, MaxHealth);
+
+		PlayerHealthAndArmorUpdate.Broadcast(CurrentArmor, CurrentHealth);
+	}
+}
+
 void UPlayerHealthComponent::ChangeHealthAndArmor(float ChangeAmount)
 {
 	if (CurrentArmor > 0.F)
@@ -55,6 +78,3 @@ void UPlayerHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, cons
 
 bool UPlayerHealthComponent::IsPlayerAlive() { return CurrentHealth > 0.F; }
 
-bool UPlayerHealthComponent::HasFullHealth() { return CurrentHealth >= MaxHealth; }
-
-bool UPlayerHealthComponent::HasFullArmor() { return CurrentArmor >= MaxArmor; }

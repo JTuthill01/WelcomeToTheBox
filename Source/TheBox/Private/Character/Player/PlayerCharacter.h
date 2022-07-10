@@ -24,6 +24,7 @@ public:
 public:
 	FORCEINLINE TObjectPtr<USkeletalMeshComponent> GetPlayerArms() { return Arms; }
 	FORCEINLINE TObjectPtr<class UCameraComponent> GetPlayerCamera() { return Camera; }
+	FORCEINLINE TObjectPtr<class UPlayerHealthComponent> GetHealthComponent() { return HealthComponent; }
 
 public:	
 	//Called every frame

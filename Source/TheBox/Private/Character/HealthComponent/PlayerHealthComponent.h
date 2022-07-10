@@ -2,13 +2,14 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Interfaces/Pickup/PickupInterface.h"
 #include "PlayerHealthComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerDeath);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHealthAndArmorUpdate, float, ArmorUpdate, float, HealthUpdate);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class UPlayerHealthComponent : public UActorComponent
+class UPlayerHealthComponent : public UActorComponent, public IPickupInterface
 {
 	GENERATED_BODY()
 
@@ -18,12 +19,14 @@ public:
 
 public:
 	FORCEINLINE bool IsPlayerAlive();
-	FORCEINLINE bool HasFullHealth();
-	FORCEINLINE bool HasFullArmor();
+	FORCEINLINE bool HasFullHealth() { return CurrentHealth >= MaxHealth; }
+	FORCEINLINE bool HasFullArmor() { return CurrentArmor >= MaxArmor; }
 
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	virtual void UpdatePlayerStats_Implementation(float HealthPickupValue, float ArmorPickupValue) override;
 
 public:
 	UFUNCTION(BlueprintCallable)

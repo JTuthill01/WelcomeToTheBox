@@ -11,11 +11,17 @@ struct FPickupData : public FTableRowBase
     GENERATED_BODY()
 
 public:
-    UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Mesh)
+	TObjectPtr<class UStaticMesh> PickupMesh;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = IconImage)
+	TObjectPtr<class UMaterialInstance> Icon;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = PickupName)
 	FName PickupName;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	class UMaterialInstance* Icon;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = PickupWidgetText)
+	FText PickupWidgetText;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Enums)
 	EPickupType PickupType;

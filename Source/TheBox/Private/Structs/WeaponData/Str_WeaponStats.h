@@ -9,7 +9,7 @@ struct FWeaponDataStats : public FTableRowBase
 {
    GENERATED_BODY()
 
-    public:
+public:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
     int32 CurrentMagTotal;
 
