@@ -4,6 +4,7 @@
 #include "GameFramework/Actor.h"
 #include "Structs/PickupData/Str_PickupData.h"
 #include "Interfaces/Interact/InteractInterface.h"
+#include "Enums/PickupEnums/PickupEnums.h"
 #include "PickupBase.generated.h"
 
 UCLASS()
@@ -39,6 +40,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Data)
 	TObjectPtr<UDataTable> PickupDataTable;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
+	EPickupType PickupBaseType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
+	EPickupHealthType BaseHealthType;
+
 private:
 	UFUNCTION()
 	void OnClearViewport();
@@ -49,13 +56,19 @@ private:
 private:
 	void HealthPickup();
 
+	void SetData();
+	void SetHealthData();
+
 private:
 	UPROPERTY()
 	TObjectPtr<class APlayerCharacter> PlayerRef;
 
+	UPROPERTY()
+	TObjectPtr<class UPickupComponent> PickupParser;
+
 private:
-	EPickupType PickupBaseType;
-	EPickupHealthType BaseHealthType;
+	
+	
 
 	float HealthValue;
 	float ArmorValue;

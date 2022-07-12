@@ -2,6 +2,7 @@
 #include "Character/Player/PlayerCharacter.h"
 #include "Character/HealthComponent/PlayerHealthComponent.h"
 #include "Interfaces/Player/PlayerCharacterInterface.h"
+#include "JsonComponents/PickupComponent/PickupComponent.h"
 #include "Interfaces/Pickup/PickupInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "EditorAssetLibrary.h"
@@ -16,6 +17,8 @@ APickupBase::APickupBase()
 	BaseMesh->SetupAttachment(RootComponent);
 	BaseMesh->SetCastShadow(false);
 	BaseMesh->SetCollisionObjectType(ECollisionChannel::ECC_WorldStatic);
+
+	PickupParser = CreateDefaultSubobject<UPickupComponent>(TEXT("Pickup Parser"));
 }
 
 // Called when the game starts or when spawned
@@ -35,6 +38,30 @@ void APickupBase::Tick(float DeltaTime)
 void APickupBase::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
+
+	switch (PickupBaseType)
+	{
+	case EPickupType::EPT_None:
+		break;
+
+	case EPickupType::EPT_Weapon:
+		break;
+
+	case EPickupType::EPT_Health:
+
+		SetHealthData();
+		
+		break;
+
+	case EPickupType::EPT_Ammo:
+		break;
+
+	case EPickupType::EPT_Armor:
+		break;
+
+	default:
+		break;
+	}
 }
 
 void APickupBase::InteractableFound_Implementation()
@@ -97,7 +124,7 @@ void APickupBase::HealthPickup()
 
 		if (!PlayerRef->GetHealthComponent()->HasFullHealth())
 		{
-			IPickupInterface::Execute_UpdatePlayerStats(PlayerRef->GetHealthComponent(), HealthValue, NULL);
+			IPickupInterface::Execute_UpdatePlayerStats(PlayerRef->GetHealthComponent(), PickupData.HealthPackValue, NULL);
 
 			Destroy();
 		}
@@ -108,7 +135,7 @@ void APickupBase::HealthPickup()
 
 		if (!PlayerRef->GetHealthComponent()->HasFullHealth())
 		{
-			IPickupInterface::Execute_UpdatePlayerStats(PlayerRef->GetHealthComponent(), HealthValue, NULL);
+			IPickupInterface::Execute_UpdatePlayerStats(PlayerRef->GetHealthComponent(), PickupData.HealthPackValue, NULL);
 
 			Destroy();
 		}
@@ -119,10 +146,74 @@ void APickupBase::HealthPickup()
 
 		if (!PlayerRef->GetHealthComponent()->HasFullHealth())
 		{
-			IPickupInterface::Execute_UpdatePlayerStats(PlayerRef->GetHealthComponent(), HealthValue, NULL);
+			IPickupInterface::Execute_UpdatePlayerStats(PlayerRef->GetHealthComponent(), PickupData.HealthPackValue, NULL);
 
 			Destroy();
 		}
+
+		break;
+
+	default:
+		break;
+	}
+}
+
+void APickupBase::SetData()
+{
+	TObjectPtr<UStaticMesh> NewMesh = LoadObject<UStaticMesh>(this, *PickupParser->MeshFilePathString);
+
+	TObjectPtr<UMaterialInstance> NewInstance = LoadObject<UMaterialInstance>(this, *PickupParser->IconFilePathString);
+
+	if (IsValid(NewMesh))
+		BaseMesh->SetStaticMesh(NewMesh);
+
+	PickupData.PickupName = FName(*PickupParser->PickupNameString);
+	PickupData.Icon = NewInstance;
+	PickupData.PickupWidgetText = FText::FromString(PickupParser->WidgetTextString);
+	PickupData.PickupType = static_cast<EPickupType>(PickupParser->PType);
+	PickupData.PickupHealthType = static_cast<EPickupHealthType>(PickupParser->PHealthType);
+	PickupData.PickupAmmoType = static_cast<EPickupAmmoType>(PickupParser->PAmmoType);
+	PickupData.HealthPackValue = PickupParser->HealthValue;
+	PickupData.ArmorValue = PickupParser->ArmValue;
+	PickupData.PistolAmmoValue = PickupParser->PAmmoValue;
+	PickupData.RifleAmmoValue = PickupParser->RAmmoValue;
+	PickupData.ShotgunAmmoValue = PickupParser->SAmmoValue;
+}
+
+void APickupBase::SetHealthData()
+{
+	switch (BaseHealthType)
+	{
+	case EPickupHealthType::EPH_None:
+		break;
+
+	case EPickupHealthType::EPH_HealthSmall:
+
+		PickupParser->SetObjectData(TEXT("Health_Small"));
+
+		PickupParser->Parser();
+
+		SetData();
+
+		break;
+
+	case EPickupHealthType::EPH_HealthMedium:
+
+		PickupParser->SetObjectData(TEXT("Health_Medium"));
+
+		PickupParser->Parser();
+
+		SetData();
+
+		break;
+
+	case EPickupHealthType::EPH_HealthLarge:
+
+		PickupParser->SetObjectData(TEXT("Health_Large"));
+
+		PickupParser->Parser();
+
+		SetData();
 
 		break;
 
