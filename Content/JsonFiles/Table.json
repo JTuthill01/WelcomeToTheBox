@@ -1,5 +1,5 @@
-{
-	"Health_Small": {
+[
+	{
 		"Name": "HealthSmall",
 		"PickupMesh": "StaticMesh'/Game/FirstAidKit/Models/SM_pillsJar.SM_pillsJar'",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/MI_Health.MI_Health'",
@@ -14,7 +14,7 @@
 		"RifleAmmoValue": 0,
 		"ShotgunAmmoValue": 0
 	},
-	"Health_Medium": {
+	{
 		"Name": "HealthMedium",
 		"PickupMesh": "StaticMesh'/Game/FirstAidKit/Models/SM_FirstAidPackMilitary.SM_FirstAidPackMilitary'",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/MI_DHearts.MI_DHearts'",
@@ -29,7 +29,7 @@
 		"RifleAmmoValue": 0,
 		"ShotgunAmmoValue": 0
 	},
-	"Health_Large": {
+	{
 		"Name": "HealthLarge",
 		"PickupMesh": "StaticMesh'/Game/First_Aid_Health_Kit/Meshes/SM_FirstAidKit1_03.SM_FirstAidKit1_03'",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/MI_HealthLarge.MI_HealthLarge'",
@@ -44,7 +44,7 @@
 		"RifleAmmoValue": 0,
 		"ShotgunAmmoValue": 0
 	},
-	"PistolAmmo": {
+	{
 		"Name": "PistolAmmo",
 		"PickupMesh": "StaticMesh'/Game/Ammo_boxes/Props/Close_ammo_boxes/SM_12_7x99_close_clean.SM_12_7x99_close_clean'",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/MI_PistolAmmo.MI_PistolAmmo'",
@@ -59,7 +59,7 @@
 		"RifleAmmoValue": 0,
 		"ShotgunAmmoValue": 0
 	},
-	"RifleAmmo": {
+	{
 		"Name": "RifleAmmo",
 		"PickupMesh": "StaticMesh'/Game/Ammo_boxes/Props/Open_boxes_with_ammo/SM_5_56x45_open_clean_with_ammo.SM_5_56x45_open_clean_with_ammo'",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/MI_RifleAmmo.MI_RifleAmmo'",
@@ -74,7 +74,7 @@
 		"RifleAmmoValue": 30,
 		"ShotgunAmmoValue": 0
 	},
-	"ShotgunAmmo": {
+	{
 		"Name": "ShotgunAmmo",
 		"PickupMesh": "StaticMesh'/Game/Ammo_boxes/Props/Open_boxes_with_ammo/SM_12_7x99_open_dirty_with_ammo.SM_12_7x99_open_dirty_with_ammo'",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/MI_ShiotgunAmmo.MI_ShiotgunAmmo'",
@@ -89,7 +89,7 @@
 		"RifleAmmoValue": 0,
 		"ShotgunAmmoValue": 12
 	},
-	"Armor": {
+	{
 		"Name": "Armor",
 		"PickupMesh": "StaticMesh'/Game/_Main/CustomStaticMeshes/Armor.Armor'",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/MI_ArmorPickup.MI_ArmorPickup'",
@@ -104,4 +104,4 @@
 		"RifleAmmoValue": 0,
 		"ShotgunAmmoValue": 0
 	}
-}
+]

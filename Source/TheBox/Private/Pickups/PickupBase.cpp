@@ -54,6 +54,9 @@ void APickupBase::OnConstruction(const FTransform& Transform)
 		break;
 
 	case EPickupType::EPT_Ammo:
+
+		SetAmmoData();
+
 		break;
 
 	case EPickupType::EPT_Armor:
@@ -87,6 +90,7 @@ void APickupBase::InteractWithObject_Implementation()
 		break;
 
 	case EPickupType::EPT_Ammo:
+
 		break;
 
 	case EPickupType::EPT_Armor:
@@ -210,6 +214,48 @@ void APickupBase::SetHealthData()
 	case EPickupHealthType::EPH_HealthLarge:
 
 		PickupParser->SetObjectData(TEXT("Health_Large"));
+
+		PickupParser->Parser();
+
+		SetData();
+
+		break;
+
+	default:
+		break;
+	}
+}
+
+void APickupBase::SetAmmoData()
+{
+	switch (PickupAmmoType)
+	{
+	case EPickupAmmoType::EPA_None:
+		break;
+
+	case EPickupAmmoType::EPH_PistolAmmo:
+
+		PickupParser->SetObjectData(TEXT("PistolAmmo"));
+
+		PickupParser->Parser();
+
+		SetData();
+
+		break;
+
+	case EPickupAmmoType::EPS_RifleAmmo:
+
+		PickupParser->SetObjectData(TEXT("RifleAmmo"));
+
+		PickupParser->Parser();
+
+		SetData();
+
+		break;
+
+	case EPickupAmmoType::EPA_ShotgunAmmo:
+
+		PickupParser->SetObjectData(TEXT("ShotgunAmmo"));
 
 		PickupParser->Parser();
 

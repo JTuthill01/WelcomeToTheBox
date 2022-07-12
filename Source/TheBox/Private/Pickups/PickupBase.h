@@ -46,6 +46,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
 	EPickupHealthType BaseHealthType;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
+	EPickupAmmoType PickupAmmoType;
+
 private:
 	UFUNCTION()
 	void OnClearViewport();
@@ -58,6 +61,7 @@ private:
 
 	void SetData();
 	void SetHealthData();
+	void SetAmmoData();
 
 private:
 	UPROPERTY()
