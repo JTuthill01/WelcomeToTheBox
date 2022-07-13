@@ -3,6 +3,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Kismet/GameplayStatics.h"
 #include "Camera/CameraComponent.h"
+#include "Weapons/WeaponBase/WeaponBase.h"
 #include "Character/HealthComponent/PlayerHealthComponent.h"
 #include "Interfaces/Interact/InteractInterface.h"
 
@@ -75,7 +76,8 @@ void APlayerCharacter::ScanForInteractables()
 	TArray<AActor*> ActorsToIgnore;
 
 	ActorsToIgnore.Add(this);
-	//ActorsToIgnore.Add(CurrentWeapon); uncomment later
+	ActorsToIgnore.Add(CurrentWeapon); 
+
 	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldStatic));
 	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldDynamic));
 
@@ -105,7 +107,8 @@ void APlayerCharacter::InteractWithObject()
 	TArray<AActor*> ActorsToIgnore;
 
 	ActorsToIgnore.Add(this);
-	//ActorsToIgnore.Add(CurrentWeapon);
+	ActorsToIgnore.Add(CurrentWeapon);
+
 	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldStatic));
 	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldDynamic));
 

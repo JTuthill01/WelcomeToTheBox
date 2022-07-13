@@ -5,6 +5,7 @@
 #include "InputActionValue.h"
 #include "Interfaces/Player/PlayerCharacterInterface.h"
 #include "Structs/CustomColors/Str_CustomColors.h"
+#include "Enums/WeaponEnums/WeaponEnums.h"
 #include "PlayerCharacter.generated.h"
 
 class UInputAction;
@@ -22,9 +23,13 @@ public:
 	APlayerCharacter();
 
 public:
+
+#pragma region Getters
 	FORCEINLINE TObjectPtr<USkeletalMeshComponent> GetPlayerArms() { return Arms; }
 	FORCEINLINE TObjectPtr<class UCameraComponent> GetPlayerCamera() { return Camera; }
 	FORCEINLINE TObjectPtr<class UPlayerHealthComponent> GetHealthComponent() { return HealthComponent; }
+	FORCEINLINE TObjectPtr<class AWeaponBase> GetCurrentWeapon() { return CurrentWeapon; }
+#pragma endregion
 
 public:	
 	//Called every frame
@@ -68,6 +73,12 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = HealthComp, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UPlayerHealthComponent> HealthComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Weapons, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class AWeaponBase> CurrentWeapon;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Montages, meta = (AllowPrivateAccess = "true"))
+	TMap<EWeaponName, UAnimMontage*>CharacterFireMap;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Colors, meta = (AllowPrivateAccess = "true"))
 	FCustomColors UserColors;
