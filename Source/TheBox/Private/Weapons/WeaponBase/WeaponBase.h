@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Enums/WeaponEnums/WeaponEnums.h"
+#include "Structs/WeaponData/Str_WeaponStats.h"
 #include "WeaponBase.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FUpdateCurrentTotalAmmo, int32, TotalAmmoCount);
@@ -70,6 +71,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = WeaponMesh)
 	TObjectPtr<USkeletalMeshComponent> WeaponMesh;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Parser)
+	TObjectPtr<class UWeaponComponentParser> WeaponParser;
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Animation)
 	TObjectPtr<UAnimMontage> WeaponFireMontage;
 
@@ -78,6 +82,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Enums)
 	EWeaponName WeaponName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WeaponStats)
+	FWeaponDataStats WeapStats;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WeaponSocketName)
 	FName SocketName;

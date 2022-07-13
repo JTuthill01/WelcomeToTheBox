@@ -2,16 +2,12 @@
 #include "JsonUtilities.h"
 
 // Sets default values for this component's properties
-UWeaponComponentParser::UWeaponComponentParser() : MeshFilePathString(FString()), CurrentMagTotal(0), MaxMagTotal(0), CurrentTotalAmmo(0), MaxTotalAmmo(0), LowAmmo(0), CrosshairIndex(0), WeaponIndex(0),
-	DamageAmount(0.F), CriciticalHitChance(0.F), DamageRadius(0.F), NameOfWeapon(NAME_None), FireType(EWeaponFireType::EWFT_None), Icon(nullptr), AmmoEject(nullptr), FireFX(nullptr), FireSound(nullptr),
-	RackSlideSound(nullptr), MagOutSound(nullptr), MagInSound(nullptr)
-{
-}
+UWeaponComponentParser::UWeaponComponentParser() = default;
 
 void UWeaponComponentParser::WeaponParser()
 {
 	/* Creates a string ref to wherever the json file(s) are */
-	const FString JsonFilePath = FPaths::ProjectContentDir() + "/JsonFiles/PTable.json";
+	const FString JsonFilePath = FPaths::ProjectContentDir() + "/JsonFiles/Table.json";
 	FString JsonString; /* Json converted to FString */
 
 	FFileHelper::LoadFileToString(JsonString, *JsonFilePath); /* Remember to dereference file path */
@@ -26,22 +22,10 @@ void UWeaponComponentParser::WeaponParser()
 	{
 		/* Gets whatever "object" from the json file you choose */
 		TSharedPtr<FJsonObject> DataObject = JsonObject->GetObjectField(ObjectString);
+		
+		WeaponData.CurrentMagTotal = DataObject->GetIntegerField("CurrentMagTotal");
 
-		MeshFilePathString = DataObject->GetStringField("PickupMesh");
-
-		CurrentMagTotal = DataObject->GetIntegerField("CurrentMagTotal");
-
-		MaxMagTotal = DataObject->GetIntegerField("MaxMagTotal");
-
-		CurrentTotalAmmo = DataObject->GetIntegerField("CurrentTotalAmmo");
-
-		MaxTotalAmmo = DataObject->GetIntegerField("MaxTotalAmmo");
-
-		LowAmmo = DataObject->GetIntegerField("LowAmmo");
-
-		CrosshairIndex = DataObject->GetIntegerField("CrosshairIndex");
-
-		WeaponIndex = DataObject->GetIntegerField("WeaponIndex");
+		WeaponData.MaxMagTotal = DataObject->GetIntegerField("MaxMagTotal");
 	}
 }
 

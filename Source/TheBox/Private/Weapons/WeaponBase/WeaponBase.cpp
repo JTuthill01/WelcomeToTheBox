@@ -8,6 +8,7 @@
 #include "Engine/DataTable.h"
 #include "Structs/WeaponData/Str_WeaponStats.h"
 #include "ImpactPhysicalMaterial/ImpactPhysicalMaterial.h"
+#include "JsonComponents/WeaponComponent/WeaponComponentParser.h"
 
 // Sets default values
 AWeaponBase::AWeaponBase() : SocketName(NAME_None), bCanFire(true), bCanReload(true), bIsReloading(false), EjectQuat(FQuat(0.F)), FireQuat(FQuat(0.F)), WeaponFireTimer(0.F)
@@ -18,6 +19,8 @@ AWeaponBase::AWeaponBase() : SocketName(NAME_None), bCanFire(true), bCanReload(t
 	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Weapon Mesh"));
 	WeaponMesh->SetCastShadow(false);
 	WeaponMesh->bReturnMaterialOnMove = true;
+
+	WeaponParser = CreateDefaultSubobject<UWeaponComponentParser>(TEXT("Weapon Parser"));
 
 	SetRootComponent(WeaponMesh);
 }
