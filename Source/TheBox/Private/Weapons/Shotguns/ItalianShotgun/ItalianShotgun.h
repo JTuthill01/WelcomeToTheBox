@@ -2,15 +2,15 @@
 
 #include "CoreMinimal.h"
 #include "Weapons/WeaponBase/WeaponBase.h"
-#include "ShortStrokeAR.generated.h"
+#include "ItalianShotgun.generated.h"
 
 UCLASS()
-class AShortStrokeAR : public AWeaponBase
+class AItalianShotgun : public AWeaponBase
 {
 	GENERATED_BODY()
 	
 public:
-	AShortStrokeAR();
+	AItalianShotgun();
 
 protected:
 	virtual void WeaponFire() override;
@@ -18,8 +18,4 @@ protected:
 	virtual void WeaponReload() override;
 
 	virtual void WeaponSetup() override;
-
-private:
-	void ResetIsReloading();
-	void ResetCanFire();
 };

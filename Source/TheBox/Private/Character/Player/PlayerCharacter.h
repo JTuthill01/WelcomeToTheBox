@@ -25,10 +25,12 @@ public:
 public:
 
 #pragma region Getters
+
 	FORCEINLINE TObjectPtr<USkeletalMeshComponent> GetPlayerArms() { return Arms; }
 	FORCEINLINE TObjectPtr<class UCameraComponent> GetPlayerCamera() { return Camera; }
 	FORCEINLINE TObjectPtr<class UPlayerHealthComponent> GetHealthComponent() { return HealthComponent; }
 	FORCEINLINE TObjectPtr<class AWeaponBase> GetCurrentWeapon() { return CurrentWeapon; }
+
 #pragma endregion
 
 public:	
@@ -47,6 +49,9 @@ public:
 public:
 	UFUNCTION()
 	void InteractWithObject();
+
+	UFUNCTION()
+	void PlayerFireWeapon();
 
 protected:
 	//Called when the game starts or when spawned
@@ -77,11 +82,26 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Weapons, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class AWeaponBase> CurrentWeapon;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Weapons, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AWeaponBase> InitialWeaponToSpawn;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Montages, meta = (AllowPrivateAccess = "true"))
-	TMap<EWeaponName, UAnimMontage*>CharacterFireMap;
+	TArray<TObjectPtr<UAnimMontage>> PlayerWeaponFireMontage;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Colors, meta = (AllowPrivateAccess = "true"))
 	FCustomColors UserColors;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = HUDVariables, meta = (AllowPrivateAccess = "true"))
+	int32 CurrentAmmoHUD;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = HUDVariables, meta = (AllowPrivateAccess = "true"))
+	int32 MaxAmmoHUD;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = HUDVariables, meta = (AllowPrivateAccess = "true"))
+	EWeaponName CurrentNameOfWeapon;
+
+private:
+	void SpawnInitialWeapon();
 
 private:
 	float InteractableTraceTimer;

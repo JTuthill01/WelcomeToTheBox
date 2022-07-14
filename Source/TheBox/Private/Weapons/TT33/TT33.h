@@ -19,6 +19,9 @@ public:
 
 	virtual void StopFire() override;
 
+protected:
+	virtual void WeaponSetup() override;
+
 private:
 	void ResetCanFire();
 };

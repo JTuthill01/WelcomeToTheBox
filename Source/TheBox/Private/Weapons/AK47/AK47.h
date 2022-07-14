@@ -2,24 +2,26 @@
 
 #include "CoreMinimal.h"
 #include "Weapons/WeaponBase/WeaponBase.h"
-#include "ShortStrokeAR.generated.h"
+#include "AK47.generated.h"
 
 UCLASS()
-class AShortStrokeAR : public AWeaponBase
+class AAK47 : public AWeaponBase
 {
 	GENERATED_BODY()
 	
 public:
-	AShortStrokeAR();
+	AAK47();
 
-protected:
+public:
 	virtual void WeaponFire() override;
 
 	virtual void WeaponReload() override;
 
+	virtual void StopFire() override;
+
+protected:
 	virtual void WeaponSetup() override;
 
 private:
-	void ResetIsReloading();
 	void ResetCanFire();
 };

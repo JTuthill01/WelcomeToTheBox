@@ -50,20 +50,20 @@ public:
     EWeaponFireType FireType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class USoundBase* RackSlideSound;
+	TObjectPtr<class USoundBase> RackSlideSound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class USoundBase* MagOutSound;
+    TObjectPtr<class USoundBase> MagOutSound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class USoundBase* MagInSound;
+    TObjectPtr<class USoundBase> MagInSound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class USoundBase* FireSound;
+    TObjectPtr<class USoundBase> FireSound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UNiagaraSystem* AmmoEject;
+	TObjectPtr<class UNiagaraSystem> AmmoEject;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UNiagaraSystem* FireFX;
+    TObjectPtr<class UNiagaraSystem> FireFX;
 };

@@ -1,17 +1,17 @@
-#include "Weapons/ShortStroke/ShortStrokeAR.h"
-#include "Kismet/GameplayStatics.h"
+#include "Weapons/AK47/AK47.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Kismet/GameplayStatics.h"
 #include "JsonComponents/WeaponComponent/WeaponComponentParser.h"
 
-AShortStrokeAR::AShortStrokeAR() = default;
+AAK47::AAK47() = default;
 
-void AShortStrokeAR::WeaponSetup()
+void AAK47::WeaponSetup()
 {
 	Super::WeaponSetup();
 
 	uint8 Temp;
 
-	WeaponParser->SetObjectData("ShortStrokeAR");
+	WeaponParser->SetObjectData("AK47");
 	WeaponParser->WeaponParser(WeapStats, WeaponFilePaths, Temp);
 
 	WeapStats.Icon = LoadObject<class UTexture2D>(this, *WeaponFilePaths.IconPath);
@@ -25,7 +25,7 @@ void AShortStrokeAR::WeaponSetup()
 	WeapStats.FireType = static_cast<EWeaponFireType>(Temp);
 }
 
-void AShortStrokeAR::WeaponFire()
+void AAK47::WeaponFire()
 {
 	Super::WeaponFire();
 
@@ -37,29 +37,30 @@ void AShortStrokeAR::WeaponFire()
 
 	FireQuat = FireTransform.GetRotation();
 
-	if (IsValid(WeaponAnimInstance))
+	if (IsValid(WeaponMesh->GetAnimInstance()))
 	{
-		WeaponFireTimer = WeaponAnimInstance->Montage_Play(WeaponFireMontage);
-
 		UGameplayStatics::SpawnSoundAttached(WeapStats.FireSound, WeaponMesh);
 
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.AmmoEject, EjectTransform.GetTranslation(), EjectQuat.Rotator());
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.FireFX, FireTransform.GetTranslation(), FireQuat.Rotator());
 
-		GetWorldTimerManager().SetTimer(WeaponFireTimerHandle, this, &AShortStrokeAR::ResetCanFire, WeaponFireTimer, false);
+		WeaponFireTimer = WeaponMesh->GetAnimInstance()->Montage_Play(WeaponFireMontage);
+
+		GetWorldTimerManager().SetTimer(WeaponFireTimerHandle, this, &AAK47::ResetCanFire, WeaponFireTimer, false);
 	}
 }
 
-void AShortStrokeAR::WeaponReload()
+void AAK47::WeaponReload()
 {
 }
 
-
-void AShortStrokeAR::ResetIsReloading()
+void AAK47::StopFire()
 {
+	bCanFire = true;
+	bCanReload = true;
 }
 
-void AShortStrokeAR::ResetCanFire()
+void AAK47::ResetCanFire()
 {
 	bCanFire = true;
 	bCanReload = true;

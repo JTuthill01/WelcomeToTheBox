@@ -4,6 +4,7 @@
 #include "Components/ActorComponent.h"
 #include "Enums/WeaponEnums/WeaponEnums.h"
 #include "Structs/WeaponData/Str_WeaponStats.h"
+#include "Structs/WeaponDataStrings/Str_WeaponStringData.h"
 #include "WeaponComponentParser.generated.h"
 
 
@@ -19,12 +20,7 @@ public:
 	FORCEINLINE void SetObjectData(FString InObjectString) { ObjectString = InObjectString; }
 
 public:
-	void WeaponParser();
-
-public:
-
-	UPROPERTY()
-	FWeaponDataStats WeaponData;
+	void WeaponParser(FWeaponDataStats& WeaponData, FWeaponStringData& OutString, uint8& OutFireType);
 
 private:
 	FString ObjectString;

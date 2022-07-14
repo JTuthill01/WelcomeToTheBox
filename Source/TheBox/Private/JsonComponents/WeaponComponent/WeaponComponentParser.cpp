@@ -4,10 +4,10 @@
 // Sets default values for this component's properties
 UWeaponComponentParser::UWeaponComponentParser() = default;
 
-void UWeaponComponentParser::WeaponParser()
+void UWeaponComponentParser::WeaponParser(FWeaponDataStats& WeaponData, FWeaponStringData& OutString, uint8& OutFireType)
 {
 	/* Creates a string ref to wherever the json file(s) are */
-	const FString JsonFilePath = FPaths::ProjectContentDir() + "/JsonFiles/Table.json";
+	const FString JsonFilePath = FPaths::ProjectContentDir() + "/JsonFiles/WeaponStatsTable.json";
 	FString JsonString; /* Json converted to FString */
 
 	FFileHelper::LoadFileToString(JsonString, *JsonFilePath); /* Remember to dereference file path */
@@ -26,6 +26,40 @@ void UWeaponComponentParser::WeaponParser()
 		WeaponData.CurrentMagTotal = DataObject->GetIntegerField("CurrentMagTotal");
 
 		WeaponData.MaxMagTotal = DataObject->GetIntegerField("MaxMagTotal");
+
+		WeaponData.CurrentTotalAmmo = DataObject->GetIntegerField("CurrentTotalAmmo");
+
+		WeaponData.MaxTotalAmmo = DataObject->GetIntegerField("MaxTotalAmmo");
+
+		WeaponData.LowAmmo = DataObject->GetIntegerField("LowAmmo");
+
+		WeaponData.CrosshairIndex = DataObject->GetIntegerField("CrosshairIndex");
+
+		WeaponData.WeaponIndex = DataObject->GetIntegerField("WeaponIndex");
+
+		WeaponData.DamageAmount = DataObject->GetNumberField("DamageAmount");
+
+		WeaponData.CriciticalHitChance = DataObject->GetNumberField("CriciticalHitChance");
+
+		WeaponData.DamageRadius = DataObject->GetNumberField("DamageRadius");
+
+		WeaponData.WeaponName = FName(*DataObject->GetStringField("WeaponName"));
+
+		OutString.IconPath = DataObject->GetStringField("Icon");
+
+		OutString.RackSlideSoundPath = DataObject->GetStringField("RackSlideSound");
+
+		OutString.MagOutSoundPath = DataObject->GetStringField("MagOutSound");
+
+		OutString.MagInSoundPath = DataObject->GetStringField("MagInSound");
+
+		OutString.FireSoundPath = DataObject->GetStringField("FireSound");
+
+		OutString.AmmoEjectPath = DataObject->GetStringField("AmmoEject");
+
+		OutString.FireFXPath = DataObject->GetStringField("FireFx");
+
+		OutFireType = DataObject->GetIntegerField("FireType");
 	}
 }
 

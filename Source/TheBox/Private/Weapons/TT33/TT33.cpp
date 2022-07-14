@@ -1,8 +1,29 @@
 #include "Weapons/TT33/TT33.h"
 #include "NiagaraFunctionLibrary.h"
-#include <Kismet/GameplayStatics.h>
+#include "Kismet/GameplayStatics.h"
+#include "JsonComponents/WeaponComponent/WeaponComponentParser.h"
 
 ATT33::ATT33() = default;
+
+void ATT33::WeaponSetup()
+{
+	Super::WeaponSetup();
+
+	uint8 Temp;
+
+	WeaponParser->SetObjectData("TT33");
+	WeaponParser->WeaponParser(WeapStats, WeaponFilePaths, Temp);
+
+	WeapStats.Icon = LoadObject<class UTexture2D>(this, *WeaponFilePaths.IconPath);
+	WeapStats.RackSlideSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.RackSlideSoundPath);
+	WeapStats.MagOutSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.MagOutSoundPath);
+	WeapStats.MagInSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.MagInSoundPath);
+	WeapStats.FireSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.FireSoundPath);
+	WeapStats.AmmoEject = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.AmmoEjectPath);
+	WeapStats.FireFX = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.FireFXPath);
+
+	WeapStats.FireType = static_cast<EWeaponFireType>(Temp);
+}
 
 void ATT33::WeaponFire()
 {
@@ -16,14 +37,14 @@ void ATT33::WeaponFire()
 
 	FireQuat = FireTransform.GetRotation();
 
-	if (WeaponAnimInstance)
+	if (IsValid(WeaponMesh->GetAnimInstance()))
 	{
-		UGameplayStatics::SpawnSoundAttached(FireSound, WeaponMesh);
+		UGameplayStatics::SpawnSoundAttached(WeapStats.FireSound, WeaponMesh);
 
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), AmmoEject, EjectTransform.GetTranslation(), EjectQuat.Rotator());
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), FireFX, FireTransform.GetTranslation(), FireQuat.Rotator());
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.AmmoEject, EjectTransform.GetTranslation(), EjectQuat.Rotator());
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.FireFX, FireTransform.GetTranslation(), FireQuat.Rotator());
 
-		WeaponFireTimer = WeaponAnimInstance->Montage_Play(WeaponFireMontage);
+		WeaponFireTimer = WeaponMesh->GetAnimInstance()->Montage_Play(WeaponFireMontage);
 
 		GetWorldTimerManager().SetTimer(WeaponFireTimerHandle, this, &ATT33::ResetCanFire, WeaponFireTimer, false);
 	}

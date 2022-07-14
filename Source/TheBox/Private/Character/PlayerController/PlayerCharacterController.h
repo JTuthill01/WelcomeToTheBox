@@ -49,6 +49,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Input)
 	UInputAction* SprintAction;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Input)
+	UInputAction* WeaponFireAction;
+
 	//Mapping Contexts//
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = InputMappings)
 	UInputMappingContext* BaseMappingContext;
@@ -64,6 +67,8 @@ protected:
 	void StopJump();
 	void Sprint();
 	void StopSprinting();
+	void FireWeapon();
+	void StopFiringWeapon();
 
 #pragma endregion
 
@@ -75,6 +80,6 @@ private:
 	float BaseSprintSpeed;
 
 private:
-	UPROPERTY();
+	UPROPERTY()
 	TObjectPtr<class APlayerCharacter> PlayerRef;
 };

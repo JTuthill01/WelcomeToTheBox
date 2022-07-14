@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Weapons/WeaponBase/WeaponBase.h"
 
 APlayerCharacterController::APlayerCharacterController() : BaseMovementSpeed(600.F), BaseSprintSpeed(800.F)
 {
@@ -42,6 +43,7 @@ void APlayerCharacterController::SetupInputComponent()
 	{
 		// PawnClientRestart can run more than once in an Actor's lifetime, so start by clearing out any leftover mappings.
 		Subsystem->ClearAllMappings();
+
 		// Add each mapping context, along with their priority values. Higher values out prioritize lower values.
 		Subsystem->AddMappingContext(BaseMappingContext, BaseMappingPriority);
 	}
@@ -58,6 +60,12 @@ void APlayerCharacterController::SetupInputComponent()
 		{
 			PlayerEnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &APlayerCharacterController::Sprint);
 			PlayerEnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &APlayerCharacterController::StopSprinting);
+		}
+
+		if (WeaponFireAction)
+		{
+			PlayerEnhancedInputComponent->BindAction(WeaponFireAction, ETriggerEvent::Started, this, &APlayerCharacterController::FireWeapon);
+			PlayerEnhancedInputComponent->BindAction(WeaponFireAction, ETriggerEvent::Completed, this, &APlayerCharacterController::StopFiringWeapon);
 		}
 
 		if (MovementAction)
@@ -98,6 +106,21 @@ void APlayerCharacterController::Interact()
 		PlayerRef->InteractWithObject();
 	}
 }
+
+void APlayerCharacterController::FireWeapon()
+{
+	bool bLocalCanFire = PlayerRef->GetCurrentWeapon()->GetCanFire();
+	bool bLocalMagHasAmmo = PlayerRef->GetCurrentWeapon()->MagHasAmmo();
+
+	if (bLocalCanFire == true && bLocalMagHasAmmo == true)
+	{
+		PlayerRef->GetCurrentWeapon()->WeaponFire();
+
+		PlayerRef->PlayerFireWeapon();
+	}
+}
+
+void APlayerCharacterController::StopFiringWeapon() { PlayerRef->GetCurrentWeapon()->StopFire(); }
 
 void APlayerCharacterController::Jump() { GetCharacter()->Jump(); }
 

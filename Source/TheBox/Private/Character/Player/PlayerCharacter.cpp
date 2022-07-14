@@ -43,6 +43,32 @@ void APlayerCharacter::Initialize()
 	GetWorldTimerManager().SetTimer(InteractableTraceTimerHandle, this, &APlayerCharacter::ScanForInteractables, InteractableTraceTimer, true);
 
 	HealthComponent->PlayerDeath.AddDynamic(this, &APlayerCharacter::PlayerDeath);
+
+	SpawnInitialWeapon();
+}
+
+void APlayerCharacter::SpawnInitialWeapon()
+{
+	FActorSpawnParameters Params;
+	Params.Owner = this;
+	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	FVector Location = Arms->GetComponentLocation();
+	FRotator Rotation = Arms->GetComponentRotation();
+
+	CurrentWeapon = GetWorld()->SpawnActor<AWeaponBase>(InitialWeaponToSpawn, Location, Rotation, Params);
+
+	if (IsValid(CurrentWeapon))
+	{
+		CurrentWeapon->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
+			CurrentWeapon->GetSocketName());
+
+		CurrentAmmoHUD = CurrentWeapon->GetCurrentAmmo();
+
+		MaxAmmoHUD = CurrentWeapon->GetCurrentTotalAmmo();
+
+		CurrentNameOfWeapon = CurrentWeapon->GetCurrentWeaponEnumName();
+	}
 }
 
 void APlayerCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -122,6 +148,13 @@ void APlayerCharacter::InteractWithObject()
 				IInteractInterface::Execute_InteractWithObject(HitResult.GetActor());
 		}
 	}
+}
+
+void APlayerCharacter::PlayerFireWeapon()
+{
+	int32 LocalIndex = CurrentWeapon->GetWeaponIndex();
+
+	Arms->GetAnimInstance()->Montage_Play(PlayerWeaponFireMontage[LocalIndex]);
 }
 
 APlayerCharacter* APlayerCharacter::SetPlayerRef_Implementation() { return this; }

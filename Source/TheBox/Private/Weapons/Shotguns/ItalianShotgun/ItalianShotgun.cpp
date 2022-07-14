@@ -1,17 +1,17 @@
-#include "Weapons/ShortStroke/ShortStrokeAR.h"
+#include "Weapons/Shotguns/ItalianShotgun/ItalianShotgun.h"
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
 #include "JsonComponents/WeaponComponent/WeaponComponentParser.h"
 
-AShortStrokeAR::AShortStrokeAR() = default;
+AItalianShotgun::AItalianShotgun() = default;
 
-void AShortStrokeAR::WeaponSetup()
+void AItalianShotgun::WeaponSetup()
 {
 	Super::WeaponSetup();
 
 	uint8 Temp;
 
-	WeaponParser->SetObjectData("ShortStrokeAR");
+	WeaponParser->SetObjectData("ItalianShotgun");
 	WeaponParser->WeaponParser(WeapStats, WeaponFilePaths, Temp);
 
 	WeapStats.Icon = LoadObject<class UTexture2D>(this, *WeaponFilePaths.IconPath);
@@ -25,7 +25,7 @@ void AShortStrokeAR::WeaponSetup()
 	WeapStats.FireType = static_cast<EWeaponFireType>(Temp);
 }
 
-void AShortStrokeAR::WeaponFire()
+void AItalianShotgun::WeaponFire()
 {
 	Super::WeaponFire();
 
@@ -45,24 +45,11 @@ void AShortStrokeAR::WeaponFire()
 
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.AmmoEject, EjectTransform.GetTranslation(), EjectQuat.Rotator());
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.FireFX, FireTransform.GetTranslation(), FireQuat.Rotator());
-
-		GetWorldTimerManager().SetTimer(WeaponFireTimerHandle, this, &AShortStrokeAR::ResetCanFire, WeaponFireTimer, false);
 	}
 }
 
-void AShortStrokeAR::WeaponReload()
+void AItalianShotgun::WeaponReload()
 {
+	Super::WeaponFire();
 }
 
-
-void AShortStrokeAR::ResetIsReloading()
-{
-}
-
-void AShortStrokeAR::ResetCanFire()
-{
-	bCanFire = true;
-	bCanReload = true;
-
-	GetWorldTimerManager().ClearTimer(WeaponFireTimerHandle);
-}

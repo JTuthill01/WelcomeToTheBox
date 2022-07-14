@@ -42,6 +42,13 @@ void AWeaponBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void AWeaponBase::OnConstruction(const FTransform& Transform)
+{
+	Super::OnConstruction(Transform);
+
+	WeaponSetup();
+}
+
 void AWeaponBase::BulletTrace(FHitResult& HitResult, FTransform& ProjectileTransform)
 {
 	if (!IsValid(PlayerRef))
@@ -130,7 +137,6 @@ void AWeaponBase::CreateImpactFX(FHitResult HitResult)
 
 void AWeaponBase::StopFire()
 {
-
 }
 
 void AWeaponBase::WeaponFire()
@@ -138,10 +144,12 @@ void AWeaponBase::WeaponFire()
 	bCanFire = false;
 	bCanReload = false;
 
-	CurrentMagTotal--;
+	WeapStats.CurrentMagTotal--;
 
-	if (CurrentMagTotal <= 0)
-		CurrentMagTotal = 0;
+	OnWeaponFire.Broadcast(WeapStats.CurrentMagTotal);
+
+	if (WeapStats.CurrentMagTotal <= 0)
+		WeapStats.CurrentMagTotal = 0;
 
 	FTransform ImpactTransform;
 	FHitResult ImpactResult;
@@ -150,14 +158,14 @@ void AWeaponBase::WeaponFire()
 	SpawnInfo.Owner = this;
 	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-	switch (FireType)
+	switch (WeapStats.FireType)
 	{
 	case EWeaponFireType::EWFT_None:
 		break;
 
 	case EWeaponFireType::EWFT_Hitscan:
 
-		NewTotalAmmo.Broadcast(CurrentMagTotal);
+		NewTotalAmmo.Broadcast(WeapStats.CurrentMagTotal);
 
 		BulletTrace(ImpactResult, ImpactTransform);
 
@@ -180,7 +188,7 @@ void AWeaponBase::WeaponFire()
 
 void AWeaponBase::WeaponReload()
 {
-	switch (FireType)
+	switch (WeapStats.FireType)
 	{
 	case EWeaponFireType::EWFT_None:
 		break;
@@ -199,6 +207,8 @@ void AWeaponBase::WeaponReload()
 	}
 }
 
-bool AWeaponBase::MagHasAmmo() { return CurrentMagTotal > 0; }
+bool AWeaponBase::MagHasAmmo() { return WeapStats.CurrentMagTotal > 0; }
 
-bool AWeaponBase::HasAmmoForReload() { return CurrentTotalAmmo > 0; }
+bool AWeaponBase::HasAmmoForReload() { return WeapStats.CurrentTotalAmmo > 0; }
+
+void AWeaponBase::WeaponSetup() {}
