@@ -9,10 +9,8 @@ void AAK47::WeaponSetup()
 {
 	Super::WeaponSetup();
 
-	uint8 Temp;
-
 	WeaponParser->SetObjectData("AK47");
-	WeaponParser->WeaponParser(WeapStats, WeaponFilePaths, Temp);
+	WeaponParser->WeaponParser(WeapStats, WeaponFilePaths);
 
 	WeapStats.Icon = LoadObject<class UTexture2D>(this, *WeaponFilePaths.IconPath);
 	WeapStats.RackSlideSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.RackSlideSoundPath);
@@ -22,7 +20,7 @@ void AAK47::WeaponSetup()
 	WeapStats.AmmoEject = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.AmmoEjectPath);
 	WeapStats.FireFX = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.FireFXPath);
 
-	WeapStats.FireType = static_cast<EWeaponFireType>(Temp);
+	WeapStats.FireType = static_cast<EWeaponFireType>(WeaponParser->UintToEnum);
 }
 
 void AAK47::WeaponFire()
@@ -37,7 +35,7 @@ void AAK47::WeaponFire()
 
 	FireQuat = FireTransform.GetRotation();
 
-	if (IsValid(WeaponMesh->GetAnimInstance()))
+	if (IsValid(WeaponAnimInstance))
 	{
 		UGameplayStatics::SpawnSoundAttached(WeapStats.FireSound, WeaponMesh);
 
@@ -46,24 +44,41 @@ void AAK47::WeaponFire()
 
 		WeaponFireTimer = WeaponMesh->GetAnimInstance()->Montage_Play(WeaponFireMontage);
 
-		GetWorldTimerManager().SetTimer(WeaponFireTimerHandle, this, &AAK47::ResetCanFire, WeaponFireTimer, false);
+		GetWorldTimerManager().SetTimer(WeaponFireTimerHandle, this, &AAK47::ResetCanFireOrCanReload, WeaponFireTimer, false);
 	}
 }
 
 void AAK47::WeaponReload()
 {
+	Super::WeaponReload();
+
+	if (IsValid(WeaponAnimInstance))
+	{
+		WeaponReloadTimer = WeaponAnimInstance->Montage_Play(WeaponReloadMontage);
+
+		GetWorldTimerManager().SetTimer(WeaponReloadTimerHandle, this, &AAK47::ResetCanFireOrCanReload, WeaponReloadTimer, false);
+	}
+
+	else
+		return;
 }
 
 void AAK47::StopFire()
 {
+	Super::StopFire();
+
 	bCanFire = true;
 	bCanReload = true;
+	bIsFiring = false;
 }
 
-void AAK47::ResetCanFire()
+void AAK47::ResetCanFireOrCanReload()
 {
 	bCanFire = true;
 	bCanReload = true;
+	bIsFiring = false;
 
 	GetWorldTimerManager().ClearTimer(WeaponFireTimerHandle);
+
+	GetWorldTimerManager().ClearTimer(WeaponReloadTimerHandle);
 }

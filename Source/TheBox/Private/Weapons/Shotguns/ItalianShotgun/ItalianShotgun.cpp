@@ -9,10 +9,8 @@ void AItalianShotgun::WeaponSetup()
 {
 	Super::WeaponSetup();
 
-	uint8 Temp;
-
 	WeaponParser->SetObjectData("ItalianShotgun");
-	WeaponParser->WeaponParser(WeapStats, WeaponFilePaths, Temp);
+	WeaponParser->WeaponParser(WeapStats, WeaponFilePaths);
 
 	WeapStats.Icon = LoadObject<class UTexture2D>(this, *WeaponFilePaths.IconPath);
 	WeapStats.RackSlideSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.RackSlideSoundPath);
@@ -21,8 +19,6 @@ void AItalianShotgun::WeaponSetup()
 	WeapStats.FireSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.FireSoundPath);
 	WeapStats.AmmoEject = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.AmmoEjectPath);
 	WeapStats.FireFX = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.FireFXPath);
-
-	WeapStats.FireType = static_cast<EWeaponFireType>(Temp);
 }
 
 void AItalianShotgun::WeaponFire()

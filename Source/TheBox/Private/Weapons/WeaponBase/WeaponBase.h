@@ -9,6 +9,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FUpdateCurrentTotalAmmo, int32, TotalAmmoCount);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWeaponFire, int32, Ammo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnWeaponReload, int32, CurrentMagAmount, int32, CurrentTotalAmmo);
 
 UCLASS()
 class AWeaponBase : public AActor
@@ -26,9 +27,9 @@ public:
 	FORCEINLINE EWeaponName GetCurrentWeaponEnumName() { return WeaponName; }
 	FORCEINLINE EWeaponFireType GetFireType() { return WeapStats.FireType; }
 
-	FORCEINLINE FName GetWeaponName() { return WeapStats.WeaponName; }
-
 	FORCEINLINE bool GetCanFire() { return bCanFire; }
+	FORCEINLINE bool GetCanReload() { return bCanReload; }
+	FORCEINLINE bool GetIsFiring() { return bIsFiring; }
 
 	FORCEINLINE int32 GetWeaponIndex() { return WeapStats.WeaponIndex; }
 	FORCEINLINE int32 GetCurrentAmmo() { return WeapStats.CurrentMagTotal; }
@@ -36,6 +37,9 @@ public:
 	FORCEINLINE int32 GetLowAmmo() { return WeapStats.LowAmmo; }
 
 #pragma endregion
+
+	UFUNCTION(BlueprintPure, BlueprintCallable)
+	FName GetWeaponName() { return WeapStats.WeaponName; }
 
 public:	
 	// Sets default values for this actor's properties
@@ -62,12 +66,17 @@ public:
 
 	bool HasAmmoForReload();
 
+	bool IsMagFull();
+
 public:
 	UPROPERTY(BlueprintAssignable)
 	FUpdateCurrentTotalAmmo NewTotalAmmo;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnWeaponFire OnWeaponFire;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnWeaponReload OnWeaponReload;
 
 protected:
 	// Called when the game starts or when spawned
@@ -85,6 +94,12 @@ protected:
 
 	UPROPERTY()
 	FWeaponStringData WeaponFilePaths;
+
+	UPROPERTY()
+	FTimerHandle WeaponFireTimerHandle;
+
+	UPROPERTY()
+	FTimerHandle WeaponReloadTimerHandle;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = WeaponMesh)
 	TObjectPtr<USkeletalMeshComponent> WeaponMesh;
@@ -111,6 +126,7 @@ protected:
 	bool bCanFire;
 	bool bCanReload;
 	bool bIsReloading;
+	bool bIsFiring;
 
 	FQuat EjectQuat;
 	FTransform EjectTransform;
@@ -119,8 +135,7 @@ protected:
 	FTransform FireTransform;
 
 	float WeaponFireTimer;
-
-	FTimerHandle WeaponFireTimerHandle;
+	float WeaponReloadTimer;
 
 private:
 	void BulletTrace(FHitResult& HitResult, FTransform& ProjectileTransform);

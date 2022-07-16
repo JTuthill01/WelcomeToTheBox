@@ -68,6 +68,9 @@ void APlayerCharacterController::SetupInputComponent()
 			PlayerEnhancedInputComponent->BindAction(WeaponFireAction, ETriggerEvent::Completed, this, &APlayerCharacterController::StopFiringWeapon);
 		}
 
+		if (WeaponReloadAction)
+			PlayerEnhancedInputComponent->BindAction(WeaponReloadAction, ETriggerEvent::Triggered, this, &APlayerCharacterController::WeaponReload);
+
 		if (MovementAction)
 			PlayerEnhancedInputComponent->BindAction(MovementAction, ETriggerEvent::Triggered, this, &APlayerCharacterController::Move);
 
@@ -118,6 +121,31 @@ void APlayerCharacterController::FireWeapon()
 
 		PlayerRef->PlayerFireWeapon();
 	}
+
+	else if (WeaponRef->HasAmmoForReload())
+		WeaponReload();
+}
+
+void APlayerCharacterController::WeaponReload()
+{
+	if (!IsValid(PlayerRef) || !IsValid(PlayerRef->GetCurrentWeapon()))
+		return;
+
+	bool LocalCanPlayerReload = PlayerRef->GetCurrentWeapon()->GetCanReload();
+	bool LocalIsPlayerFiring = PlayerRef->GetCurrentWeapon()->GetIsFiring();
+
+	if (LocalCanPlayerReload && !LocalIsPlayerFiring)
+	{
+		if (PlayerRef->GetCurrentWeapon()->HasAmmoForReload() && !PlayerRef->GetCurrentWeapon()->IsMagFull())
+		{
+			PlayerRef->PlayerReloadWeapon();
+
+			PlayerRef->GetCurrentWeapon()->WeaponReload();
+		}
+	}
+
+	else
+		return;
 }
 
 void APlayerCharacterController::StopFiringWeapon() { PlayerRef->GetCurrentWeapon()->StopFire(); }

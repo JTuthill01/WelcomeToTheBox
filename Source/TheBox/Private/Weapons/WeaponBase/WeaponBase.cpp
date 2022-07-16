@@ -5,13 +5,12 @@
 #include "Character/Player/PlayerCharacter.h"
 #include "Interfaces/Player/PlayerCharacterInterface.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Engine/DataTable.h"
 #include "Structs/WeaponData/Str_WeaponStats.h"
 #include "ImpactPhysicalMaterial/ImpactPhysicalMaterial.h"
 #include "JsonComponents/WeaponComponent/WeaponComponentParser.h"
 
 // Sets default values
-AWeaponBase::AWeaponBase() : SocketName(NAME_None), bCanFire(true), bCanReload(true), bIsReloading(false), EjectQuat(FQuat(0.F)), FireQuat(FQuat(0.F)), WeaponFireTimer(0.F)
+AWeaponBase::AWeaponBase() : SocketName(NAME_None), bCanFire(true), bCanReload(true), bIsReloading(false), bIsFiring(false), EjectQuat(FQuat(0.F)), FireQuat(FQuat(0.F)), WeaponFireTimer(0.F), WeaponReloadTimer(0.F)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
@@ -135,14 +134,11 @@ void AWeaponBase::CreateImpactFX(FHitResult HitResult)
 	}
 }
 
-void AWeaponBase::StopFire()
-{
-}
-
 void AWeaponBase::WeaponFire()
 {
 	bCanFire = false;
 	bCanReload = false;
+	bIsFiring = true;
 
 	WeapStats.CurrentMagTotal--;
 
@@ -183,32 +179,31 @@ void AWeaponBase::WeaponFire()
 	default:
 		break;
 	}
-	
 }
 
 void AWeaponBase::WeaponReload()
 {
-	switch (WeapStats.FireType)
-	{
-	case EWeaponFireType::EWFT_None:
-		break;
+	bCanFire = false;
 
-	case EWeaponFireType::EWFT_Hitscan:
-		break;
+	bCanReload = false;
 
-	case EWeaponFireType::EWFT_Projectile:
-		break;
+	WeapStats.CurrentTotalAmmo -= WeapStats.MaxMagTotal - WeapStats.CurrentMagTotal;
 
-	case EWeaponFireType::EWFT_SpreadScan:
-		break;
+	WeapStats.CurrentMagTotal = UKismetMathLibrary::Min(WeapStats.MaxMagTotal, WeapStats.CurrentTotalAmmo);
 
-	default:
-		break;
-	}
+	WeapStats.CurrentMagTotal = FMath::Clamp(WeapStats.CurrentMagTotal, 0, WeapStats.MaxMagTotal);
+
+	WeapStats.CurrentTotalAmmo = FMath::Clamp(WeapStats.CurrentTotalAmmo, 0, WeapStats.MaxTotalAmmo);
+
+	OnWeaponReload.Broadcast(WeapStats.CurrentMagTotal, WeapStats.CurrentTotalAmmo);
 }
 
 bool AWeaponBase::MagHasAmmo() { return WeapStats.CurrentMagTotal > 0; }
 
 bool AWeaponBase::HasAmmoForReload() { return WeapStats.CurrentTotalAmmo > 0; }
 
+bool AWeaponBase::IsMagFull() { return WeapStats.CurrentMagTotal >= WeapStats.MaxMagTotal; }
+
 void AWeaponBase::WeaponSetup() {}
+
+void AWeaponBase::StopFire() {}

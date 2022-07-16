@@ -40,6 +40,9 @@ void APlayerCharacter::Tick(float DeltaTime)
 
 void APlayerCharacter::Initialize()
 {
+	if (IsValid(Arms))
+		PlayerAnimInstance = Arms->GetAnimInstance();
+
 	GetWorldTimerManager().SetTimer(InteractableTraceTimerHandle, this, &APlayerCharacter::ScanForInteractables, InteractableTraceTimer, true);
 
 	HealthComponent->PlayerDeath.AddDynamic(this, &APlayerCharacter::PlayerDeath);
@@ -154,7 +157,22 @@ void APlayerCharacter::PlayerFireWeapon()
 {
 	int32 LocalIndex = CurrentWeapon->GetWeaponIndex();
 
-	Arms->GetAnimInstance()->Montage_Play(PlayerWeaponFireMontage[LocalIndex]);
+	if (PlayerWeaponFireMontage.IsValidIndex(LocalIndex))
+		PlayerAnimInstance->Montage_Play(PlayerWeaponFireMontage[LocalIndex]);
+
+	else
+		return;
+}
+
+void APlayerCharacter::PlayerReloadWeapon()
+{
+	int32 LocalIndex = CurrentWeapon->GetWeaponIndex();
+
+	if (PlayerWeaponReloadMontage.IsValidIndex(LocalIndex))
+		PlayerAnimInstance->Montage_Play(PlayerWeaponReloadMontage[LocalIndex]);
+
+	else
+		return;
 }
 
 APlayerCharacter* APlayerCharacter::SetPlayerRef_Implementation() { return this; }

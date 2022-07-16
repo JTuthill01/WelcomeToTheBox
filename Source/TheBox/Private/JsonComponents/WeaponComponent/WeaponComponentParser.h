@@ -7,7 +7,6 @@
 #include "Structs/WeaponDataStrings/Str_WeaponStringData.h"
 #include "WeaponComponentParser.generated.h"
 
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UWeaponComponentParser : public UActorComponent
 {
@@ -20,7 +19,10 @@ public:
 	FORCEINLINE void SetObjectData(FString InObjectString) { ObjectString = InObjectString; }
 
 public:
-	void WeaponParser(FWeaponDataStats& WeaponData, FWeaponStringData& OutString, uint8& OutFireType);
+	void WeaponParser(FWeaponDataStats& WeaponData, FWeaponStringData& OutString);
+
+public:
+	uint8 UintToEnum;
 
 private:
 	FString ObjectString;

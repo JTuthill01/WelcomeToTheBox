@@ -53,6 +53,9 @@ public:
 	UFUNCTION()
 	void PlayerFireWeapon();
 
+	UFUNCTION()
+	void PlayerReloadWeapon();
+
 protected:
 	//Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -61,8 +64,10 @@ private:
 	UFUNCTION()
 	void PlayerDeath();
 
-private:
+	UFUNCTION()
 	void ScanForInteractables();
+
+private:
 	void Initialize();
 
 public:
@@ -70,6 +75,9 @@ public:
 	FOnClearViewport Clear;
 
 private:
+	UPROPERTY()
+	TObjectPtr<UAnimInstance> PlayerAnimInstance;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UCameraComponent> Camera;
 
@@ -88,6 +96,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Montages, meta = (AllowPrivateAccess = "true"))
 	TArray<TObjectPtr<UAnimMontage>> PlayerWeaponFireMontage;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Montages, meta = (AllowPrivateAccess = "true"))
+	TArray<TObjectPtr<UAnimMontage>> PlayerWeaponReloadMontage;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Colors, meta = (AllowPrivateAccess = "true"))
 	FCustomColors UserColors;
 
@@ -104,7 +115,9 @@ private:
 	void SpawnInitialWeapon();
 
 private:
+	UPROPERTY()
 	float InteractableTraceTimer;
 
+	UPROPERTY()
 	FTimerHandle InteractableTraceTimerHandle;
 };

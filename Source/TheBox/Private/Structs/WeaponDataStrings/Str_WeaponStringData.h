@@ -20,4 +20,6 @@ struct FWeaponStringData
 	FString AmmoEjectPath;
 
 	FString FireFXPath;
+
+	FString StringToInt;
 };
