@@ -43,12 +43,82 @@ struct FCustomColorsFromHex
 		return FColor::FromHex(TEXT("556B2F"));
 	}
 
+	FORCEINLINE static FColor DarkForestGreen()
+	{
+		return FColor::FromHex(TEXT("254117"));
+	}
+
+	FORCEINLINE static FColor ShamrockGreen()
+	{
+		return FColor::FromHex(TEXT("347C17"));
+	}
+
+	FORCEINLINE static FColor NeonGreen()
+	{
+		return FColor::FromHex(TEXT("16F529"));
+	}
+
+	FORCEINLINE static FColor NeonYellow()
+	{
+		return FColor::FromHex(TEXT("FFFF33"));
+	}
+
+	FORCEINLINE static FColor NeonOrange()
+	{
+		return FColor::FromHex(TEXT("FF6700"));
+	}
+
+	FORCEINLINE static FColor NeonPurple()
+	{
+		return FColor::FromHex(TEXT("9D00FF"));
+	}
+
 	FORCEINLINE static FColor DarkPurple()
 	{
 		return FColor::FromHex(TEXT("452F6B"));
 	}
 
-    static FORCEINLINE FColor CreateUndefined(FColor& OutColor, FString InHexString)
+	FORCEINLINE static FColor RubberDuckyYellow()
+	{
+		return FColor::FromHex(TEXT("FFD801"));
+	}
+
+	FORCEINLINE static FColor OrangeRed()
+	{
+		return FColor::FromHex(TEXT("FF4500"));
+	}
+
+	FORCEINLINE static FColor RedWine()
+	{
+		return FColor::FromHex(TEXT("990012"));
+	}
+
+	FORCEINLINE static FColor DarkRed()
+	{
+		return FColor::FromHex(TEXT("8B0000"));
+	}
+
+	FORCEINLINE static FColor BloodNight()
+	{
+		return FColor::FromHex(TEXT("551606"));
+	}
+
+	FORCEINLINE static FColor DeepPurple()
+	{
+		return FColor::FromHex(TEXT("36013F"));
+	}
+
+	FORCEINLINE static FColor PurpleMonster()
+	{
+		return FColor::FromHex(TEXT("461B7E"));
+	}
+
+	FORCEINLINE static FColor RichLilac()
+	{
+		return FColor::FromHex(TEXT("B666D2"));
+	}
+
+    FORCEINLINE static FColor CreateUndefined(FColor& OutColor, FString InHexString)
     {
         OutColor = FColor::FromHex(InHexString);
 

@@ -10,6 +10,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FUpdateCurrentTotalAmmo, int32, TotalAmmoCount);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWeaponFire, int32, Ammo);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnWeaponReload, int32, CurrentMagAmount, int32, CurrentTotalAmmo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnShotgunReload, int32, CurrentAmount, int32, CurrentTotal);
 
 UCLASS()
 class AWeaponBase : public AActor
@@ -30,6 +31,7 @@ public:
 	FORCEINLINE bool GetCanFire() { return bCanFire; }
 	FORCEINLINE bool GetCanReload() { return bCanReload; }
 	FORCEINLINE bool GetIsFiring() { return bIsFiring; }
+	FORCEINLINE bool GetIsWeaponShotgun() { return bIsWeaponShotgun; }
 
 	FORCEINLINE int32 GetWeaponIndex() { return WeapStats.WeaponIndex; }
 	FORCEINLINE int32 GetCurrentAmmo() { return WeapStats.CurrentMagTotal; }
@@ -40,6 +42,12 @@ public:
 
 	UFUNCTION(BlueprintPure, BlueprintCallable)
 	FName GetWeaponName() { return WeapStats.WeaponName; }
+
+	UFUNCTION(BlueprintPure, BlueprintCallable)
+	int32 GetWeaponIndexBP() { return WeapStats.WeaponIndex; }
+
+	UFUNCTION(BlueprintPure, BlueprintCallable)
+	int32 GetCrosshairIndex() { return WeapStats.CrosshairIndex; }
 
 public:	
 	// Sets default values for this actor's properties
@@ -61,6 +69,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void WeaponReload();
 
+	UFUNCTION()
+	virtual void ShotgunReloadStart();
+
 public:
 	bool MagHasAmmo();
 
@@ -78,12 +89,22 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnWeaponReload OnWeaponReload;
 
+	UPROPERTY(BlueprintAssignable)
+	FOnShotgunReload OnShotgunReload;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
 	virtual void WeaponSetup();
+
+	UFUNCTION()
+	virtual void ShotgunReloadLoop();
+
+	UFUNCTION()
+	virtual void ShotgunReloadEnd();
+
 
 protected:
 	UPROPERTY()
@@ -100,6 +121,9 @@ protected:
 
 	UPROPERTY()
 	FTimerHandle WeaponReloadTimerHandle;
+
+	UPROPERTY()
+	FTimerHandle ShotgunReloadTimerHandle;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = WeaponMesh)
 	TObjectPtr<USkeletalMeshComponent> WeaponMesh;
@@ -127,6 +151,7 @@ protected:
 	bool bCanReload;
 	bool bIsReloading;
 	bool bIsFiring;
+	bool bIsWeaponShotgun;
 
 	FQuat EjectQuat;
 	FTransform EjectTransform;
@@ -136,6 +161,12 @@ protected:
 
 	float WeaponFireTimer;
 	float WeaponReloadTimer;
+
+	uint8 InUintToEnum;
+
+	uint8 ShotgunReloadStartIndex;
+	uint8 ShotgunReloadLoopIndex;
+	uint8 ShotgunReloadEndIndex;
 
 private:
 	void BulletTrace(FHitResult& HitResult, FTransform& ProjectileTransform);

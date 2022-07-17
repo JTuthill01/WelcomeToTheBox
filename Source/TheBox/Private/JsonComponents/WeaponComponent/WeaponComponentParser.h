@@ -19,7 +19,7 @@ public:
 	FORCEINLINE void SetObjectData(FString InObjectString) { ObjectString = InObjectString; }
 
 public:
-	void WeaponParser(FWeaponDataStats& WeaponData, FWeaponStringData& OutString);
+	void WeaponParser(FWeaponDataStats& WeaponData, FWeaponStringData& OutString, uint8& OutUintToEnum);
 
 public:
 	uint8 UintToEnum;

@@ -30,6 +30,7 @@ public:
 	FORCEINLINE TObjectPtr<class UCameraComponent> GetPlayerCamera() { return Camera; }
 	FORCEINLINE TObjectPtr<class UPlayerHealthComponent> GetHealthComponent() { return HealthComponent; }
 	FORCEINLINE TObjectPtr<class AWeaponBase> GetCurrentWeapon() { return CurrentWeapon; }
+	FORCEINLINE TObjectPtr<UAnimInstance> GetPlayerAnimInstance() { return PlayerAnimInstance; }
 
 #pragma endregion
 
@@ -73,6 +74,9 @@ private:
 public:
 	UPROPERTY(BlueprintAssignable)
 	FOnClearViewport Clear;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = ShotgunMontages)
+	TArray<TObjectPtr<class UAnimMontage>>ItalianReloadMonatge;
 
 private:
 	UPROPERTY()

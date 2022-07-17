@@ -10,7 +10,7 @@ void AShortStrokeAR::WeaponSetup()
 	Super::WeaponSetup();
 
 	WeaponParser->SetObjectData("ShortStrokeAR");
-	WeaponParser->WeaponParser(WeapStats, WeaponFilePaths);
+	WeaponParser->WeaponParser(WeapStats, WeaponFilePaths, InUintToEnum);
 
 	WeapStats.Icon = LoadObject<class UTexture2D>(this, *WeaponFilePaths.IconPath);
 	WeapStats.RackSlideSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.RackSlideSoundPath);
@@ -19,6 +19,8 @@ void AShortStrokeAR::WeaponSetup()
 	WeapStats.FireSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.FireSoundPath);
 	WeapStats.AmmoEject = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.AmmoEjectPath);
 	WeapStats.FireFX = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.FireFXPath);
+
+	WeapStats.FireType = static_cast<EWeaponFireType>(InUintToEnum);
 }
 
 void AShortStrokeAR::WeaponFire()

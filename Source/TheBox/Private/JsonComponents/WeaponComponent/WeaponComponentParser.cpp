@@ -4,7 +4,7 @@
 // Sets default values for this component's properties
 UWeaponComponentParser::UWeaponComponentParser() = default;
 
-void UWeaponComponentParser::WeaponParser(FWeaponDataStats& WeaponData, FWeaponStringData& OutString)
+void UWeaponComponentParser::WeaponParser(FWeaponDataStats& WeaponData, FWeaponStringData& OutString, uint8& OutUintToEnum)
 {
 	/* Creates a string ref to wherever the json file(s) are */
 	const FString JsonFilePath = FPaths::ProjectContentDir() + "/JsonFiles/WeaponStatsTable.json";
@@ -59,7 +59,7 @@ void UWeaponComponentParser::WeaponParser(FWeaponDataStats& WeaponData, FWeaponS
 
 		OutString.FireFXPath = DataObject->GetStringField("FireFx");
 
-		UintToEnum = DataObject->GetNumberField("FireType");
+		OutUintToEnum = DataObject->GetNumberField("FireType");
 	}
 }
 

@@ -6,11 +6,13 @@
 #include "Interfaces/Player/PlayerCharacterInterface.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Structs/WeaponData/Str_WeaponStats.h"
+#include "Structs/HexColors/Str_CustomHexColors.h"
 #include "ImpactPhysicalMaterial/ImpactPhysicalMaterial.h"
 #include "JsonComponents/WeaponComponent/WeaponComponentParser.h"
 
 // Sets default values
-AWeaponBase::AWeaponBase() : SocketName(NAME_None), bCanFire(true), bCanReload(true), bIsReloading(false), bIsFiring(false), EjectQuat(FQuat(0.F)), FireQuat(FQuat(0.F)), WeaponFireTimer(0.F), WeaponReloadTimer(0.F)
+AWeaponBase::AWeaponBase() : SocketName(NAME_None), bCanFire(true), bCanReload(true), bIsReloading(false), bIsFiring(false), bIsWeaponShotgun(false), EjectQuat(FQuat(0.F)), FireQuat(FQuat(0.F)), 
+	WeaponFireTimer(0.F), WeaponReloadTimer(0.F), InUintToEnum(0), ShotgunReloadStartIndex(0), ShotgunReloadLoopIndex(1), ShotgunReloadEndIndex(2)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
@@ -197,6 +199,12 @@ void AWeaponBase::WeaponReload()
 
 	OnWeaponReload.Broadcast(WeapStats.CurrentMagTotal, WeapStats.CurrentTotalAmmo);
 }
+
+void AWeaponBase::ShotgunReloadStart(){}
+
+void AWeaponBase::ShotgunReloadLoop() {}
+
+void AWeaponBase::ShotgunReloadEnd() {}
 
 bool AWeaponBase::MagHasAmmo() { return WeapStats.CurrentMagTotal > 0; }
 

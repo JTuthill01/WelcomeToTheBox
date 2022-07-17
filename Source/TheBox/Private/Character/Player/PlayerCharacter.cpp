@@ -171,8 +171,6 @@ void APlayerCharacter::PlayerReloadWeapon()
 	if (PlayerWeaponReloadMontage.IsValidIndex(LocalIndex))
 		PlayerAnimInstance->Montage_Play(PlayerWeaponReloadMontage[LocalIndex]);
 
-	else
-		return;
 }
 
 APlayerCharacter* APlayerCharacter::SetPlayerRef_Implementation() { return this; }

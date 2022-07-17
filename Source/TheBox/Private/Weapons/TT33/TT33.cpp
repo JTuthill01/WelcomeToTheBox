@@ -10,7 +10,7 @@ void ATT33::WeaponSetup()
 	Super::WeaponSetup();
 
 	WeaponParser->SetObjectData("TT33");
-	WeaponParser->WeaponParser(WeapStats, WeaponFilePaths);
+	WeaponParser->WeaponParser(WeapStats, WeaponFilePaths, InUintToEnum);
 
 	WeapStats.Icon = LoadObject<class UTexture2D>(this, *WeaponFilePaths.IconPath);
 	WeapStats.RackSlideSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.RackSlideSoundPath);

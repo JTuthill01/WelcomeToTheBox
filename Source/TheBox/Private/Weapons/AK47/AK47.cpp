@@ -10,7 +10,7 @@ void AAK47::WeaponSetup()
 	Super::WeaponSetup();
 
 	WeaponParser->SetObjectData("AK47");
-	WeaponParser->WeaponParser(WeapStats, WeaponFilePaths);
+	WeaponParser->WeaponParser(WeapStats, WeaponFilePaths, InUintToEnum);
 
 	WeapStats.Icon = LoadObject<class UTexture2D>(this, *WeaponFilePaths.IconPath);
 	WeapStats.RackSlideSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.RackSlideSoundPath);
@@ -20,7 +20,7 @@ void AAK47::WeaponSetup()
 	WeapStats.AmmoEject = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.AmmoEjectPath);
 	WeapStats.FireFX = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.FireFXPath);
 
-	WeapStats.FireType = static_cast<EWeaponFireType>(WeaponParser->UintToEnum);
+	WeapStats.FireType = static_cast<EWeaponFireType>(InUintToEnum);
 }
 
 void AAK47::WeaponFire()

@@ -131,21 +131,31 @@ void APlayerCharacterController::WeaponReload()
 	if (!IsValid(PlayerRef) || !IsValid(PlayerRef->GetCurrentWeapon()))
 		return;
 
-	bool LocalCanPlayerReload = PlayerRef->GetCurrentWeapon()->GetCanReload();
-	bool LocalIsPlayerFiring = PlayerRef->GetCurrentWeapon()->GetIsFiring();
+	const bool bIsShotgun = PlayerRef->GetCurrentWeapon()->GetIsWeaponShotgun();
+	const bool LocalCanPlayerReload = PlayerRef->GetCurrentWeapon()->GetCanReload();
+	const bool LocalIsPlayerFiring = PlayerRef->GetCurrentWeapon()->GetIsFiring();
 
-	if (LocalCanPlayerReload && !LocalIsPlayerFiring)
+	if (bIsShotgun == false)
 	{
-		if (PlayerRef->GetCurrentWeapon()->HasAmmoForReload() && !PlayerRef->GetCurrentWeapon()->IsMagFull())
+		if (LocalCanPlayerReload && !LocalIsPlayerFiring)
 		{
-			PlayerRef->PlayerReloadWeapon();
+			if (PlayerRef->GetCurrentWeapon()->HasAmmoForReload() && !PlayerRef->GetCurrentWeapon()->IsMagFull())
+			{
+				PlayerRef->PlayerReloadWeapon();
 
-			PlayerRef->GetCurrentWeapon()->WeaponReload();
+				PlayerRef->GetCurrentWeapon()->WeaponReload();
+			}
 		}
 	}
 
-	else
-		return;
+	else if (bIsShotgun == true)
+	{
+		if (LocalCanPlayerReload && !LocalIsPlayerFiring)
+		{
+			if (PlayerRef->GetCurrentWeapon()->HasAmmoForReload() && !PlayerRef->GetCurrentWeapon()->IsMagFull())
+				PlayerRef->GetCurrentWeapon()->ShotgunReloadStart();
+		}
+	}
 }
 
 void APlayerCharacterController::StopFiringWeapon() { PlayerRef->GetCurrentWeapon()->StopFire(); }

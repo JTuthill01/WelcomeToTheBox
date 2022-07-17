@@ -22,4 +22,16 @@ struct FCustomColors
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	FLinearColor PlainRed = FLinearColor::FromSRGBColor(FColor::FromHex(TEXT("FF0000")));
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	FLinearColor Platinum = FLinearColor::FromSRGBColor(FColor::FromHex(TEXT("E5E4E2")));
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	FLinearColor GrayGoose = FLinearColor::FromSRGBColor(FColor::FromHex(TEXT("D1D0CE")));
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	FLinearColor JetGray = FLinearColor::FromSRGBColor(FColor::FromHex(TEXT("616D7E")));
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	FLinearColor LightWhite = FLinearColor::FromSRGBColor(FColor::FromHex(TEXT("FFFFF7")));
 };
