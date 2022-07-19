@@ -23,8 +23,6 @@ void AItalianShotgun::WeaponSetup()
 	WeapStats.FireFX = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.FireFXPath);
 
 	WeapStats.FireType = static_cast<EWeaponFireType>(InUintToEnum);
-
-	bIsWeaponShotgun = true;
 }
 
 void AItalianShotgun::BeginPlay()

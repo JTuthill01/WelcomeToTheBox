@@ -6,12 +6,17 @@
 #include "Interfaces/Player/PlayerCharacterInterface.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Structs/WeaponData/Str_WeaponStats.h"
-#include "Structs/HexColors/Str_CustomHexColors.h"
 #include "ImpactPhysicalMaterial/ImpactPhysicalMaterial.h"
 #include "JsonComponents/WeaponComponent/WeaponComponentParser.h"
+#include "Structs/HexColors/Str_CustomHexColors.h"
+#include "DrawDebugHelpers.h"
+
+#define CAMERA_FORWARD PlayerRef->GetPlayerCamera()->GetForwardVector()
+#define CAMERA_RIGHT PlayerRef->GetPlayerCamera()->GetRightVector()
+#define CAMERA_UP PlayerRef->GetPlayerCamera()->GetUpVector()
 
 // Sets default values
-AWeaponBase::AWeaponBase() : SocketName(NAME_None), bCanFire(true), bCanReload(true), bIsReloading(false), bIsFiring(false), bIsWeaponShotgun(false), EjectQuat(FQuat(0.F)), FireQuat(FQuat(0.F)), 
+AWeaponBase::AWeaponBase() : SocketName(NAME_None), ShotgunPellets(6), Range(4'500), SpreadAngle(22.6F), bCanFire(true), bCanReload(true), bIsReloading(false), bIsFiring(false), EjectQuat(FQuat(0.F)), FireQuat(FQuat(0.F)),
 	WeaponFireTimer(0.F), WeaponReloadTimer(0.F), InUintToEnum(0), ShotgunReloadStartIndex(0), ShotgunReloadLoopIndex(1), ShotgunReloadEndIndex(2)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -19,6 +24,7 @@ AWeaponBase::AWeaponBase() : SocketName(NAME_None), bCanFire(true), bCanReload(t
 
 	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Weapon Mesh"));
 	WeaponMesh->SetCastShadow(false);
+	WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	WeaponMesh->bReturnMaterialOnMove = true;
 
 	WeaponParser = CreateDefaultSubobject<UWeaponComponentParser>(TEXT("Weapon Parser"));
@@ -62,13 +68,14 @@ void AWeaponBase::BulletTrace(FHitResult& HitResult, FTransform& ProjectileTrans
 
 	TArray<AActor*> ActorsToIgnore;
 	ActorsToIgnore.Add(UGameplayStatics::GetPlayerController(PlayerRef, 0));
+	ActorsToIgnore.Add(PlayerRef);
 	ActorsToIgnore.Add(this);
 
 	TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjects;
 	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldStatic));
 	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldDynamic));
 
-	const bool bHasBeenHit = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), Start, End, TraceObjects, true, ActorsToIgnore, EDrawDebugTrace::None, HitResult, true);
+	const bool bHasBeenHit = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), Start, End, TraceObjects, true, ActorsToIgnore, EDrawDebugTrace::None, HitResult, false);
 
 	FVector Translation = HitResult.Location;
 	FVector SocketLocation = WeaponMesh->GetSocketLocation(FName("Fire_FX_Slot"));
@@ -163,8 +170,6 @@ void AWeaponBase::WeaponFire()
 
 	case EWeaponFireType::EWFT_Hitscan:
 
-		NewTotalAmmo.Broadcast(WeapStats.CurrentMagTotal);
-
 		BulletTrace(ImpactResult, ImpactTransform);
 
 		if (ImpactResult.bBlockingHit)
@@ -176,10 +181,48 @@ void AWeaponBase::WeaponFire()
 		break;
 
 	case EWeaponFireType::EWFT_SpreadScan:
+
+		ShotgunCone();
+
 		break;
 
 	default:
 		break;
+	}
+}
+
+void AWeaponBase::ShotgunCone()
+{
+	if (!IsValid(PlayerRef))
+		return;
+
+	FVector Start{ PlayerRef->GetPlayerCamera()->GetRelativeLocation() };
+
+	TArray<AActor*> ActorsToIgnore;
+	ActorsToIgnore.Add(UGameplayStatics::GetPlayerController(PlayerRef, 0));
+	ActorsToIgnore.Add(PlayerRef);
+	ActorsToIgnore.Add(this);
+
+	TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjects;
+	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldStatic));
+	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldDynamic));
+
+	FHitResult Result;
+
+	for (int32 i = 1; i < ShotgunPellets; ++i)
+	{
+		float Temp = Range * (UKismetMathLibrary::DegTan(SpreadAngle));
+
+		FVector2D Focii = RandPointInCircle(Temp);
+
+		FVector FociiX{ CAMERA_RIGHT * Focii.X };
+
+		FVector FociiY{ CAMERA_UP * Focii.Y };
+
+		FVector End{ (CAMERA_FORWARD * 10'000.F) + Start + FociiY };
+
+		const bool bTrace = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), Start, End, TraceObjects, true, ActorsToIgnore, EDrawDebugTrace::ForDuration, Result, true, 
+			FLinearColor::FromSRGBColor(FCustomColorsFromHex::ShamrockGreen()));
 	}
 }
 
@@ -200,17 +243,31 @@ void AWeaponBase::WeaponReload()
 	OnWeaponReload.Broadcast(WeapStats.CurrentMagTotal, WeapStats.CurrentTotalAmmo);
 }
 
-void AWeaponBase::ShotgunReloadStart(){}
+FVector2D AWeaponBase::RandPointInCircle(float Radius)
+{
+	float FullCircle = 360.F;
+	float Angle = UKismetMathLibrary::RandomFloatInRange(NULL, FullCircle);
+	float DistanceFromFocus = UKismetMathLibrary::RandomFloatInRange(NULL, Radius);
 
-void AWeaponBase::ShotgunReloadLoop() {}
+	float X = DistanceFromFocus * (UKismetMathLibrary::DegCos(Angle));
+	float Y = DistanceFromFocus * (UKismetMathLibrary::DegSin(Angle));
 
-void AWeaponBase::ShotgunReloadEnd() {}
+	FVector2D OutResult { X, Y };
+
+	return OutResult;
+}
 
 bool AWeaponBase::MagHasAmmo() { return WeapStats.CurrentMagTotal > 0; }
 
 bool AWeaponBase::HasAmmoForReload() { return WeapStats.CurrentTotalAmmo > 0; }
 
 bool AWeaponBase::IsMagFull() { return WeapStats.CurrentMagTotal >= WeapStats.MaxMagTotal; }
+
+void AWeaponBase::ShotgunReloadStart() {}
+
+void AWeaponBase::ShotgunReloadLoop() {}
+
+void AWeaponBase::ShotgunReloadEnd() {}
 
 void AWeaponBase::WeaponSetup() {}
 

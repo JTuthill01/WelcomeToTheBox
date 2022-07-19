@@ -42,22 +42,40 @@ void ATT33::WeaponFire()
 
 		WeaponFireTimer = WeaponMesh->GetAnimInstance()->Montage_Play(WeaponFireMontage);
 
-		GetWorldTimerManager().SetTimer(WeaponFireTimerHandle, this, &ATT33::ResetCanFire, WeaponFireTimer, false);
+		GetWorldTimerManager().SetTimer(WeaponFireTimerHandle, this, &ATT33::ResetCanFireOrReload, WeaponFireTimer, false);
 	}
 }
 
 void ATT33::WeaponReload()
 {
+	Super::WeaponReload();
+
+	if (IsValid(WeaponAnimInstance))
+	{
+		WeaponReloadTimer = WeaponAnimInstance->Montage_Play(WeaponReloadMontage);
+
+		GetWorldTimerManager().SetTimer(WeaponReloadTimerHandle, this, &ATT33::ResetCanFireOrReload, WeaponReloadTimer, false);
+	}
+
+	else
+		return;
 }
 
 void ATT33::StopFire()
 {
+	Super::StopFire();
+
+	bCanFire = true;
+	bCanReload = true;
+	bIsFiring = false;
 }
 
-void ATT33::ResetCanFire()
+void ATT33::ResetCanFireOrReload()
 {
 	bCanFire = true;
 	bCanReload = true;
+	bIsFiring = false;
 
 	GetWorldTimerManager().ClearTimer(WeaponFireTimerHandle);
+	GetWorldTimerManager().ClearTimer(WeaponReloadTimerHandle);
 }

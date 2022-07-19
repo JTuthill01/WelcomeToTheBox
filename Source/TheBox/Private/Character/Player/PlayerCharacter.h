@@ -29,8 +29,10 @@ public:
 	FORCEINLINE TObjectPtr<USkeletalMeshComponent> GetPlayerArms() { return Arms; }
 	FORCEINLINE TObjectPtr<class UCameraComponent> GetPlayerCamera() { return Camera; }
 	FORCEINLINE TObjectPtr<class UPlayerHealthComponent> GetHealthComponent() { return HealthComponent; }
-	FORCEINLINE TObjectPtr<class AWeaponBase> GetCurrentWeapon() { return CurrentWeapon; }
 	FORCEINLINE TObjectPtr<UAnimInstance> GetPlayerAnimInstance() { return PlayerAnimInstance; }
+
+	UFUNCTION(BlueprintPure, BlueprintCallable)
+	FORCEINLINE class AWeaponBase* GetCurrentWeapon() { return CurrentWeapon; }
 
 #pragma endregion
 

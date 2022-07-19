@@ -9,6 +9,8 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Weapons/WeaponBase/WeaponBase.h"
+#include "Enums/WeaponEnums/WeaponEnums.h"
+#include "Structs/HexColors/Str_CustomHexColors.h"
 
 APlayerCharacterController::APlayerCharacterController() : BaseMovementSpeed(600.F), BaseSprintSpeed(800.F)
 {
@@ -122,7 +124,7 @@ void APlayerCharacterController::FireWeapon()
 		PlayerRef->PlayerFireWeapon();
 	}
 
-	else if (WeaponRef->HasAmmoForReload())
+	else if (PlayerRef->GetCurrentWeapon()->HasAmmoForReload())
 		WeaponReload();
 }
 
@@ -131,11 +133,18 @@ void APlayerCharacterController::WeaponReload()
 	if (!IsValid(PlayerRef) || !IsValid(PlayerRef->GetCurrentWeapon()))
 		return;
 
-	const bool bIsShotgun = PlayerRef->GetCurrentWeapon()->GetIsWeaponShotgun();
+	EWeaponName WeaponNameEnum = PlayerRef->GetCurrentWeapon()->GetCurrentWeaponEnumName();
+
 	const bool LocalCanPlayerReload = PlayerRef->GetCurrentWeapon()->GetCanReload();
 	const bool LocalIsPlayerFiring = PlayerRef->GetCurrentWeapon()->GetIsFiring();
 
-	if (bIsShotgun == false)
+	if (WeaponNameEnum == EWeaponName::EWN_Bulldog || WeaponNameEnum == EWeaponName::EWN_AmericanShotgun || WeaponNameEnum == EWeaponName::EWN_ItalianShotgun)
+	{
+		if (PlayerRef->GetCurrentWeapon()->HasAmmoForReload() && !PlayerRef->GetCurrentWeapon()->IsMagFull())
+			PlayerRef->GetCurrentWeapon()->ShotgunReloadStart();
+	}
+
+	else
 	{
 		if (LocalCanPlayerReload && !LocalIsPlayerFiring)
 		{
@@ -145,15 +154,6 @@ void APlayerCharacterController::WeaponReload()
 
 				PlayerRef->GetCurrentWeapon()->WeaponReload();
 			}
-		}
-	}
-
-	else if (bIsShotgun == true)
-	{
-		if (LocalCanPlayerReload && !LocalIsPlayerFiring)
-		{
-			if (PlayerRef->GetCurrentWeapon()->HasAmmoForReload() && !PlayerRef->GetCurrentWeapon()->IsMagFull())
-				PlayerRef->GetCurrentWeapon()->ShotgunReloadStart();
 		}
 	}
 }

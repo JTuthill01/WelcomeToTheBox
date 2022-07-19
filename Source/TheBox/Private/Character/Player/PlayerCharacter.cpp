@@ -6,6 +6,8 @@
 #include "Weapons/WeaponBase/WeaponBase.h"
 #include "Character/HealthComponent/PlayerHealthComponent.h"
 #include "Interfaces/Interact/InteractInterface.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Structs/HexColors/Str_CustomHexColors.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter() : InteractableTraceTimer(0.25F)
@@ -171,6 +173,8 @@ void APlayerCharacter::PlayerReloadWeapon()
 	if (PlayerWeaponReloadMontage.IsValidIndex(LocalIndex))
 		PlayerAnimInstance->Montage_Play(PlayerWeaponReloadMontage[LocalIndex]);
 
+	else
+		return;
 }
 
 APlayerCharacter* APlayerCharacter::SetPlayerRef_Implementation() { return this; }

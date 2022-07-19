@@ -23,5 +23,5 @@ protected:
 	virtual void WeaponSetup() override;
 
 private:
-	void ResetCanFire();
+	void ResetCanFireOrReload();
 };

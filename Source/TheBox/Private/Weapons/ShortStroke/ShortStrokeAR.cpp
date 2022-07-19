@@ -44,23 +44,41 @@ void AShortStrokeAR::WeaponFire()
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.AmmoEject, EjectTransform.GetTranslation(), EjectQuat.Rotator());
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.FireFX, FireTransform.GetTranslation(), FireQuat.Rotator());
 
-		GetWorldTimerManager().SetTimer(WeaponFireTimerHandle, this, &AShortStrokeAR::ResetCanFire, WeaponFireTimer, false);
+		GetWorldTimerManager().SetTimer(WeaponFireTimerHandle, this, &AShortStrokeAR::ResetCanFireOrReload, WeaponFireTimer, false);
 	}
 }
 
 void AShortStrokeAR::WeaponReload()
 {
+	Super::WeaponReload();
+
+	if (IsValid(WeaponAnimInstance))
+	{
+		WeaponReloadTimer = WeaponAnimInstance->Montage_Play(WeaponReloadMontage);
+
+		GetWorldTimerManager().SetTimer(WeaponReloadTimerHandle, this, &AShortStrokeAR::ResetCanFireOrReload, WeaponReloadTimer, false);
+	}
+
+	else
+		return;
 }
 
 
-void AShortStrokeAR::ResetIsReloading()
+void AShortStrokeAR::StopFire()
 {
+	Super::StopFire();
+
+	bCanFire = true;
+	bCanReload = true;
+	bIsFiring = false;
 }
 
-void AShortStrokeAR::ResetCanFire()
+
+void AShortStrokeAR::ResetCanFireOrReload()
 {
 	bCanFire = true;
 	bCanReload = true;
+	bIsFiring = false;
 
 	GetWorldTimerManager().ClearTimer(WeaponFireTimerHandle);
 }

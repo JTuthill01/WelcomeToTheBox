@@ -31,7 +31,6 @@ public:
 	FORCEINLINE bool GetCanFire() { return bCanFire; }
 	FORCEINLINE bool GetCanReload() { return bCanReload; }
 	FORCEINLINE bool GetIsFiring() { return bIsFiring; }
-	FORCEINLINE bool GetIsWeaponShotgun() { return bIsWeaponShotgun; }
 
 	FORCEINLINE int32 GetWeaponIndex() { return WeapStats.WeaponIndex; }
 	FORCEINLINE int32 GetCurrentAmmo() { return WeapStats.CurrentMagTotal; }
@@ -48,6 +47,9 @@ public:
 
 	UFUNCTION(BlueprintPure, BlueprintCallable)
 	int32 GetCrosshairIndex() { return WeapStats.CrosshairIndex; }
+
+	UFUNCTION(BlueprintPure, BlueprintCallable)
+	EWeaponName GetCurrentWeaponEnumNameBP() { return WeaponName; }
 
 public:	
 	// Sets default values for this actor's properties
@@ -92,6 +94,9 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnShotgunReload OnShotgunReload;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WeaponStats)
+	FWeaponDataStats WeapStats;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -104,7 +109,6 @@ protected:
 
 	UFUNCTION()
 	virtual void ShotgunReloadEnd();
-
 
 protected:
 	UPROPERTY()
@@ -137,21 +141,26 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Animation)
 	TObjectPtr<UAnimMontage> WeaponReloadMontage;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WeaponStats)
-	FWeaponDataStats WeapStats;
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Enums)
 	EWeaponName WeaponName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WeaponSocketName)
 	FName SocketName;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = ShotgunBalistics)
+	int32 ShotgunPellets;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = ShotgunBalistics)
+	int32 Range;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = ShotgunBalistics)
+	float SpreadAngle;
+
 protected:
 	bool bCanFire;
 	bool bCanReload;
 	bool bIsReloading;
 	bool bIsFiring;
-	bool bIsWeaponShotgun;
 
 	FQuat EjectQuat;
 	FTransform EjectTransform;
@@ -161,6 +170,7 @@ protected:
 
 	float WeaponFireTimer;
 	float WeaponReloadTimer;
+	
 
 	uint8 InUintToEnum;
 
@@ -172,4 +182,8 @@ private:
 	void BulletTrace(FHitResult& HitResult, FTransform& ProjectileTransform);
 
 	void CreateImpactFX(FHitResult HitResult);
+
+	void ShotgunCone();
+
+	FVector2D RandPointInCircle(float Radius);
 };
