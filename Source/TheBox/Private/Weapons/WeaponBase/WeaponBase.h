@@ -39,6 +39,8 @@ public:
 
 #pragma endregion
 
+#pragma region Blueprint Getters
+
 	UFUNCTION(BlueprintPure, BlueprintCallable)
 	FName GetWeaponName() { return WeapStats.WeaponName; }
 
@@ -50,6 +52,8 @@ public:
 
 	UFUNCTION(BlueprintPure, BlueprintCallable)
 	EWeaponName GetCurrentWeaponEnumNameBP() { return WeaponName; }
+
+#pragma endregion
 
 public:	
 	// Sets default values for this actor's properties
@@ -156,6 +160,22 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = ShotgunBalistics)
 	float SpreadAngle;
 
+#pragma region Reids Tutorial Variables
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = RShotgunBalistics)
+	float BulletAngle;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = RShotgunBalistics)
+	float StartingBulletAngle;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = RShotgunBalistics)
+	int32 BulletRange;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = RShotgunBalistics)
+	int32 NumBB;
+
+#pragma endregion
+
 protected:
 	bool bCanFire;
 	bool bCanReload;
@@ -183,7 +203,5 @@ private:
 
 	void CreateImpactFX(FHitResult HitResult);
 
-	void ShotgunCone();
-
-	FVector2D RandPointInCircle(float Radius);
+	void ShotgunFire(int32 InShotgunPelletCount, FHitResult& OutResult);
 };

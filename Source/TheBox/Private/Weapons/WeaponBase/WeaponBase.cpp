@@ -11,13 +11,9 @@
 #include "Structs/HexColors/Str_CustomHexColors.h"
 #include "DrawDebugHelpers.h"
 
-#define CAMERA_FORWARD PlayerRef->GetPlayerCamera()->GetForwardVector()
-#define CAMERA_RIGHT PlayerRef->GetPlayerCamera()->GetRightVector()
-#define CAMERA_UP PlayerRef->GetPlayerCamera()->GetUpVector()
-
 // Sets default values
-AWeaponBase::AWeaponBase() : SocketName(NAME_None), ShotgunPellets(6), Range(4'500), SpreadAngle(22.6F), bCanFire(true), bCanReload(true), bIsReloading(false), bIsFiring(false), EjectQuat(FQuat(0.F)), FireQuat(FQuat(0.F)),
-	WeaponFireTimer(0.F), WeaponReloadTimer(0.F), InUintToEnum(0), ShotgunReloadStartIndex(0), ShotgunReloadLoopIndex(1), ShotgunReloadEndIndex(2)
+AWeaponBase::AWeaponBase() : SocketName(NAME_None), ShotgunPellets(6), Range(4'500), SpreadAngle(4.445F), BulletAngle(0.F), StartingBulletAngle(5.F), BulletRange(10'000), NumBB(8), bCanFire(true), bCanReload(true), bIsReloading(false), bIsFiring(false), EjectQuat(FQuat(0.F)),
+	FireQuat(FQuat(0.F)), WeaponFireTimer(0.F), WeaponReloadTimer(0.F), InUintToEnum(0), ShotgunReloadStartIndex(0), ShotgunReloadLoopIndex(1), ShotgunReloadEndIndex(2)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
@@ -67,7 +63,6 @@ void AWeaponBase::BulletTrace(FHitResult& HitResult, FTransform& ProjectileTrans
 	FVector Scale = FVector(1.F);
 
 	TArray<AActor*> ActorsToIgnore;
-	ActorsToIgnore.Add(UGameplayStatics::GetPlayerController(PlayerRef, 0));
 	ActorsToIgnore.Add(PlayerRef);
 	ActorsToIgnore.Add(this);
 
@@ -75,7 +70,7 @@ void AWeaponBase::BulletTrace(FHitResult& HitResult, FTransform& ProjectileTrans
 	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldStatic));
 	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldDynamic));
 
-	const bool bHasBeenHit = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), Start, End, TraceObjects, true, ActorsToIgnore, EDrawDebugTrace::None, HitResult, false);
+	const bool bHasBeenHit = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), Start, End, TraceObjects, true, ActorsToIgnore, EDrawDebugTrace::None, HitResult, true);
 
 	FVector Translation = HitResult.Location;
 	FVector SocketLocation = WeaponMesh->GetSocketLocation(FName("Fire_FX_Slot"));
@@ -182,7 +177,11 @@ void AWeaponBase::WeaponFire()
 
 	case EWeaponFireType::EWFT_SpreadScan:
 
-		ShotgunCone();
+		ShotgunFire(ShotgunPellets, ImpactResult);
+
+		if (ImpactResult.bBlockingHit)
+			for (int32 i = 1; i < ShotgunPellets; ++i)
+				CreateImpactFX(ImpactResult);
 
 		break;
 
@@ -191,38 +190,32 @@ void AWeaponBase::WeaponFire()
 	}
 }
 
-void AWeaponBase::ShotgunCone()
+void AWeaponBase::ShotgunFire(int32 InShotgunPelletCount, FHitResult& OutResult)
 {
-	if (!IsValid(PlayerRef))
-		return;
-
-	FVector Start{ PlayerRef->GetPlayerCamera()->GetRelativeLocation() };
-
-	TArray<AActor*> ActorsToIgnore;
-	ActorsToIgnore.Add(UGameplayStatics::GetPlayerController(PlayerRef, 0));
-	ActorsToIgnore.Add(PlayerRef);
-	ActorsToIgnore.Add(this);
-
-	TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjects;
-	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldStatic));
-	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldDynamic));
-
-	FHitResult Result;
-
-	for (int32 i = 1; i < ShotgunPellets; ++i)
+	for (int32 i = 1; i < InShotgunPelletCount; ++i)
 	{
-		float Temp = Range * (UKismetMathLibrary::DegTan(SpreadAngle));
+		FVector SocketLocation = WeaponMesh->GetSocketLocation(FName("Fire_FX_Slot"));
 
-		FVector2D Focii = RandPointInCircle(Temp);
+		UE_LOG(LogTemp, Warning, TEXT("Socket Location: %s"), *SocketLocation.ToString());
 
-		FVector FociiX{ CAMERA_RIGHT * Focii.X };
+		GEngine->AddOnScreenDebugMessage(-1, 8.F, FCustomColorsFromHex::RubberDuckyYellow(), TEXT("Socket Location: ") + SocketLocation.ToString());
 
-		FVector FociiY{ CAMERA_UP * Focii.Y };
+		FVector TempVectorX = UKismetMathLibrary::RandomUnitVectorInConeInDegrees(-GetActorForwardVector(), SpreadAngle);
 
-		FVector End{ (CAMERA_FORWARD * 10'000.F) + Start + FociiY };
+		FVector TempVectorY = TempVectorX * Range;
 
-		const bool bTrace = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), Start, End, TraceObjects, true, ActorsToIgnore, EDrawDebugTrace::ForDuration, Result, true, 
-			FLinearColor::FromSRGBColor(FCustomColorsFromHex::ShamrockGreen()));
+		FVector EndVector = TempVectorY + SocketLocation;
+
+		TArray<AActor*> ActorsToIgnore;
+		ActorsToIgnore.Add(UGameplayStatics::GetPlayerController(PlayerRef, 0));
+		ActorsToIgnore.Add(PlayerRef);
+		ActorsToIgnore.Add(this);
+
+		TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjects;
+		TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldStatic));
+		TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldDynamic));
+
+		const bool bIsHit = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), SocketLocation, EndVector, TraceObjects, true, ActorsToIgnore, EDrawDebugTrace::ForDuration, OutResult, true);
 	}
 }
 
@@ -241,20 +234,6 @@ void AWeaponBase::WeaponReload()
 	WeapStats.CurrentTotalAmmo = FMath::Clamp(WeapStats.CurrentTotalAmmo, 0, WeapStats.MaxTotalAmmo);
 
 	OnWeaponReload.Broadcast(WeapStats.CurrentMagTotal, WeapStats.CurrentTotalAmmo);
-}
-
-FVector2D AWeaponBase::RandPointInCircle(float Radius)
-{
-	float FullCircle = 360.F;
-	float Angle = UKismetMathLibrary::RandomFloatInRange(NULL, FullCircle);
-	float DistanceFromFocus = UKismetMathLibrary::RandomFloatInRange(NULL, Radius);
-
-	float X = DistanceFromFocus * (UKismetMathLibrary::DegCos(Angle));
-	float Y = DistanceFromFocus * (UKismetMathLibrary::DegSin(Angle));
-
-	FVector2D OutResult { X, Y };
-
-	return OutResult;
 }
 
 bool AWeaponBase::MagHasAmmo() { return WeapStats.CurrentMagTotal > 0; }
