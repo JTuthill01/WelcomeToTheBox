@@ -14,6 +14,7 @@ void UPlayerHealthComponent::BeginPlay()
 	Super::BeginPlay();
 
 	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UPlayerHealthComponent::TakeDamage);
+	GetOwner()->OnTakeRadialDamage.AddDynamic(this, &UPlayerHealthComponent::TakeRadialDamage);
 }
 
 // Called every frame
@@ -70,6 +71,13 @@ void UPlayerHealthComponent::ChangeHealthAndArmor(float ChangeAmount)
 }
 
 void UPlayerHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
+{
+	ChangeHealthAndArmor(Damage);
+
+	PlayerHealthAndArmorUpdate.Broadcast(CurrentArmor, CurrentHealth);
+}
+
+void UPlayerHealthComponent::TakeRadialDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, FVector Origin, FHitResult HitInfo, AController* InstigatedBy, AActor* DamageCauser)
 {
 	ChangeHealthAndArmor(Damage);
 

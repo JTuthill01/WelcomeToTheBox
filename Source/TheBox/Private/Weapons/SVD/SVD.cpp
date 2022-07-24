@@ -56,7 +56,7 @@ void ASVD::WeaponReload()
 	{
 		WeaponReloadTimer = WeaponAnimInstance->Montage_Play(WeaponReloadMontage);
 
-		GetWorldTimerManager().SetTimer(WeaponReloadTimerHandle, this, &AAK47::ResetCanFireOrCanReload, WeaponReloadTimer, false);
+		GetWorldTimerManager().SetTimer(WeaponReloadTimerHandle, this, &ASVD::ResetCanFireOrCanReload, WeaponReloadTimer, false);
 	}
 
 	else

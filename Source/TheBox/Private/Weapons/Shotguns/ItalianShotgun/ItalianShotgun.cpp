@@ -4,6 +4,9 @@
 #include "JsonComponents/WeaponComponent/WeaponComponentParser.h"
 #include "Character/Player/PlayerCharacter.h"
 #include "Interfaces/Player/PlayerCharacterInterface.h"
+#include "Structs/HexColors/Str_CustomHexColors.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "DrawDebugHelpers.h"
 
 AItalianShotgun::AItalianShotgun() = default;
 

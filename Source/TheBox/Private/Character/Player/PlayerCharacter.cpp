@@ -16,7 +16,7 @@ APlayerCharacter::APlayerCharacter() : InteractableTraceTimer(0.25F)
 	PrimaryActorTick.bCanEverTick = false;
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-	Camera->SetupAttachment(GetRootComponent());
+	Camera->SetupAttachment(RootComponent);
 	Camera->bUsePawnControlRotation = true;
 
 	Arms = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Arms"));

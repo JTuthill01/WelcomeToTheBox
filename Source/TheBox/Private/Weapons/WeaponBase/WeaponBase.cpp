@@ -12,20 +12,22 @@
 #include "DrawDebugHelpers.h"
 
 // Sets default values
-AWeaponBase::AWeaponBase() : SocketName(NAME_None), ShotgunPellets(6), Range(4'500), SpreadAngle(4.445F), BulletAngle(0.F), StartingBulletAngle(5.F), BulletRange(10'000), NumBB(8), bCanFire(true), bCanReload(true), bIsReloading(false), bIsFiring(false), EjectQuat(FQuat(0.F)),
+AWeaponBase::AWeaponBase() : SocketName(NAME_None), ShotgunPellets(6), Range(4'500), SpreadAngle(8.89F), bCanFire(true), bCanReload(true), bIsReloading(false), bIsFiring(false), EjectQuat(FQuat(0.F)),
 	FireQuat(FQuat(0.F)), WeaponFireTimer(0.F), WeaponReloadTimer(0.F), InUintToEnum(0), ShotgunReloadStartIndex(0), ShotgunReloadLoopIndex(1), ShotgunReloadEndIndex(2)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
+	WeaponRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Weapon Root"));
+	SetRootComponent(WeaponRoot);
+
 	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Weapon Mesh"));
 	WeaponMesh->SetCastShadow(false);
 	WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	WeaponMesh->bReturnMaterialOnMove = true;
+	WeaponMesh->SetupAttachment(WeaponRoot);
 
 	WeaponParser = CreateDefaultSubobject<UWeaponComponentParser>(TEXT("Weapon Parser"));
-
-	SetRootComponent(WeaponMesh);
 }
 
 // Called when the game starts or when spawned
@@ -180,8 +182,7 @@ void AWeaponBase::WeaponFire()
 		ShotgunFire(ShotgunPellets, ImpactResult);
 
 		if (ImpactResult.bBlockingHit)
-			for (int32 i = 1; i < ShotgunPellets; ++i)
-				CreateImpactFX(ImpactResult);
+			CreateImpactFX(ImpactResult);
 
 		break;
 
@@ -194,20 +195,11 @@ void AWeaponBase::ShotgunFire(int32 InShotgunPelletCount, FHitResult& OutResult)
 {
 	for (int32 i = 1; i < InShotgunPelletCount; ++i)
 	{
-		FVector SocketLocation = WeaponMesh->GetSocketLocation(FName("Fire_FX_Slot"));
-
-		UE_LOG(LogTemp, Warning, TEXT("Socket Location: %s"), *SocketLocation.ToString());
-
-		GEngine->AddOnScreenDebugMessage(-1, 8.F, FCustomColorsFromHex::RubberDuckyYellow(), TEXT("Socket Location: ") + SocketLocation.ToString());
-
-		FVector TempVectorX = UKismetMathLibrary::RandomUnitVectorInConeInDegrees(-GetActorForwardVector(), SpreadAngle);
-
-		FVector TempVectorY = TempVectorX * Range;
-
-		FVector EndVector = TempVectorY + SocketLocation;
+		FVector Start{ WeaponMesh->GetSocketLocation("Fire_FX_Slot") };
+		FVector Middle{ (UKismetMathLibrary::RandomUnitVectorInConeInDegrees(-GetActorForwardVector(), SpreadAngle)) * Range };
+		FVector End{ Start + Middle };
 
 		TArray<AActor*> ActorsToIgnore;
-		ActorsToIgnore.Add(UGameplayStatics::GetPlayerController(PlayerRef, 0));
 		ActorsToIgnore.Add(PlayerRef);
 		ActorsToIgnore.Add(this);
 
@@ -215,7 +207,34 @@ void AWeaponBase::ShotgunFire(int32 InShotgunPelletCount, FHitResult& OutResult)
 		TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldStatic));
 		TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldDynamic));
 
-		const bool bIsHit = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), SocketLocation, EndVector, TraceObjects, true, ActorsToIgnore, EDrawDebugTrace::ForDuration, OutResult, true);
+		const bool bHasHit = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), Start, End, TraceObjects, true, ActorsToIgnore, EDrawDebugTrace::None, OutResult, true);
+	}
+}
+
+void AWeaponBase::ShotgunFire_Radians(int32 InShotgunPelletCount, FHitResult& OutResult)
+{
+	for (int32 i = 0; i < InShotgunPelletCount; ++i)
+	{
+		FVector Start{ WeaponMesh->GetSocketLocation("Fire_FX_Slot") };
+
+		const float LocalSpread = FMath::DegreesToRadians(SpreadAngle * 0.5f);
+
+		FRotator SocketRot = WeaponMesh->GetSocketRotation("Fire_FX_Slot");
+
+		FVector End;
+
+		End = Start + FMath::VRandCone(SocketRot.Vector(), LocalSpread, LocalSpread) * Range;
+
+		TArray<AActor*> ActorsToIgnore;
+		ActorsToIgnore.Add(PlayerRef);
+		ActorsToIgnore.Add(this);
+
+		TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjects;
+		TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldStatic));
+		TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldDynamic));
+
+		const bool bHasHit = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), Start, End, TraceObjects, true, ActorsToIgnore, EDrawDebugTrace::ForDuration, OutResult, true, 
+			FLinearColor::FromSRGBColor(FCustomColorsFromHex::NeonOrange()));
 	}
 }
 

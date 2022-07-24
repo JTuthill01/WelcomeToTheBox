@@ -32,6 +32,9 @@ public:
 	FORCEINLINE bool GetCanReload() { return bCanReload; }
 	FORCEINLINE bool GetIsFiring() { return bIsFiring; }
 
+	FORCEINLINE float GetDamageRadius() { return WeapStats.DamageRadius; }
+	FORCEINLINE float GetDamageAmount() { return WeapStats.DamageAmount; }
+
 	FORCEINLINE int32 GetWeaponIndex() { return WeapStats.WeaponIndex; }
 	FORCEINLINE int32 GetCurrentAmmo() { return WeapStats.CurrentMagTotal; }
 	FORCEINLINE int32 GetCurrentTotalAmmo() { return WeapStats.CurrentTotalAmmo; }
@@ -133,16 +136,19 @@ protected:
 	UPROPERTY()
 	FTimerHandle ShotgunReloadTimerHandle;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = WeaponRoot)
+	TObjectPtr<class USceneComponent> WeaponRoot;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = WeaponMesh)
 	TObjectPtr<USkeletalMeshComponent> WeaponMesh;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Parser)
 	TObjectPtr<class UWeaponComponentParser> WeaponParser;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Animation)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
 	TObjectPtr<UAnimMontage> WeaponFireMontage;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Animation)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
 	TObjectPtr<UAnimMontage> WeaponReloadMontage;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Enums)
@@ -160,22 +166,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = ShotgunBalistics)
 	float SpreadAngle;
 
-#pragma region Reids Tutorial Variables
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = RShotgunBalistics)
-	float BulletAngle;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = RShotgunBalistics)
-	float StartingBulletAngle;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = RShotgunBalistics)
-	int32 BulletRange;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = RShotgunBalistics)
-	int32 NumBB;
-
-#pragma endregion
-
 protected:
 	bool bCanFire;
 	bool bCanReload;
@@ -190,7 +180,6 @@ protected:
 
 	float WeaponFireTimer;
 	float WeaponReloadTimer;
-	
 
 	uint8 InUintToEnum;
 
@@ -204,4 +193,6 @@ private:
 	void CreateImpactFX(FHitResult HitResult);
 
 	void ShotgunFire(int32 InShotgunPelletCount, FHitResult& OutResult);
+
+	void ShotgunFire_Radians(int32 InShotgunPelletCount, FHitResult& OutResult);
 };
