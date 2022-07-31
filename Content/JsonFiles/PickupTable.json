@@ -1,0 +1,47 @@
+[
+	{
+		"Name": "HealthSmall",
+		"PickupMesh": "StaticMesh'/Game/FirstAidKit/Models/SM_pillsJar.SM_pillsJar'",
+		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/MI_Health.MI_Health'",
+		"PickupName": "HealthPackSmall",
+		"PickupWidgetText": "NSLOCTEXT(\"[AFDC6636459DA1140FED83B1FC3270BD]\", \"3910B1C44F5308D688AFCDBACE35AE8E\", \"Health +10\")",
+		"PickupType": "EPT_Health",
+		"PickupHealthType": "EPH_HealthSmall",
+		"PickupAmmoType": "EPA_None",
+		"HealthPackValue": 10,
+		"ArmorValue": 0,
+		"PistolAmmoValue": 0,
+		"RifleAmmoValue": 0,
+		"ShotgunAmmoValue": 0
+	},
+	{
+		"Name": "HealthMedium",
+		"PickupMesh": "StaticMesh'/Game/FirstAidKit/Models/SM_FirstAidPackMilitary.SM_FirstAidPackMilitary'",
+		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/MI_DHearts.MI_DHearts'",
+		"PickupName": "HealthPackMedium",
+		"PickupWidgetText": "NSLOCTEXT(\"[AFDC6636459DA1140FED83B1FC3270BD]\", \"A27DD73A4DD2D0F4A6EEB68A17DCD3FF\", \"Health +20\")",
+		"PickupType": "EPT_Health",
+		"PickupHealthType": "EPH_HealthMedium",
+		"PickupAmmoType": "EPA_None",
+		"HealthPackValue": 20,
+		"ArmorValue": 0,
+		"PistolAmmoValue": 0,
+		"RifleAmmoValue": 0,
+		"ShotgunAmmoValue": 0
+	},
+	{
+		"Name": "HealthLarge",
+		"PickupMesh": "StaticMesh'/Game/First_Aid_Health_Kit/Meshes/SM_FirstAidKit1_03.SM_FirstAidKit1_03'",
+		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/MI_HealthLarge.MI_HealthLarge'",
+		"PickupName": "HealthPackLarge",
+		"PickupWidgetText": "NSLOCTEXT(\"[AFDC6636459DA1140FED83B1FC3270BD]\", \"24409F0D4CC7E358EA01959F4A50DD19\", \"Health +50\")",
+		"PickupType": "EPT_Health",
+		"PickupHealthType": "EPH_HealthLarge",
+		"PickupAmmoType": "EPA_None",
+		"HealthPackValue": 50,
+		"ArmorValue": 0,
+		"PistolAmmoValue": 0,
+		"RifleAmmoValue": 0,
+		"ShotgunAmmoValue": 0
+	}
+]
