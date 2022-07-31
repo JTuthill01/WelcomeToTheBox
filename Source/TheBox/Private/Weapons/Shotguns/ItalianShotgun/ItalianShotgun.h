@@ -12,9 +12,6 @@ class AItalianShotgun : public AWeaponBase
 public:
 	AItalianShotgun();
 
-public:
-	virtual void Tick(float DeltaTime) override;
-
 protected:
 	virtual void BeginPlay() override;
 
@@ -29,8 +26,6 @@ protected:
 	virtual void ShotgunReloadEnd() override;
 
 private:
-	void ResetReload(float DeltaTime);
-
 	void UpdateReloadAmmo();
 
 private:

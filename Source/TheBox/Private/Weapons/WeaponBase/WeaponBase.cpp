@@ -9,14 +9,13 @@
 #include "ImpactPhysicalMaterial/ImpactPhysicalMaterial.h"
 #include "JsonComponents/WeaponComponent/WeaponComponentParser.h"
 #include "Structs/HexColors/Str_CustomHexColors.h"
-#include "DrawDebugHelpers.h"
 
 // Sets default values
 AWeaponBase::AWeaponBase() : SocketName(NAME_None), ShotgunPellets(6), Range(4'500), SpreadAngle(8.89F), bIsReloading(false), bIsFiring(false), EjectQuat(FQuat(0.F)),
 	FireQuat(FQuat(0.F)), WeaponFireTimer(0.F), WeaponReloadTimer(0.F), InUintToEnum(0), ShotgunReloadStartIndex(0), ShotgunReloadLoopIndex(1), ShotgunReloadEndIndex(2)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	WeaponRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Weapon Root"));
 	SetRootComponent(WeaponRoot);
@@ -42,8 +41,6 @@ void AWeaponBase::BeginPlay()
 void AWeaponBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	ResetFireOrReload(DeltaTime);
 }
 
 void AWeaponBase::OnConstruction(const FTransform& Transform)
@@ -222,36 +219,19 @@ void AWeaponBase::ShotgunFireMulti(int32 InShotgunPelletCount)
 	}
 }
 
-void AWeaponBase::ResetFireOrReload(float DeltaTime)
-{
-	if (!WeaponAnimInstance->Montage_IsPlaying(WeaponFireMontage))
-		bIsFiring = false;
-
-	else
-		bIsFiring = true;
-
-	if (!WeaponAnimInstance->Montage_IsPlaying(WeaponReloadMontage))
-		bIsReloading = false;
-
-	else
-		bIsReloading = true;
-}
-
 bool AWeaponBase::MagHasAmmo() { return WeapStats.CurrentMagTotal > 0; }
 
 bool AWeaponBase::HasAmmoForReload() { return WeapStats.CurrentTotalAmmo > 0; }
 
 bool AWeaponBase::IsMagFull() { return WeapStats.CurrentMagTotal >= WeapStats.MaxMagTotal; }
 
-bool AWeaponBase::CanWeaponFire() { return !bIsFiring && !bIsReloading && WeapStats.CurrentMagTotal > 0; }
+bool AWeaponBase::CanFireOrReload() { return !WeaponAnimInstance->Montage_IsPlaying(WeaponFireMontage) && !WeaponAnimInstance->Montage_IsPlaying(WeaponReloadMontage); }
 
-bool AWeaponBase::CanWeaponReload() { return !bIsReloading && !bIsFiring && WeapStats.CurrentTotalAmmo > 0 && WeapStats.CurrentMagTotal < WeapStats.MaxMagTotal; }
-
-void AWeaponBase::ShotgunReloadStart() { bIsFiring = false; bIsReloading = true; }
+void AWeaponBase::ShotgunReloadStart() {}
 
 void AWeaponBase::ShotgunReloadLoop() {}
 
-void AWeaponBase::ShotgunReloadEnd() { bIsReloading = false; }
+void AWeaponBase::ShotgunReloadEnd() {}
 
 void AWeaponBase::WeaponSetup() {}
 

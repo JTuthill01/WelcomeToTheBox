@@ -117,12 +117,15 @@ void APlayerCharacterController::FireWeapon()
 	if (!IsValid(PlayerRef) || !IsValid(PlayerRef->GetCurrentWeapon()))
 		return;
 
-	if (PlayerRef->GetCurrentWeapon()->CanWeaponFire())
+	if (PlayerRef->GetCurrentWeapon()->CanFireOrReload() && PlayerRef->GetCurrentWeapon()->MagHasAmmo())
 	{
-		PlayerRef->PlayerFireWeapon();
-
 		PlayerRef->GetCurrentWeapon()->WeaponFire();
+
+		PlayerRef->PlayerFireWeapon();
 	}
+
+	else
+		return;
 }
 
 void APlayerCharacterController::WeaponReload()
@@ -132,18 +135,18 @@ void APlayerCharacterController::WeaponReload()
 
 	EWeaponType WeaponTypeEnum = PlayerRef->GetCurrentWeapon()->GetWeaponType();
 	
-	if (PlayerRef->GetCurrentWeapon()->CanWeaponReload())
+	if (WeaponTypeEnum == EWeaponType::EWT_Shotgun)
+		PlayerRef->GetCurrentWeapon()->ShotgunReloadStart();
+
+	else if (PlayerRef->GetCurrentWeapon()->CanFireOrReload() && PlayerRef->GetCurrentWeapon()->HasAmmoForReload())
 	{
-		if (WeaponTypeEnum == EWeaponType::EWT_Shotgun)
-			PlayerRef->GetCurrentWeapon()->ShotgunReloadStart();
+		PlayerRef->GetCurrentWeapon()->WeaponReload();
 
-		else
-		{
-			PlayerRef->GetCurrentWeapon()->WeaponReload();
-
-			PlayerRef->PlayerReloadWeapon();
-		}
+		PlayerRef->PlayerReloadWeapon();
 	}
+
+	else
+		return;
 }
 
 void APlayerCharacterController::StopFiringWeapon() { PlayerRef->GetCurrentWeapon()->StopFire(); }

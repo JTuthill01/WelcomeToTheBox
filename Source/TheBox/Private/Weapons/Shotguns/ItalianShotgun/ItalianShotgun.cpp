@@ -6,10 +6,7 @@
 #include "Interfaces/Player/PlayerCharacterInterface.h"
 #include <Structs/HexColors/Str_CustomHexColors.h>
 
-AItalianShotgun::AItalianShotgun()
-{
-	PrimaryActorTick.bCanEverTick = true;
-}
+AItalianShotgun::AItalianShotgun() = default;
 
 void AItalianShotgun::WeaponSetup()
 {
@@ -28,13 +25,6 @@ void AItalianShotgun::WeaponSetup()
 
 	WeapStats.FireType = static_cast<EWeaponFireType>(InUintToEnum);
 	WeapStats.Type = static_cast<EWeaponType>(InType);
-}
-
-void AItalianShotgun::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-	ResetReload(DeltaTime);
 }
 
 void AItalianShotgun::BeginPlay()
@@ -78,7 +68,7 @@ void AItalianShotgun::ShotgunReloadStart()
 	bIsReloading = true;
 
 	bIsFiring = true;
-	
+
 	PlayerRef->GetPlayerAnimInstance()->Montage_Play(PlayerRef->ItalianReloadMonatge[ShotgunReloadStartIndex]);
 
 	float Length = WeaponAnimInstance->Montage_Play(ItalianReloadMonatge[ShotgunReloadStartIndex]);
@@ -108,24 +98,6 @@ void AItalianShotgun::ShotgunReloadEnd()
 	WeaponAnimInstance->Montage_Play(ItalianReloadMonatge[ShotgunReloadEndIndex]);
 
 	PlayerRef->GetPlayerAnimInstance()->Montage_Play(PlayerRef->ItalianReloadMonatge[ShotgunReloadEndIndex]);
-}
-
-void AItalianShotgun::ResetReload(float DeltaTime)
-{
-	if (!WeaponAnimInstance->Montage_IsPlaying(ItalianReloadMonatge[ShotgunReloadStartIndex]) || !WeaponAnimInstance->Montage_IsPlaying(ItalianReloadMonatge[ShotgunReloadLoopIndex]) || 
-		!WeaponAnimInstance->Montage_IsPlaying(ItalianReloadMonatge[ShotgunReloadEndIndex]))
-	{
-		bIsReloading = false;
-
-		bIsFiring = false;
-	}
-
-	else
-	{
-		bIsReloading = true;
-
-		bIsFiring = true;
-	}
 }
 
 void AItalianShotgun::UpdateReloadAmmo()

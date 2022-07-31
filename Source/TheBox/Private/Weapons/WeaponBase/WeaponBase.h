@@ -22,6 +22,7 @@ public:
 
 	FORCEINLINE TObjectPtr<USkeletalMeshComponent> GetWeaponMesh() const { return WeaponMesh; }
 	FORCEINLINE TObjectPtr<class UTexture2D> GetIcon() { return WeapStats.Icon; }
+	FORCEINLINE TObjectPtr<class USoundBase> GetMagTapSound() { return MagTapSound; }
 
 	FORCEINLINE FName GetSocketName() const { return SocketName; }
 
@@ -67,8 +68,6 @@ public:
 
 	virtual void OnConstruction(const FTransform& Transform) override;
 
-	void WeaponFireFX();
-
 public:
 	UFUNCTION(BlueprintCallable)
 	virtual void StopFire();
@@ -89,9 +88,7 @@ public:
 
 	bool IsMagFull();
 
-	bool CanWeaponFire();
-
-	bool CanWeaponReload();
+	bool CanFireOrReload();
 
 public:
 	UPROPERTY(BlueprintAssignable)
@@ -156,6 +153,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
 	TObjectPtr<UAnimMontage> WeaponReloadMontage;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Sound)
+	TObjectPtr<class USoundBase> MagTapSound;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Enums)
 	EWeaponName WeaponName;
 
@@ -170,9 +170,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = ShotgunBalistics)
 	float SpreadAngle;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ASyncTrace)
-	TEnumAsByte<ETraceTypeQuery> TraceType;
 
 protected:
 	bool bIsReloading;
@@ -203,6 +200,4 @@ private:
 	void ShotgunFireMulti(int32 InShotgunPelletCount);
 
 	void InitializeVariables();
-
-	void ResetFireOrReload(float DeltaTime);
 };
