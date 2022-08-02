@@ -47,26 +47,22 @@ void AAmericanShotgun::WeaponFire()
 
 	if (IsValid(WeaponAnimInstance))
 	{
-		WeaponFireTimer = WeaponAnimInstance->Montage_Play(WeaponFireMontage);
+		WeaponAnimInstance->Montage_Play(WeaponFireMontage);
 
 		UGameplayStatics::SpawnSoundAttached(WeapStats.FireSound, WeaponMesh);
 
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.AmmoEject, EjectTransform.GetTranslation(), EjectQuat.Rotator());
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.FireFX, FireTransform.GetTranslation(), FireQuat.Rotator());
-
-		GetWorldTimerManager().SetTimer(WeaponFireTimerHandle, this, &AAmericanShotgun::ResetCanFire, WeaponFireTimer, false);
 	}
 }
 
 void AAmericanShotgun::ShotgunReloadStart()
 {
-	bIsFiring = false;
-
 	Super::ShotgunReloadStart();
 
-	float Length = PlayerRef->GetPlayerAnimInstance()->Montage_Play(PlayerRef->AmericanReloadMonatge[ShotgunReloadStartIndex]);
+	PlayerRef->GetPlayerAnimInstance()->Montage_Play(PlayerRef->AmericanReloadMonatge[ShotgunReloadStartIndex]);
 
-	WeaponAnimInstance->Montage_Play(AmericanReloadMonatge[ShotgunReloadStartIndex]);
+	float Length = WeaponAnimInstance->Montage_Play(AmericanReloadMonatge[ShotgunReloadStartIndex]);
 
 	GetWorldTimerManager().SetTimer(ShotgunReloadTimerHandle, this, &AAmericanShotgun::ShotgunReloadLoop, Length, false);
 }
@@ -79,20 +75,18 @@ void AAmericanShotgun::ShotgunReloadLoop()
 
 	WeapStats.CurrentTotalAmmo--;
 
-	float Length = PlayerRef->GetPlayerAnimInstance()->Montage_Play(PlayerRef->AmericanReloadMonatge[ShotgunReloadLoopIndex]);
+	PlayerRef->GetPlayerAnimInstance()->Montage_Play(PlayerRef->AmericanReloadMonatge[ShotgunReloadLoopIndex]);
 
-	WeaponAnimInstance->Montage_Play(AmericanReloadMonatge[ShotgunReloadLoopIndex]);
+	float Length = WeaponAnimInstance->Montage_Play(AmericanReloadMonatge[ShotgunReloadLoopIndex]);
 
 	GetWorldTimerManager().SetTimer(ShotgunReloadTimerHandle, this, &AAmericanShotgun::UpdateReloadAmmo, Length, false);
 }
 
 void AAmericanShotgun::ShotgunReloadEnd()
 {
-	WeaponFireTimer = WeaponAnimInstance->Montage_Play(AmericanReloadMonatge[ShotgunReloadEndIndex]);
+	WeaponAnimInstance->Montage_Play(AmericanReloadMonatge[ShotgunReloadEndIndex]);
 
 	PlayerRef->GetPlayerAnimInstance()->Montage_Play(PlayerRef->AmericanReloadMonatge[ShotgunReloadEndIndex]);
-
-	GetWorldTimerManager().SetTimer(WeaponFireTimerHandle, this, &AAmericanShotgun::ResetCanFire, WeaponFireTimer, false);
 
 	GetWorldTimerManager().ClearTimer(ShotgunReloadTimerHandle);
 }
@@ -110,11 +104,3 @@ void AAmericanShotgun::UpdateReloadAmmo()
 		ShotgunReloadLoop();
 }
 
-void AAmericanShotgun::ResetCanFire()
-{
-	GetWorldTimerManager().ClearTimer(WeaponFireTimerHandle);
-
-	bIsFiring = false;
-
-	bIsReloading = false;
-}

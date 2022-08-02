@@ -43,9 +43,7 @@ void ASVD::WeaponFire()
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.AmmoEject, EjectTransform.GetTranslation(), EjectQuat.Rotator());
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.FireFX, FireTransform.GetTranslation(), FireQuat.Rotator());
 
-		WeaponFireTimer = WeaponMesh->GetAnimInstance()->Montage_Play(WeaponFireMontage);
-
-		GetWorldTimerManager().SetTimer(WeaponFireTimerHandle, this, &ASVD::ResetCanFireOrCanReload, WeaponFireTimer, false);
+		WeaponMesh->GetAnimInstance()->Montage_Play(WeaponFireMontage);
 	}
 }
 
@@ -54,28 +52,9 @@ void ASVD::WeaponReload()
 	Super::WeaponReload();
 
 	if (IsValid(WeaponAnimInstance))
-	{
-		bIsFiring = false;
-
-		WeaponReloadTimer = WeaponAnimInstance->Montage_Play(WeaponReloadMontage);
-
-		GetWorldTimerManager().SetTimer(WeaponReloadTimerHandle, this, &ASVD::ResetCanFireOrCanReload, WeaponReloadTimer, false);
-	}
+		WeaponAnimInstance->Montage_Play(WeaponReloadMontage);
 
 	else
 		return;
 }
 
-void ASVD::StopFire()
-{
-	Super::StopFire();
-
-	bIsFiring = false;
-}
-
-void ASVD::ResetCanFireOrCanReload()
-{
-	bIsFiring = false;
-
-	GetWorldTimerManager().ClearAllTimersForObject(this);
-}

@@ -38,14 +38,12 @@ void AGermanSMG::WeaponFire()
 
 	if (IsValid(WeaponAnimInstance))
 	{
-		WeaponFireTimer = WeaponAnimInstance->Montage_Play(WeaponFireMontage);
+		WeaponAnimInstance->Montage_Play(WeaponFireMontage);
 
 		UGameplayStatics::SpawnSoundAttached(WeapStats.FireSound, WeaponMesh);
 
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.AmmoEject, EjectTransform.GetTranslation(), EjectQuat.Rotator());
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.FireFX, FireTransform.GetTranslation(), FireQuat.Rotator());
-
-		GetWorldTimerManager().SetTimer(WeaponFireTimerHandle, this, &AGermanSMG::ResetCanFireOrReload, WeaponFireTimer, false);
 	}
 
 	else
@@ -57,30 +55,9 @@ void AGermanSMG::WeaponReload()
 	Super::WeaponReload();
 
 	if (IsValid(WeaponAnimInstance))
-	{
-		bIsFiring = false;
-
-		WeaponReloadTimer = WeaponAnimInstance->Montage_Play(WeaponReloadMontage);
-
-		GetWorldTimerManager().SetTimer(WeaponReloadTimerHandle, this, &AGermanSMG::ResetCanFireOrReload, WeaponReloadTimer, false);
-	}
+		WeaponAnimInstance->Montage_Play(WeaponReloadMontage);
 
 	else
 		return;
-}
-
-void AGermanSMG::StopFire()
-{
-	Super::StopFire();
-
-	bIsFiring = false;
-}
-
-void AGermanSMG::ResetCanFireOrReload()
-{
-	bIsReloading = false;
-	bIsFiring = false;
-
-	GetWorldTimerManager().ClearAllTimersForObject(this);
 }
 

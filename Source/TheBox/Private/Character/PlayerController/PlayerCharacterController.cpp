@@ -81,6 +81,9 @@ void APlayerCharacterController::SetupInputComponent()
 
 		if (InteractAction)
 			PlayerEnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &APlayerCharacterController::Interact);
+
+		if (WeaponSwapAction)
+			PlayerEnhancedInputComponent->BindAction(WeaponSwapAction, ETriggerEvent::Triggered, this, &APlayerCharacterController::SwapWeapon);
 	}
 }
 
@@ -124,6 +127,9 @@ void APlayerCharacterController::FireWeapon()
 		PlayerRef->PlayerFireWeapon();
 	}
 
+	else if (!PlayerRef->GetCurrentWeapon()->MagHasAmmo() && PlayerRef->GetCurrentWeapon()->HasAmmoForReload())
+		WeaponReload();
+
 	else
 		return;
 }
@@ -136,9 +142,14 @@ void APlayerCharacterController::WeaponReload()
 	EWeaponType WeaponTypeEnum = PlayerRef->GetCurrentWeapon()->GetWeaponType();
 	
 	if (WeaponTypeEnum == EWeaponType::EWT_Shotgun)
-		PlayerRef->GetCurrentWeapon()->ShotgunReloadStart();
+	{
+		if (PlayerRef->GetCurrentWeapon()->CanShotgunFireOrReload())
+		{
+			PlayerRef->GetCurrentWeapon()->ShotgunReloadStart();
+		}
+	}
 
-	else if (PlayerRef->GetCurrentWeapon()->CanFireOrReload() && PlayerRef->GetCurrentWeapon()->HasAmmoForReload())
+	else if (PlayerRef->GetCurrentWeapon()->CanFireOrReload())
 	{
 		PlayerRef->GetCurrentWeapon()->WeaponReload();
 
@@ -147,6 +158,11 @@ void APlayerCharacterController::WeaponReload()
 
 	else
 		return;
+}
+
+void APlayerCharacterController::SwapWeapon()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 4.F, FCustomColorsFromHex::PlumVelvet(), __FUNCTION__);
 }
 
 void APlayerCharacterController::StopFiringWeapon() { PlayerRef->GetCurrentWeapon()->StopFire(); }

@@ -27,7 +27,6 @@ protected:
 
 private:
 	void UpdateReloadAmmo();
-	void ResetCanFire();
 
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Animation, meta = (AllowPrivateAccess = "true"))

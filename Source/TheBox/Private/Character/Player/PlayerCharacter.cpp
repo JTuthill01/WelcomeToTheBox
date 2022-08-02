@@ -70,8 +70,6 @@ void APlayerCharacter::SpawnInitialWeapon()
 		CurrentWeapon->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
 			CurrentWeapon->GetSocketName());
 
-		PlayerAnimInstance->Montage_Play(PlayerWeaponRaiseMontage[CurrentWeapon->GetWeaponIndex()]);
-
 		WeaponSlotArray.Add(CurrentWeapon);
 
 		CurrentAmmoHUD = CurrentWeapon->GetCurrentAmmo();

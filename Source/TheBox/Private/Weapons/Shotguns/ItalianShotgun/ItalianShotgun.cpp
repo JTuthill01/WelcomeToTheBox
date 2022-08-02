@@ -38,10 +38,6 @@ void AItalianShotgun::WeaponFire()
 {
 	Super::WeaponFire();
 
-	bIsFiring = true;
-
-	bIsReloading = true;
-
 	EjectTransform = WeaponMesh->GetSocketTransform("AmmoEject");
 
 	EjectQuat = EjectTransform.GetRotation();
@@ -64,10 +60,6 @@ void AItalianShotgun::WeaponFire()
 void AItalianShotgun::ShotgunReloadStart()
 {
 	Super::ShotgunReloadStart();
-
-	bIsReloading = true;
-
-	bIsFiring = true;
 
 	PlayerRef->GetPlayerAnimInstance()->Montage_Play(PlayerRef->ItalianReloadMonatge[ShotgunReloadStartIndex]);
 

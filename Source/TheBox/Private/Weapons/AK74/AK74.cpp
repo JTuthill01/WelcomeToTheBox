@@ -43,9 +43,7 @@ void AAK74::WeaponFire()
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.AmmoEject, EjectTransform.GetTranslation(), EjectQuat.Rotator());
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.FireFX, FireTransform.GetTranslation(), FireQuat.Rotator());
 
-		WeaponFireTimer = WeaponMesh->GetAnimInstance()->Montage_Play(WeaponFireMontage);
-
-		GetWorldTimerManager().SetTimer(WeaponFireTimerHandle, this, &AAK74::ResetCanFireOrCanReload, WeaponFireTimer, false);
+		WeaponMesh->GetAnimInstance()->Montage_Play(WeaponFireMontage);
 	}
 
 	else
@@ -57,29 +55,8 @@ void AAK74::WeaponReload()
 	Super::WeaponReload();
 
 	if (IsValid(WeaponAnimInstance))
-	{
-		bIsFiring = false;
-
-		WeaponReloadTimer = WeaponAnimInstance->Montage_Play(WeaponReloadMontage);
-
-		GetWorldTimerManager().SetTimer(WeaponReloadTimerHandle, this, &AAK74::ResetCanFireOrCanReload, WeaponReloadTimer, false);
-	}
-
+		WeaponAnimInstance->Montage_Play(WeaponReloadMontage);
+	
 	else
 		return;
-}
-
-void AAK74::StopFire()
-{
-	Super::StopFire();
-
-	bIsFiring = false;
-}
-
-void AAK74::ResetCanFireOrCanReload()
-{
-	bIsReloading = false;
-	bIsFiring = false;
-
-	GetWorldTimerManager().ClearAllTimersForObject(this);
 }

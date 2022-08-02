@@ -38,14 +38,12 @@ void AHandCannon::WeaponFire()
 
 	if (IsValid(WeaponAnimInstance))
 	{
-		WeaponFireTimer = WeaponAnimInstance->Montage_Play(WeaponFireMontage);
+		WeaponAnimInstance->Montage_Play(WeaponFireMontage);
 
 		UGameplayStatics::SpawnSoundAttached(WeapStats.FireSound, WeaponMesh);
 
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.AmmoEject, EjectTransform.GetTranslation(), EjectQuat.Rotator());
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.FireFX, FireTransform.GetTranslation(), FireQuat.Rotator());
-
-		GetWorldTimerManager().SetTimer(WeaponFireTimerHandle, this, &AHandCannon::ResetCanFireOrReload, WeaponFireTimer, false);
 	}
 
 	else
@@ -57,29 +55,10 @@ void AHandCannon::WeaponReload()
 	Super::WeaponReload();
 
 	if (IsValid(WeaponAnimInstance))
-	{
-		bIsFiring = false;
-
-		WeaponReloadTimer = WeaponAnimInstance->Montage_Play(WeaponReloadMontage);
-
-		GetWorldTimerManager().SetTimer(WeaponReloadTimerHandle, this, &AHandCannon::ResetCanFireOrReload, WeaponReloadTimer, false);
-	}
+		WeaponAnimInstance->Montage_Play(WeaponReloadMontage);
+	
 
 	else
 		return;
 }
 
-void AHandCannon::StopFire()
-{
-	Super::StopFire();
-
-	bIsFiring = false;
-}
-
-void AHandCannon::ResetCanFireOrReload()
-{
-	bIsFiring = false;
-	bIsReloading = false;
-
-	GetWorldTimerManager().ClearAllTimersForObject(this);
-}

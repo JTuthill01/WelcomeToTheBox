@@ -30,8 +30,6 @@ public:
 	FORCEINLINE EWeaponFireType GetFireType() { return WeapStats.FireType; }
 	FORCEINLINE EWeaponType GetWeaponType() { return WeapStats.Type; }
 
-	FORCEINLINE bool GetIsFiring() { return bIsFiring; }
-
 	FORCEINLINE float GetDamageRadius() { return WeapStats.DamageRadius; }
 	FORCEINLINE float GetDamageAmount() { return WeapStats.DamageAmount; }
 
@@ -41,6 +39,8 @@ public:
 	FORCEINLINE int32 GetLowAmmo() { return WeapStats.LowAmmo; }
 
 #pragma endregion
+
+	FORCEINLINE void SetCanShgotgunFireOrReload(bool bReset) { bCanShotgunFireOrReload = bReset; }
 
 #pragma region Blueprint Getters
 
@@ -81,6 +81,8 @@ public:
 	UFUNCTION()
 	virtual void ShotgunReloadStart();
 
+	void SetTotalAmmo(int32 NewAmmoValue);
+
 public:
 	bool MagHasAmmo();
 
@@ -90,9 +92,13 @@ public:
 
 	bool CanFireOrReload();
 
+	bool IsAmmoFull();
+
+	bool CanShotgunFireOrReload();
+
 public:
 	UPROPERTY(BlueprintAssignable)
-	FUpdateCurrentTotalAmmo NewTotalAmmo;
+	FUpdateCurrentTotalAmmo OnNewTotalAmmo;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnWeaponFire OnWeaponFire;
@@ -128,12 +134,6 @@ protected:
 
 	UPROPERTY()
 	FWeaponStringData WeaponFilePaths;
-
-	UPROPERTY()
-	FTimerHandle WeaponFireTimerHandle;
-
-	UPROPERTY()
-	FTimerHandle WeaponReloadTimerHandle;
 
 	UPROPERTY()
 	FTimerHandle ShotgunReloadTimerHandle;
@@ -172,18 +172,14 @@ protected:
 	float SpreadAngle;
 
 protected:
-	bool bIsReloading;
-	bool bIsFiring;
 	bool bHasHitOccured;
+	bool bCanShotgunFireOrReload;
 
 	FQuat EjectQuat;
 	FTransform EjectTransform;
 
 	FQuat FireQuat;
 	FTransform FireTransform;
-
-	float WeaponFireTimer;
-	float WeaponReloadTimer;
 
 	uint8 InUintToEnum;
 	uint8 InType;

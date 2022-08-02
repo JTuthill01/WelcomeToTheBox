@@ -55,6 +55,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Input)
 	UInputAction* WeaponReloadAction;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Input)
+	UInputAction* WeaponSwapAction;
+
 	//Mapping Contexts//
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = InputMappings)
 	UInputMappingContext* BaseMappingContext;
@@ -73,6 +76,7 @@ protected:
 	void FireWeapon();
 	void StopFiringWeapon();
 	void WeaponReload();
+	void SwapWeapon();
 
 #pragma endregion
 

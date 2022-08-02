@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Structs/WeaponPickup/Str_WeaponPickup.h"
 #include "PickupComponent.generated.h"
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -14,10 +15,14 @@ public:
 	UPickupComponent();
 
 	FORCEINLINE void SetObjectData(FString InObjectString) { ObjectString = InObjectString; }
+	FORCEINLINE void SetWeaponObjectData(FString InObjectString) { WeaponObjectString = InObjectString; }
 
 public:
 	UFUNCTION()
 	void Parser();
+
+	UFUNCTION()
+	void WeaponPickupParser();
 
 protected:
 
@@ -72,4 +77,6 @@ public:
 
 private:
 	FString ObjectString;
+
+	FString WeaponObjectString;
 };

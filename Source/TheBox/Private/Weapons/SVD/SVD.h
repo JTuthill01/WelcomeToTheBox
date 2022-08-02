@@ -17,12 +17,7 @@ public:
 
 	virtual void WeaponReload() override;
 
-	virtual void StopFire() override;
-
 protected:
 	virtual void WeaponSetup() override;
 
-private:
-	UFUNCTION()
-	void ResetCanFireOrCanReload();
 };

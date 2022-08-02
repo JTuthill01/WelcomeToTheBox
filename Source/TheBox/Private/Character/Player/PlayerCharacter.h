@@ -153,8 +153,4 @@ private:
 
 private:
 	uint32 MaxSlots;
-
-	FTimerHandle RaiseMontageTimerHandle;
-
-	float RaiseMontageTimer;
 };

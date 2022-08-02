@@ -18,9 +18,4 @@ protected:
 	virtual void WeaponReload() override;
 
 	virtual void WeaponSetup() override;
-	
-	virtual void StopFire() override;
-
-private:
-	void ResetCanFireOrReload();
 };

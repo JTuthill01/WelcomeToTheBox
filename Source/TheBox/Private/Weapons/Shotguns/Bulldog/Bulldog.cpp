@@ -47,14 +47,12 @@ void ABulldog::WeaponFire()
 
 	if (IsValid(WeaponAnimInstance))
 	{
-		WeaponFireTimer = WeaponAnimInstance->Montage_Play(WeaponFireMontage);
+		WeaponAnimInstance->Montage_Play(WeaponFireMontage);
 
 		UGameplayStatics::SpawnSoundAttached(WeapStats.FireSound, WeaponMesh);
 
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.AmmoEject, EjectTransform.GetTranslation(), EjectQuat.Rotator());
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.FireFX, FireTransform.GetTranslation(), FireQuat.Rotator());
-
-		GetWorldTimerManager().SetTimer(WeaponFireTimerHandle, this, &ABulldog::ResetCanFire, WeaponFireTimer, false);
 	}
 }
 
@@ -62,11 +60,9 @@ void ABulldog::ShotgunReloadStart()
 {
 	Super::ShotgunReloadStart();
 
-	bIsFiring = false;
+	PlayerRef->GetPlayerAnimInstance()->Montage_Play(PlayerRef->BulldogReloadMonatge[ShotgunReloadStartIndex]);
 
-	float Length = PlayerRef->GetPlayerAnimInstance()->Montage_Play(PlayerRef->BulldogReloadMonatge[ShotgunReloadStartIndex]);
-
-	WeaponAnimInstance->Montage_Play(BulldogReloadMonatge[ShotgunReloadStartIndex]);
+	float Length = WeaponAnimInstance->Montage_Play(BulldogReloadMonatge[ShotgunReloadStartIndex]);
 
 	GetWorldTimerManager().SetTimer(ShotgunReloadTimerHandle, this, &ABulldog::ShotgunReloadLoop, Length, false);
 }
@@ -79,22 +75,18 @@ void ABulldog::ShotgunReloadLoop()
 
 	WeapStats.CurrentTotalAmmo--;
 
-	float Length = PlayerRef->GetPlayerAnimInstance()->Montage_Play(PlayerRef->BulldogReloadMonatge[ShotgunReloadLoopIndex]);
+	PlayerRef->GetPlayerAnimInstance()->Montage_Play(PlayerRef->BulldogReloadMonatge[ShotgunReloadLoopIndex]);
 
-	WeaponAnimInstance->Montage_Play(BulldogReloadMonatge[ShotgunReloadLoopIndex]);
+	float Length = WeaponAnimInstance->Montage_Play(BulldogReloadMonatge[ShotgunReloadLoopIndex]);
 
 	GetWorldTimerManager().SetTimer(ShotgunReloadTimerHandle, this, &ABulldog::UpdateReloadAmmo, Length, false);
 }
 
 void ABulldog::ShotgunReloadEnd()
 {
-	WeaponFireTimer = WeaponAnimInstance->Montage_Play(BulldogReloadMonatge[ShotgunReloadEndIndex]);
+	WeaponAnimInstance->Montage_Play(BulldogReloadMonatge[ShotgunReloadEndIndex]);
 
 	PlayerRef->GetPlayerAnimInstance()->Montage_Play(PlayerRef->BulldogReloadMonatge[ShotgunReloadEndIndex]);
-
-	GetWorldTimerManager().SetTimer(WeaponFireTimerHandle, this, &ABulldog::ResetCanFire, WeaponFireTimer, false);
-
-	GetWorldTimerManager().ClearTimer(ShotgunReloadTimerHandle);
 }
 
 void ABulldog::UpdateReloadAmmo()
@@ -108,13 +100,4 @@ void ABulldog::UpdateReloadAmmo()
 
 	else
 		ShotgunReloadLoop();
-}
-
-void ABulldog::ResetCanFire()
-{
-	GetWorldTimerManager().ClearTimer(WeaponFireTimerHandle);
-
-	bIsFiring = false;
-
-	bIsReloading = false;
 }

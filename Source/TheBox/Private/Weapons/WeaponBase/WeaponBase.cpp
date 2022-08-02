@@ -11,8 +11,8 @@
 #include "Structs/HexColors/Str_CustomHexColors.h"
 
 // Sets default values
-AWeaponBase::AWeaponBase() : SocketName(NAME_None), ShotgunPellets(6), Range(4'500), SpreadAngle(8.89F), bIsReloading(false), bIsFiring(false), EjectQuat(FQuat(0.F)),
-	FireQuat(FQuat(0.F)), WeaponFireTimer(0.F), WeaponReloadTimer(0.F), InUintToEnum(0), ShotgunReloadStartIndex(0), ShotgunReloadLoopIndex(1), ShotgunReloadEndIndex(2)
+AWeaponBase::AWeaponBase() : SocketName(NAME_None), ShotgunPellets(6), Range(4'500), SpreadAngle(8.89F), bCanShotgunFireOrReload(true), EjectQuat(FQuat(0.F)),
+	FireQuat(FQuat(0.F)), InUintToEnum(0), ShotgunReloadStartIndex(0), ShotgunReloadLoopIndex(1), ShotgunReloadEndIndex(2)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
@@ -170,13 +170,9 @@ void AWeaponBase::WeaponReload()
 	if (!IsValid(PlayerRef))
 		return;
 
-	bIsFiring = false;
-
-	if (!bIsReloading && !bIsFiring && HasAmmoForReload() && !IsMagFull())
+	if (HasAmmoForReload() && !IsMagFull())
 	{
 		PlayerRef->PlayerReloadWeapon();
-
-		bIsReloading = true;
 
 		WeapStats.CurrentTotalAmmo -= WeapStats.MaxMagTotal - WeapStats.CurrentMagTotal;
 
@@ -219,6 +215,22 @@ void AWeaponBase::ShotgunFireMulti(int32 InShotgunPelletCount)
 	}
 }
 
+void AWeaponBase::SetTotalAmmo(int32 NewAmmoValue)
+{
+	WeapStats.CurrentTotalAmmo += NewAmmoValue;
+
+	if (WeapStats.CurrentTotalAmmo > WeapStats.MaxTotalAmmo)
+		WeapStats.CurrentTotalAmmo = WeapStats.MaxTotalAmmo;
+
+	OnNewTotalAmmo.Broadcast(WeapStats.CurrentTotalAmmo);
+}
+
+void AWeaponBase::ShotgunReloadStart() {}
+
+void AWeaponBase::ShotgunReloadLoop() {}
+
+void AWeaponBase::ShotgunReloadEnd() {}
+
 bool AWeaponBase::MagHasAmmo() { return WeapStats.CurrentMagTotal > 0; }
 
 bool AWeaponBase::HasAmmoForReload() { return WeapStats.CurrentTotalAmmo > 0; }
@@ -227,11 +239,9 @@ bool AWeaponBase::IsMagFull() { return WeapStats.CurrentMagTotal >= WeapStats.Ma
 
 bool AWeaponBase::CanFireOrReload() { return !WeaponAnimInstance->Montage_IsPlaying(WeaponFireMontage) && !WeaponAnimInstance->Montage_IsPlaying(WeaponReloadMontage); }
 
-void AWeaponBase::ShotgunReloadStart() {}
+bool AWeaponBase::IsAmmoFull() { return WeapStats.CurrentTotalAmmo >= WeapStats.MaxTotalAmmo; }
 
-void AWeaponBase::ShotgunReloadLoop() {}
-
-void AWeaponBase::ShotgunReloadEnd() {}
+bool AWeaponBase::CanShotgunFireOrReload() { return !WeaponAnimInstance->Montage_IsPlaying(WeaponFireMontage) && bCanShotgunFireOrReload && HasAmmoForReload() && !IsMagFull(); }
 
 void AWeaponBase::WeaponSetup() {}
 
