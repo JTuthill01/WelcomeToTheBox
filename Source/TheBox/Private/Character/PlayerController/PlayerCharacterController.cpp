@@ -9,7 +9,6 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Weapons/WeaponBase/WeaponBase.h"
-#include "Enums/WeaponEnums/WeaponEnums.h"
 #include "Structs/HexColors/Str_CustomHexColors.h"
 
 APlayerCharacterController::APlayerCharacterController() : BaseMovementSpeed(600.F), BaseSprintSpeed(800.F)
@@ -84,6 +83,9 @@ void APlayerCharacterController::SetupInputComponent()
 
 		if (WeaponSwapAction)
 			PlayerEnhancedInputComponent->BindAction(WeaponSwapAction, ETriggerEvent::Triggered, this, &APlayerCharacterController::SwapWeapon);
+
+		if (PrimairyWeaponSwitchAction)
+			PlayerEnhancedInputComponent->BindAction(PrimairyWeaponSwitchAction, ETriggerEvent::Triggered, this, &APlayerCharacterController::SwitchPrimairyWeapon);
 	}
 }
 
@@ -163,6 +165,96 @@ void APlayerCharacterController::WeaponReload()
 void APlayerCharacterController::SwapWeapon()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 4.F, FCustomColorsFromHex::PlumVelvet(), __FUNCTION__);
+}
+
+void APlayerCharacterController::SwitchPrimairyWeapon()
+{
+	EWeaponSlot LocalSlot = PlayerRef->GetEquippedWeaponIndexEnum();
+
+	switch (LocalSlot)
+	{
+	case EWeaponSlot::EWS_Default_Slot:
+
+		if (PlayerRef->GetWeaponSlotArray().Num() > 1)
+		{
+			PlayerRef->SetWeaponSlotIndex(EWeaponSlot::EWS_First_Slot);
+
+			SwitchPrimairyWeaponMesh(LocalSlot);
+		}
+
+		else
+		{
+			PlayerRef->SetWeaponSlotIndex(EWeaponSlot::EWS_First_Slot);
+
+			SwitchPrimairyWeaponMesh(PlayerRef->GetEquippedWeaponIndexEnum());
+		}
+
+		break;
+
+	case EWeaponSlot::EWS_First_Slot:
+
+		if (PlayerRef->GetWeaponSlotArray().Num() > 2)
+		{
+			PlayerRef->SetWeaponSlotIndex(EWeaponSlot::EWS_Second_Slot);
+
+			SwitchPrimairyWeaponMesh(LocalSlot);
+		}
+
+		else
+		{
+			PlayerRef->SetWeaponSlotIndex(EWeaponSlot::EWS_First_Slot);
+
+			SwitchPrimairyWeaponMesh(PlayerRef->GetEquippedWeaponIndexEnum());
+		}
+
+		break;
+
+	case EWeaponSlot::EWS_Second_Slot:
+
+		if (PlayerRef->GetWeaponSlotArray().Num() > 3)
+		{
+			PlayerRef->SetWeaponSlotIndex(EWeaponSlot::EWS_Third_Slot);
+
+			SwitchPrimairyWeaponMesh(LocalSlot);
+		}
+
+		else
+		{
+			PlayerRef->SetWeaponSlotIndex(EWeaponSlot::EWS_First_Slot);
+
+			SwitchPrimairyWeaponMesh(PlayerRef->GetEquippedWeaponIndexEnum());
+		}
+
+		break;
+
+	case EWeaponSlot::EWS_Third_Slot:
+
+		if (PlayerRef->GetWeaponSlotArray().Num() > 4)
+		{
+			PlayerRef->SetWeaponSlotIndex(EWeaponSlot::EWS_Fourth_Slot);
+
+			SwitchPrimairyWeaponMesh(LocalSlot);
+		}
+
+		else
+		{
+			PlayerRef->SetWeaponSlotIndex(EWeaponSlot::EWS_First_Slot);
+
+			SwitchPrimairyWeaponMesh(PlayerRef->GetEquippedWeaponIndexEnum());
+		}
+
+		break;
+
+	case EWeaponSlot::EWS_Fourth_Slot:
+		break;
+
+	default:
+		break;
+	}
+}
+
+void APlayerCharacterController::SwitchPrimairyWeaponMesh(EWeaponSlot Index)
+{
 }
 
 void APlayerCharacterController::StopFiringWeapon() { PlayerRef->GetCurrentWeapon()->StopFire(); }

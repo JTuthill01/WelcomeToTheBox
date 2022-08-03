@@ -4,6 +4,7 @@
 #include "GameFramework/PlayerController.h"
 #include "InputActionValue.h"
 #include "Interfaces/Controller/PlayerControllerInterface.h"
+#include "Enums/WeaponEnums/WeaponEnums.h"
 #include "PlayerCharacterController.generated.h"
 
 class UInputAction;
@@ -58,6 +59,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Input)
 	UInputAction* WeaponSwapAction;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Input)
+	UInputAction* PrimairyWeaponSwitchAction;
+
 	//Mapping Contexts//
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = InputMappings)
 	UInputMappingContext* BaseMappingContext;
@@ -77,6 +81,8 @@ protected:
 	void StopFiringWeapon();
 	void WeaponReload();
 	void SwapWeapon();
+	void SwitchPrimairyWeapon();
+	void SwitchPrimairyWeaponMesh(EWeaponSlot Index);
 
 #pragma endregion
 

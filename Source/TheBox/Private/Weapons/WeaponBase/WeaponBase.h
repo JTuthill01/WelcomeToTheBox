@@ -130,6 +130,9 @@ protected:
 	TObjectPtr<class APlayerCharacter> PlayerRef;
 
 	UPROPERTY()
+	TObjectPtr<class AProjectileBase> Projectile;
+
+	UPROPERTY()
 	TObjectPtr<UAnimInstance> WeaponAnimInstance;
 
 	UPROPERTY()
@@ -155,6 +158,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Sound)
 	TObjectPtr<class USoundBase> MagTapSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Projectile)
+	TSubclassOf<class AProjectileBase> ProjectileToSpawn;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Enums)
 	EWeaponName WeaponName;
@@ -194,6 +200,8 @@ private:
 	void CreateImpactFX(FHitResult HitResult);
 
 	void ShotgunFireMulti(int32 InShotgunPelletCount);
+
+	void SpawnProjectile();
 
 	void InitializeVariables();
 };

@@ -4,7 +4,8 @@ UENUM(BlueprintType)
 enum class EHasWeapon : uint8 { EHW_NoWeapon UMETA(DisplayName = "No Weapon"), EHW_HasWeapon UMETA(DisplayName = "Has Weapon") };
 
 UENUM(BlueprintType)
-enum class EWeaponSlot : uint8 { EWS_First_Slot UMETA(DisplayName = "First Slot"), EWS_Second_Slot UMETA(DisplayName = "Second Slot"), EWS_Third_Slot UMETA(DisplayName = "Third Slot") };
+enum class EWeaponSlot : uint8 { EWS_Default_Slot UMETA(DisplayName = "Default Slot"), EWS_First_Slot UMETA(DisplayName = "First Slot"), EWS_Second_Slot UMETA(DisplayName = "Second Slot"), EWS_Third_Slot UMETA(DisplayName = "Third Slot"),
+	EWS_Fourth_Slot UMETA(DisplayName = "Fourth Slot") };
 
 UENUM(BlueprintType)
 enum class EWeaponName : uint8 { EWN_NONE UMETA(DisplayName = "None"), EWN_TT33 UMETA(DisplayName = "TT33"), EWN_AK47 UMETA(DisplayName = "AK47"), EWN_AmericanShotgun UMETA(DisplayName = "American Shotgun"), EWN_BelgianAR UMETA(DisplayName = "Belgian AR"),

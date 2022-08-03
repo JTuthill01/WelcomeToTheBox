@@ -6,7 +6,9 @@
 #include "Character/Player/PlayerCharacter.h"
 #include "Interfaces/Player/PlayerCharacterInterface.h"
 #include "Weapons/WeaponBase/WeaponBase.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Kismet/GameplayStatics.h"
+#include "ImpactPhysicalMaterial/ImpactPhysicalMaterial.h"
 #include "Character/HealthComponent/PlayerHealthComponent.h"
 
 // Sets default values
@@ -24,10 +26,12 @@ AProjectileBase::AProjectileBase() : bIsCausingRadiusDamage(false)
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	Sphere->SetSphereRadius(8.F);
 	Sphere->SetGenerateOverlapEvents(true);
+	Sphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
 	Sphere->bReturnMaterialOnMove = true;
 
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Projectile Mesh"));
 	ProjectileMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	ProjectileMesh->SetSimulatePhysics(false);
 	ProjectileMesh->SetupAttachment(Sphere);
 
 	SetRootComponent(Sphere);
@@ -101,5 +105,45 @@ void AProjectileBase::ExplodeOnImpact(const FHitResult& HitResult)
 
 void AProjectileBase::SpawnImpactFX(const FHitResult& HitResult)
 {
+	if (TObjectPtr<UImpactPhysicalMaterial> PhysMat = Cast<UImpactPhysicalMaterial>(HitResult.PhysMaterial))
+	{
+		if (TObjectPtr<USoundBase> ImpactSound = PhysMat->LineTraceImpactEffect.ImpactSound)
+		{
+			FVector Location = HitResult.Location;
+
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), ImpactSound, Location);
+		}
+
+		if (TObjectPtr<UNiagaraSystem> HitFX = Cast<UNiagaraSystem>(PhysMat->LineTraceImpactEffect.ImpactEffect))
+		{
+			FRotator Rotation = UKismetMathLibrary::MakeRotFromX(HitResult.Normal);
+			UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), HitFX, HitResult.Location, Rotation);
+		}
+
+		else if (TObjectPtr<UParticleSystem> ParticleFX = Cast<UParticleSystem>(PhysMat->LineTraceImpactEffect.ImpactEffect))
+		{
+			FRotator Rotation = UKismetMathLibrary::MakeRotFromX(HitResult.Normal);
+			FVector Location = HitResult.Location;
+
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParticleFX, Location, Rotation);
+		}
+
+		if (TObjectPtr<UMaterialInstance> ImpactDecal = PhysMat->LineTraceImpactEffect.ImpactDecal)
+		{
+			if (TObjectPtr<USceneComponent> HitComponent = HitResult.GetComponent())
+			{
+				FRotator Rotation = UKismetMathLibrary::MakeRotFromX(HitResult.Normal);
+
+				Rotation.Pitch += 180.0f;
+
+				FVector DecalSize = PhysMat->LineTraceImpactEffect.DecalSize;
+
+				float DecalLifetime = PhysMat->LineTraceImpactEffect.DecalLifeTime;
+
+				UGameplayStatics::SpawnDecalAttached(ImpactDecal, DecalSize, HitComponent, NAME_None,
+					HitResult.Location, Rotation, EAttachLocation::KeepWorldPosition, DecalLifetime);
+			}
+		}
+	}
 }
 

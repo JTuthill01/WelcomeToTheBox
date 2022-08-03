@@ -34,7 +34,14 @@ public:
 	UFUNCTION(BlueprintPure, BlueprintCallable)
 	FORCEINLINE class AWeaponBase* GetCurrentWeapon() { return CurrentWeapon; }
 
+	FORCEINLINE TArray<TObjectPtr<AWeaponBase>> GetWeaponSlotArray() { return WeaponSlotArray; }
+
+	FORCEINLINE EWeaponSlot GetEquippedWeaponIndexEnum() { return WeaponIndexEnum; }
+	FORCEINLINE uint8 GetEquippedWeaponIndexUint() { return WeaponIndex = static_cast<uint8>(WeaponIndexEnum); }
+
 #pragma endregion
+
+	FORCEINLINE void SetWeaponSlotIndex(EWeaponSlot NewValue) { WeaponIndexEnum = NewValue; }
 
 public:	
 	//Called every frame
@@ -69,6 +76,8 @@ private:
 
 	UFUNCTION()
 	void ScanForInteractables();
+
+
 
 private:
 	void Initialize();
@@ -152,5 +161,8 @@ private:
 	FTimerHandle InteractableTraceTimerHandle;
 
 private:
-	uint32 MaxSlots;
+	EWeaponSlot WeaponIndexEnum;
+
+	uint8 MaxSlots;
+	uint8 WeaponIndex;
 };

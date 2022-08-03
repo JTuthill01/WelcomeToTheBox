@@ -9,13 +9,14 @@
 #include "ImpactPhysicalMaterial/ImpactPhysicalMaterial.h"
 #include "JsonComponents/WeaponComponent/WeaponComponentParser.h"
 #include "Structs/HexColors/Str_CustomHexColors.h"
+#include "Projectiles/ProjectileBase.h"
 
 // Sets default values
 AWeaponBase::AWeaponBase() : SocketName(NAME_None), ShotgunPellets(6), Range(4'500), SpreadAngle(8.89F), bCanShotgunFireOrReload(true), EjectQuat(FQuat(0.F)),
 	FireQuat(FQuat(0.F)), InUintToEnum(0), ShotgunReloadStartIndex(0), ShotgunReloadLoopIndex(1), ShotgunReloadEndIndex(2)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	WeaponRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Weapon Root"));
 	SetRootComponent(WeaponRoot);
@@ -152,6 +153,9 @@ void AWeaponBase::WeaponFire()
 		break;
 
 	case EWeaponFireType::EWFT_Projectile:
+
+		SpawnProjectile();
+
 		break;
 
 	case EWeaponFireType::EWFT_SpreadScan:
@@ -213,6 +217,22 @@ void AWeaponBase::ShotgunFireMulti(int32 InShotgunPelletCount)
 			for (auto&& Result : OutResult)
 				CreateImpactFX(Result);
 	}
+}
+
+void AWeaponBase::SpawnProjectile()
+{
+	FActorSpawnParameters SpawnInfo;
+	SpawnInfo.Owner = this;
+	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	FTransform SpawnTransform;
+	FVector Scale{ FVector(1.F) };
+	FVector SocketLocation{ WeaponMesh->GetSocketLocation("Fire_FX_Slot") };
+	FRotator Rotation{ PlayerRef->GetControlRotation() };
+
+	SpawnTransform = UKismetMathLibrary::MakeTransform(SocketLocation, Rotation, Scale);
+
+	Projectile = GetWorld()->SpawnActor<AProjectileBase>(ProjectileToSpawn, SpawnTransform, SpawnInfo);
 }
 
 void AWeaponBase::SetTotalAmmo(int32 NewAmmoValue)
