@@ -10,7 +10,8 @@
 #include "Structs/HexColors/Str_CustomHexColors.h"
 
 // Sets default values
-APlayerCharacter::APlayerCharacter() : InteractableTraceTimer(0.25F), WeaponIndexEnum(EWeaponSlot::EWS_First_Slot), MaxSlots(4)
+APlayerCharacter::APlayerCharacter() : InteractableTraceTimer(0.25F), WeaponIndexEnum(EWeaponSlot::EWS_Default_Slot), MaxSlots(5), WeaponIndex(0), bIsDefaultSlotFull(false), bIsFirstSlotFull(false), 
+	bIsSecondSlotFull(false), bIsThirdSlotFull(false), bHasOpenSlot(true)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
@@ -70,13 +71,15 @@ void APlayerCharacter::SpawnInitialWeapon()
 		CurrentWeapon->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
 			CurrentWeapon->GetSocketName());
 
-		WeaponSlotArray.Add(CurrentWeapon);
-
 		CurrentAmmoHUD = CurrentWeapon->GetCurrentAmmo();
 
 		MaxAmmoHUD = CurrentWeapon->GetCurrentTotalAmmo();
 
 		CurrentNameOfWeapon = CurrentWeapon->GetCurrentWeaponEnumName();
+
+		WeaponSlotArray.Emplace(CurrentWeapon);
+
+		bIsDefaultSlotFull = true;
 	}
 }
 
@@ -111,7 +114,7 @@ void APlayerCharacter::ScanForInteractables()
 	TArray<AActor*> ActorsToIgnore;
 
 	ActorsToIgnore.Add(this);
-	ActorsToIgnore.Add(CurrentWeapon); 
+	ActorsToIgnore.Add(WeaponSlotArray[GetEquippedWeaponIndexUint()]);
 
 	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldStatic));
 	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldDynamic));
@@ -161,7 +164,7 @@ void APlayerCharacter::InteractWithObject()
 
 void APlayerCharacter::PlayerFireWeapon()
 {
-	int32 LocalIndex = CurrentWeapon->GetWeaponIndex();
+	int32 LocalIndex = WeaponSlotArray[GetEquippedWeaponIndexUint()]->GetWeaponIndex();
 
 	if (PlayerWeaponFireMontage.IsValidIndex(LocalIndex))
 		PlayerAnimInstance->Montage_Play(PlayerWeaponFireMontage[LocalIndex]);
@@ -172,9 +175,9 @@ void APlayerCharacter::PlayerFireWeapon()
 
 void APlayerCharacter::PlayerReloadWeapon()
 {
-	int32 LocalIndex = CurrentWeapon->GetWeaponIndex();
+	int32 LocalIndex = WeaponSlotArray[GetEquippedWeaponIndexUint()]->GetWeaponIndex();
 
-	EWeaponType LocalWeaponType = CurrentWeapon->GetWeaponType();
+	EWeaponType LocalWeaponType = WeaponSlotArray[GetEquippedWeaponIndexUint()]->GetWeaponType();
 
 	if (LocalWeaponType != EWeaponType::EWT_Shotgun)
 	{
@@ -187,6 +190,219 @@ void APlayerCharacter::PlayerReloadWeapon()
 
 	else
 		return;
+}
+
+void APlayerCharacter::SpawnWeaponFromPickup(TObjectPtr<class AWeaponBase> WeaponRef, TSubclassOf<class AWeaponBase> SpawnRef, bool& IsSuccessful)
+{
+	FActorSpawnParameters Params;
+	Params.Owner = this;
+	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	FVector Location = Arms->GetComponentLocation();
+	FRotator Rotation = Arms->GetComponentRotation();
+
+	switch (WeaponIndexEnum)
+	{
+	case EWeaponSlot::EWS_Default_Slot:
+
+		if (!bIsDefaultSlotFull)
+		{
+			WeaponRef = GetWorld()->SpawnActor<AWeaponBase>(SpawnRef, Location, Rotation, Params);
+
+			if (IsValid(WeaponRef))
+			{
+				WeaponRef->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
+					WeaponRef->GetSocketName());
+
+				bIsDefaultSlotFull = true;
+
+				WeaponSlotArray.Insert(WeaponRef, 0);
+
+				WeaponIndexEnum = EWeaponSlot::EWS_Default_Slot;
+
+				IsSuccessful = true;
+			}
+
+			else
+			{
+				IsSuccessful = false;
+
+				break;
+			}
+		}
+
+		else if (!bIsFirstSlotFull)
+		{
+			SpawnWeaponFromPickup(WeaponRef, SpawnRef, IsSuccessful);
+
+			WeaponIndexEnum = EWeaponSlot::EWS_First_Slot;
+
+			IsSuccessful = true;
+		}
+
+		else
+		{
+			IsSuccessful = false;
+
+			bHasOpenSlot = false;
+		}
+
+		break;
+
+	case EWeaponSlot::EWS_First_Slot:
+
+		if (!bIsFirstSlotFull)
+		{
+			WeaponRef = GetWorld()->SpawnActor<AWeaponBase>(SpawnRef, Location, Rotation, Params);
+
+			if (IsValid(WeaponRef))
+			{
+				WeaponRef->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
+					WeaponRef->GetSocketName());
+
+				bIsFirstSlotFull = true;
+
+				WeaponSlotArray.Insert(WeaponRef, 1);
+
+				WeaponIndexEnum = EWeaponSlot::EWS_First_Slot;
+
+				IsSuccessful = true;
+			}
+
+			else
+			{
+				IsSuccessful = false;
+
+				break;
+			}
+		}
+
+		else if (!bIsSecondSlotFull)
+		{
+			SpawnWeaponFromPickup(WeaponRef, SpawnRef, IsSuccessful);
+
+			WeaponIndexEnum = EWeaponSlot::EWS_Second_Slot;
+
+			IsSuccessful = true;
+		}
+
+		else
+		{
+			IsSuccessful = false;
+
+			bHasOpenSlot = false;
+		}
+
+		break;
+
+	case EWeaponSlot::EWS_Second_Slot:
+
+		if (!bIsSecondSlotFull)
+		{
+			WeaponRef = GetWorld()->SpawnActor<AWeaponBase>(SpawnRef, Location, Rotation, Params);
+
+			if (IsValid(WeaponRef))
+			{
+				WeaponRef->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
+					WeaponRef->GetSocketName());
+
+				bIsSecondSlotFull = true;
+
+				WeaponSlotArray.Insert(WeaponRef, 2);
+
+				WeaponIndexEnum = EWeaponSlot::EWS_Second_Slot;
+
+				IsSuccessful = true;
+			}
+
+			else
+			{
+				IsSuccessful = false;
+
+				break;
+			}
+		}
+
+		else if (!bIsThirdSlotFull)
+		{
+			SpawnWeaponFromPickup(WeaponRef, SpawnRef, IsSuccessful);
+
+			WeaponIndexEnum = EWeaponSlot::EWS_Third_Slot;
+
+			IsSuccessful = true;
+		}
+
+		else
+		{
+			IsSuccessful = false;
+
+			bHasOpenSlot = false;
+		}
+
+		break;
+
+	case EWeaponSlot::EWS_Third_Slot:
+
+		if (!bIsThirdSlotFull)
+		{
+			WeaponRef = GetWorld()->SpawnActor<AWeaponBase>(SpawnRef, Location, Rotation, Params);
+
+			if (IsValid(WeaponRef))
+			{
+				WeaponRef->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
+					WeaponRef->GetSocketName());
+
+				bIsThirdSlotFull = true;
+
+				WeaponSlotArray.Insert(WeaponRef, 3);
+
+				WeaponIndexEnum = EWeaponSlot::EWS_Third_Slot;
+
+				IsSuccessful = true;
+			}
+
+			else
+			{
+				IsSuccessful = false;
+
+				break;
+			}
+		}
+
+		else if (!bIsDefaultSlotFull)
+		{
+			SpawnWeaponFromPickup(WeaponRef, SpawnRef, IsSuccessful);
+
+			WeaponIndexEnum = EWeaponSlot::EWS_Default_Slot;
+
+			IsSuccessful = true;
+		}
+
+		else
+		{
+			IsSuccessful = false;
+
+			bHasOpenSlot = false;
+		}
+
+		break;
+
+	case EWeaponSlot::EWS_Fourth_Slot:
+		break;
+
+	default:
+		break;
+	}
+}
+
+void APlayerCharacter::SwapWeaponFromPickup(TObjectPtr<class AWeaponBase> WeaponRef)
+{
+	uint8 TempIndex = static_cast<uint8>(WeaponIndexEnum);
+
+	if (!IsValid(WeaponRef) || !WeaponSlotArray.IsValidIndex(TempIndex))
+		return;
+
+
 }
 
 APlayerCharacter* APlayerCharacter::SetPlayerRef_Implementation() { return this; }

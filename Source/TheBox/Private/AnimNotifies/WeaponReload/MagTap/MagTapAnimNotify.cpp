@@ -10,6 +10,10 @@ void UMagTapAnimNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBa
 		auto&& PlayerRef = Cast<APlayerCharacter>(MeshComp->GetOwner());
 
 		if (IsValid(PlayerRef))
-			UGameplayStatics::SpawnSoundAttached(PlayerRef->GetCurrentWeapon()->GetMagTapSound(), PlayerRef->GetCurrentWeapon()->GetWeaponMesh());
+		{
+			uint8 Temp = PlayerRef->GetEquippedWeaponIndexUint();
+
+			UGameplayStatics::SpawnSoundAttached(PlayerRef->GetWeaponSlotArray()[Temp]->GetMagTapSound(), PlayerRef->GetCurrentWeapon()->GetWeaponMesh());
+		}
 	}
 }

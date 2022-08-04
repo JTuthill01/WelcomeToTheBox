@@ -119,17 +119,19 @@ void APlayerCharacterController::Interact()
 
 void APlayerCharacterController::FireWeapon()
 {
-	if (!IsValid(PlayerRef) || !IsValid(PlayerRef->GetCurrentWeapon()))
+	if (!IsValid(PlayerRef) || !PlayerRef->GetWeaponSlotArray().IsValidIndex(PlayerRef->GetEquippedWeaponIndexUint()))
 		return;
 
-	if (PlayerRef->GetCurrentWeapon()->CanFireOrReload() && PlayerRef->GetCurrentWeapon()->MagHasAmmo())
+	uint8 Temp = PlayerRef->GetEquippedWeaponIndexUint();
+
+	if (PlayerRef->GetWeaponSlotArray()[Temp]->CanFireOrReload() && PlayerRef->GetWeaponSlotArray()[Temp]->MagHasAmmo())
 	{
-		PlayerRef->GetCurrentWeapon()->WeaponFire();
+		PlayerRef->GetWeaponSlotArray()[Temp]->WeaponFire();
 
 		PlayerRef->PlayerFireWeapon();
 	}
 
-	else if (!PlayerRef->GetCurrentWeapon()->MagHasAmmo() && PlayerRef->GetCurrentWeapon()->HasAmmoForReload())
+	else if (!PlayerRef->GetWeaponSlotArray()[Temp]->MagHasAmmo() && PlayerRef->GetWeaponSlotArray()[Temp]->HasAmmoForReload())
 		WeaponReload();
 
 	else
@@ -141,19 +143,21 @@ void APlayerCharacterController::WeaponReload()
 	if (!IsValid(PlayerRef) || !IsValid(PlayerRef->GetCurrentWeapon()))
 		return;
 
-	EWeaponType WeaponTypeEnum = PlayerRef->GetCurrentWeapon()->GetWeaponType();
+	uint8 Temp = PlayerRef->GetEquippedWeaponIndexUint();
+
+	EWeaponType WeaponTypeEnum = PlayerRef->GetWeaponSlotArray()[Temp]->GetWeaponType();
 	
 	if (WeaponTypeEnum == EWeaponType::EWT_Shotgun)
 	{
-		if (PlayerRef->GetCurrentWeapon()->CanShotgunFireOrReload())
+		if (PlayerRef->GetWeaponSlotArray()[Temp]->CanShotgunFireOrReload())
 		{
-			PlayerRef->GetCurrentWeapon()->ShotgunReloadStart();
+			PlayerRef->GetWeaponSlotArray()[Temp]->ShotgunReloadStart();
 		}
 	}
 
-	else if (PlayerRef->GetCurrentWeapon()->CanFireOrReload())
+	else if (PlayerRef->GetWeaponSlotArray()[Temp]->CanFireOrReload())
 	{
-		PlayerRef->GetCurrentWeapon()->WeaponReload();
+		PlayerRef->GetWeaponSlotArray()[Temp]->WeaponReload();
 
 		PlayerRef->PlayerReloadWeapon();
 	}
@@ -164,7 +168,7 @@ void APlayerCharacterController::WeaponReload()
 
 void APlayerCharacterController::SwapWeapon()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 4.F, FCustomColorsFromHex::PlumVelvet(), __FUNCTION__);
+	
 }
 
 void APlayerCharacterController::SwitchPrimairyWeapon()
@@ -184,7 +188,7 @@ void APlayerCharacterController::SwitchPrimairyWeapon()
 
 		else
 		{
-			PlayerRef->SetWeaponSlotIndex(EWeaponSlot::EWS_First_Slot);
+			PlayerRef->SetWeaponSlotIndex(EWeaponSlot::EWS_Default_Slot);
 
 			SwitchPrimairyWeaponMesh(PlayerRef->GetEquippedWeaponIndexEnum());
 		}
@@ -202,7 +206,7 @@ void APlayerCharacterController::SwitchPrimairyWeapon()
 
 		else
 		{
-			PlayerRef->SetWeaponSlotIndex(EWeaponSlot::EWS_First_Slot);
+			PlayerRef->SetWeaponSlotIndex(EWeaponSlot::EWS_Default_Slot);
 
 			SwitchPrimairyWeaponMesh(PlayerRef->GetEquippedWeaponIndexEnum());
 		}
@@ -220,7 +224,7 @@ void APlayerCharacterController::SwitchPrimairyWeapon()
 
 		else
 		{
-			PlayerRef->SetWeaponSlotIndex(EWeaponSlot::EWS_First_Slot);
+			PlayerRef->SetWeaponSlotIndex(EWeaponSlot::EWS_Default_Slot);
 
 			SwitchPrimairyWeaponMesh(PlayerRef->GetEquippedWeaponIndexEnum());
 		}
@@ -231,16 +235,16 @@ void APlayerCharacterController::SwitchPrimairyWeapon()
 
 		if (PlayerRef->GetWeaponSlotArray().Num() > 4)
 		{
-			PlayerRef->SetWeaponSlotIndex(EWeaponSlot::EWS_Fourth_Slot);
+			PlayerRef->SetWeaponSlotIndex(EWeaponSlot::EWS_Default_Slot);
 
 			SwitchPrimairyWeaponMesh(LocalSlot);
 		}
 
 		else
 		{
-			PlayerRef->SetWeaponSlotIndex(EWeaponSlot::EWS_First_Slot);
+			PlayerRef->SetWeaponSlotIndex(EWeaponSlot::EWS_Default_Slot);
 
-			SwitchPrimairyWeaponMesh(PlayerRef->GetEquippedWeaponIndexEnum());
+			SwitchPrimairyWeaponMesh(LocalSlot);
 		}
 
 		break;
@@ -255,6 +259,66 @@ void APlayerCharacterController::SwitchPrimairyWeapon()
 
 void APlayerCharacterController::SwitchPrimairyWeaponMesh(EWeaponSlot Index)
 {
+	uint8 DefaultSlot = static_cast<uint8>(EWeaponSlot::EWS_Default_Slot);
+	uint8 Slot_One = static_cast<uint8>(EWeaponSlot::EWS_First_Slot);
+	uint8 Slot_Two = static_cast<uint8>(EWeaponSlot::EWS_Second_Slot);
+	uint8 Slot_Three = static_cast<uint8>(EWeaponSlot::EWS_Third_Slot);
+
+	uint8 LocalIndex = static_cast<uint8>(Index);
+	uint8 ArrayNum = PlayerRef->GetWeaponSlotArray().Num();
+
+	switch (Index)
+	{
+	case EWeaponSlot::EWS_Default_Slot:
+
+		if (ArrayNum >= 2)
+		{
+			PlayerRef->GetWeaponSlotArray()[DefaultSlot]->SetActorHiddenInGame(true);
+
+			PlayerRef->GetWeaponSlotArray()[Slot_One]->SetActorHiddenInGame(false);
+		}
+
+		break;
+
+	case EWeaponSlot::EWS_First_Slot:
+
+		if (ArrayNum >= 3)
+		{
+			PlayerRef->GetWeaponSlotArray()[Slot_One]->SetActorHiddenInGame(true);
+
+			PlayerRef->GetWeaponSlotArray()[Slot_Two]->SetActorHiddenInGame(false);
+		}
+
+		break;
+
+	case EWeaponSlot::EWS_Second_Slot:
+
+		if (ArrayNum >= 4)
+		{
+			PlayerRef->GetWeaponSlotArray()[Slot_Two]->SetActorHiddenInGame(true);
+
+			PlayerRef->GetWeaponSlotArray()[Slot_Three]->SetActorHiddenInGame(false);
+		}
+
+		break;
+
+	case EWeaponSlot::EWS_Third_Slot:
+
+		if (ArrayNum >= 5)
+		{
+			PlayerRef->GetWeaponSlotArray()[Slot_Three]->SetActorHiddenInGame(true);
+
+			PlayerRef->GetWeaponSlotArray()[DefaultSlot]->SetActorHiddenInGame(false);
+		}
+
+		break;
+
+	case EWeaponSlot::EWS_Fourth_Slot:
+		break;
+
+	default:
+		break;
+	}
 }
 
 void APlayerCharacterController::StopFiringWeapon() { PlayerRef->GetCurrentWeapon()->StopFire(); }

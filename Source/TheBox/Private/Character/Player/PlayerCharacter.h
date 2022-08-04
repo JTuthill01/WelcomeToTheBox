@@ -24,23 +24,33 @@ public:
 
 public:
 
-#pragma region Getters
+#pragma region C++ only Getters
 
 	FORCEINLINE TObjectPtr<USkeletalMeshComponent> GetPlayerArms() { return Arms; }
 	FORCEINLINE TObjectPtr<class UCameraComponent> GetPlayerCamera() { return Camera; }
 	FORCEINLINE TObjectPtr<class UPlayerHealthComponent> GetHealthComponent() { return HealthComponent; }
 	FORCEINLINE TObjectPtr<UAnimInstance> GetPlayerAnimInstance() { return PlayerAnimInstance; }
 
+	FORCEINLINE EWeaponSlot GetEquippedWeaponIndexEnum() { return WeaponIndexEnum; }
+
+	FORCEINLINE bool HasOpenWeaponSlot() { return bHasOpenSlot; }
+
+#pragma endregion
+
+#pragma region Blueprint and C++ Getters
+
+	UFUNCTION(BlueprintPure, BlueprintCallable)
+	FORCEINLINE TArray<AWeaponBase*> GetWeaponSlotArray() { return WeaponSlotArray; }
+
 	UFUNCTION(BlueprintPure, BlueprintCallable)
 	FORCEINLINE class AWeaponBase* GetCurrentWeapon() { return CurrentWeapon; }
 
-	FORCEINLINE TArray<TObjectPtr<AWeaponBase>> GetWeaponSlotArray() { return WeaponSlotArray; }
-
-	FORCEINLINE EWeaponSlot GetEquippedWeaponIndexEnum() { return WeaponIndexEnum; }
+	UFUNCTION(BlueprintPure, BlueprintCallable)
 	FORCEINLINE uint8 GetEquippedWeaponIndexUint() { return WeaponIndex = static_cast<uint8>(WeaponIndexEnum); }
 
 #pragma endregion
 
+	/* Setter for the EWeaponSlot Enum, used in PlayerCharacterController for switching weapons */
 	FORCEINLINE void SetWeaponSlotIndex(EWeaponSlot NewValue) { WeaponIndexEnum = NewValue; }
 
 public:	
@@ -66,6 +76,11 @@ public:
 	UFUNCTION()
 	void PlayerReloadWeapon();
 
+public:
+	void SpawnWeaponFromPickup(TObjectPtr<class AWeaponBase> WeaponRef, TSubclassOf<class AWeaponBase> SpawnRef, bool& IsSuccessful);
+
+	void SwapWeaponFromPickup(TObjectPtr<class AWeaponBase> WeaponRef);
+
 protected:
 	//Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -76,8 +91,6 @@ private:
 
 	UFUNCTION()
 	void ScanForInteractables();
-
-
 
 private:
 	void Initialize();
@@ -138,18 +151,6 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = HUDVariables, meta = (AllowPrivateAccess = "true"))
 	EWeaponName CurrentNameOfWeapon;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = HUDVariables, meta = (AllowPrivateAccess = "true"))
-	uint8 Slot1;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = HUDVariables, meta = (AllowPrivateAccess = "true"))
-	uint8 Slot2;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = HUDVariables, meta = (AllowPrivateAccess = "true"))
-	uint8 Slot3;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = HUDVariables, meta = (AllowPrivateAccess = "true"))
-	uint8 Slot4;
-
 private:
 	void SpawnInitialWeapon();
 
@@ -165,4 +166,10 @@ private:
 
 	uint8 MaxSlots;
 	uint8 WeaponIndex;
+
+	bool bIsDefaultSlotFull;
+	bool bIsFirstSlotFull;
+	bool bIsSecondSlotFull;
+	bool bIsThirdSlotFull;
+	bool bHasOpenSlot;
 };

@@ -182,6 +182,11 @@ void APickupBase::HealthPickup(EPickupHealthType InHealthType)
 
 void APickupBase::AmmoPickup(EPickupAmmoType InAmmoType)
 {
+	if (!IsValid(PlayerRef) && !PlayerRef->GetWeaponSlotArray().IsValidIndex(PlayerRef->GetEquippedWeaponIndexUint()))
+		return;
+
+	uint8 Temp = PlayerRef->GetEquippedWeaponIndexUint();
+
 	switch (InAmmoType)
 	{
 	case EPickupAmmoType::EPA_None:
@@ -189,11 +194,11 @@ void APickupBase::AmmoPickup(EPickupAmmoType InAmmoType)
 
 	case EPickupAmmoType::EPH_PistolAmmo:
 
-		if (PlayerRef->GetCurrentWeapon()->GetWeaponType() == EWeaponType::EWT_Pistol)
+		if (PlayerRef->GetWeaponSlotArray()[Temp]->GetWeaponType() == EWeaponType::EWT_Pistol)
 		{
-			if (!PlayerRef->GetCurrentWeapon()->IsAmmoFull())
+			if (!PlayerRef->GetWeaponSlotArray()[Temp]->IsAmmoFull())
 			{
-				PlayerRef->GetCurrentWeapon()->SetTotalAmmo(PickupData.PistolAmmoValue);
+				PlayerRef->GetWeaponSlotArray()[Temp]->SetTotalAmmo(PickupData.PistolAmmoValue);
 
 				Destroy();
 			}
@@ -203,11 +208,11 @@ void APickupBase::AmmoPickup(EPickupAmmoType InAmmoType)
 
 	case EPickupAmmoType::EPS_RifleAmmo:
 
-		if (PlayerRef->GetCurrentWeapon()->GetWeaponType() == EWeaponType::EWT_Rifle)
+		if (PlayerRef->GetWeaponSlotArray()[Temp]->GetWeaponType() == EWeaponType::EWT_Rifle)
 		{
-			if (!PlayerRef->GetCurrentWeapon()->IsAmmoFull())
+			if (!PlayerRef->GetWeaponSlotArray()[Temp]->IsAmmoFull())
 			{
-				PlayerRef->GetCurrentWeapon()->SetTotalAmmo(PickupData.RifleAmmoValue);
+				PlayerRef->GetWeaponSlotArray()[Temp]->SetTotalAmmo(PickupData.RifleAmmoValue);
 
 				Destroy();
 			}
@@ -217,11 +222,11 @@ void APickupBase::AmmoPickup(EPickupAmmoType InAmmoType)
 
 	case EPickupAmmoType::EPA_ShotgunAmmo:
 
-		if (PlayerRef->GetCurrentWeapon()->GetWeaponType() == EWeaponType::EWT_Shotgun)
+		if (PlayerRef->GetWeaponSlotArray()[Temp]->GetWeaponType() == EWeaponType::EWT_Shotgun)
 		{
-			if (!PlayerRef->GetCurrentWeapon()->IsAmmoFull())
+			if (!PlayerRef->GetWeaponSlotArray()[Temp]->IsAmmoFull())
 			{
-				PlayerRef->GetCurrentWeapon()->SetTotalAmmo(PickupData.ShotgunAmmoValue);
+				PlayerRef->GetWeaponSlotArray()[Temp]->SetTotalAmmo(PickupData.ShotgunAmmoValue);
 
 				Destroy();
 			}

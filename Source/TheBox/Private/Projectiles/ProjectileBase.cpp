@@ -66,17 +66,19 @@ void AProjectileBase::ProjectileStop(const FHitResult& HitResult)
 
 void AProjectileBase::ExplodeOnImpact(const FHitResult& HitResult)
 {
-	if (!IsValid(PlayerRef->GetCurrentWeapon()))
+	if (!IsValid(PlayerRef) || !PlayerRef->GetWeaponSlotArray().IsValidIndex(PlayerRef->GetEquippedWeaponIndexUint()))
 		return;
 
-	CurrentWeaponStats.DamageRadius = PlayerRef->GetCurrentWeapon()->GetDamageRadius();
-	CurrentWeaponStats.DamageAmount = PlayerRef->GetCurrentWeapon()->GetDamageAmount();
+	uint8 Temp = PlayerRef->GetEquippedWeaponIndexUint();
+
+	CurrentWeaponStats.DamageRadius = PlayerRef->GetWeaponSlotArray()[Temp]->GetDamageRadius();
+	CurrentWeaponStats.DamageAmount = PlayerRef->GetWeaponSlotArray()[Temp]->GetDamageAmount();
 	
 	TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjects;
 	TArray<AActor*> ActorsToIgnore;
 	TArray<AActor*> OutActors;
 
-	ActorsToIgnore.Add(PlayerRef->GetCurrentWeapon());
+	ActorsToIgnore.Add(PlayerRef->GetWeaponSlotArray()[Temp]);
 	ActorsToIgnore.Add(this);
 
 	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldDynamic));
@@ -90,7 +92,7 @@ void AProjectileBase::ExplodeOnImpact(const FHitResult& HitResult)
 
 		TArray<AActor*> Ignore;
 		Ignore.Add(this);
-		Ignore.Add(PlayerRef->GetCurrentWeapon());
+		Ignore.Add(PlayerRef->GetWeaponSlotArray()[Temp]);
 
 		for (int32 i = 0; i < Count; ++i)
 		{
