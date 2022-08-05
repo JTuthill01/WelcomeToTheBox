@@ -1,4 +1,6 @@
 #include "Interactables/Animated/AnimatedInteractables.h"
+#include "Weapons/WeaponBase/WeaponBase.h"
+#include "Character/Player/PlayerCharacter.h"
 
 AAnimatedInteractables::AAnimatedInteractables() : bHasBeenOpned(false)
 {
@@ -42,4 +44,16 @@ void AAnimatedInteractables::Open()
 	SKBaseMesh->PlayAnimation(AnimToPlay, false);
 
 	bHasBeenOpned = true;
+
+	FActorSpawnParameters Parms;
+	Parms.Owner = this;
+	Parms.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	/* Temp code for weapon pickup spawning. IT ACTUALLY FUCKING WORKS!!!!!!!*/
+
+	FVector Loc{ SKBaseMesh->GetSocketLocation("SpawnSocket") };
+
+	FRotator Rot{ SKBaseMesh->GetSocketRotation("SpawnSocket") };
+
+	TObjectPtr<AWeaponBase> Temp = GetWorld()->SpawnActor<AWeaponBase>(PlayerRef->GetWeaponSlotArray()[0]->GetSubClass(), Loc, Rot, Parms);
 }

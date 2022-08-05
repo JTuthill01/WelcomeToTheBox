@@ -11,7 +11,7 @@
 #include "Weapons/WeaponBase/WeaponBase.h"
 #include "Structs/HexColors/Str_CustomHexColors.h"
 
-APlayerCharacterController::APlayerCharacterController() : BaseMovementSpeed(600.F), BaseSprintSpeed(800.F)
+APlayerCharacterController::APlayerCharacterController() : BaseMovementSpeed(600.F), BaseSprintSpeed(800.F), IndexEnum(EWeaponSlot::EWS_First_Slot)
 {
 	PlayerCameraManagerClass = ATheBoxCameraManager::StaticClass();
 }
@@ -84,8 +84,8 @@ void APlayerCharacterController::SetupInputComponent()
 		if (WeaponSwapAction)
 			PlayerEnhancedInputComponent->BindAction(WeaponSwapAction, ETriggerEvent::Triggered, this, &APlayerCharacterController::SwapWeapon);
 
-		if (PrimairyWeaponSwitchAction)
-			PlayerEnhancedInputComponent->BindAction(PrimairyWeaponSwitchAction, ETriggerEvent::Triggered, this, &APlayerCharacterController::SwitchPrimairyWeapon);
+		/*if (PrimairyWeaponSwitchAction)
+			PlayerEnhancedInputComponent->BindAction(PrimairyWeaponSwitchAction, ETriggerEvent::Triggered, this, &APlayerCharacterController::SwitchPrimairyWeapon);*/
 	}
 }
 
@@ -169,156 +169,6 @@ void APlayerCharacterController::WeaponReload()
 void APlayerCharacterController::SwapWeapon()
 {
 	
-}
-
-void APlayerCharacterController::SwitchPrimairyWeapon()
-{
-	EWeaponSlot LocalSlot = PlayerRef->GetEquippedWeaponIndexEnum();
-
-	switch (LocalSlot)
-	{
-	case EWeaponSlot::EWS_Default_Slot:
-
-		if (PlayerRef->GetWeaponSlotArray().Num() > 1)
-		{
-			PlayerRef->SetWeaponSlotIndex(EWeaponSlot::EWS_First_Slot);
-
-			SwitchPrimairyWeaponMesh(LocalSlot);
-		}
-
-		else
-		{
-			PlayerRef->SetWeaponSlotIndex(EWeaponSlot::EWS_Default_Slot);
-
-			SwitchPrimairyWeaponMesh(PlayerRef->GetEquippedWeaponIndexEnum());
-		}
-
-		break;
-
-	case EWeaponSlot::EWS_First_Slot:
-
-		if (PlayerRef->GetWeaponSlotArray().Num() > 2)
-		{
-			PlayerRef->SetWeaponSlotIndex(EWeaponSlot::EWS_Second_Slot);
-
-			SwitchPrimairyWeaponMesh(LocalSlot);
-		}
-
-		else
-		{
-			PlayerRef->SetWeaponSlotIndex(EWeaponSlot::EWS_Default_Slot);
-
-			SwitchPrimairyWeaponMesh(PlayerRef->GetEquippedWeaponIndexEnum());
-		}
-
-		break;
-
-	case EWeaponSlot::EWS_Second_Slot:
-
-		if (PlayerRef->GetWeaponSlotArray().Num() > 3)
-		{
-			PlayerRef->SetWeaponSlotIndex(EWeaponSlot::EWS_Third_Slot);
-
-			SwitchPrimairyWeaponMesh(LocalSlot);
-		}
-
-		else
-		{
-			PlayerRef->SetWeaponSlotIndex(EWeaponSlot::EWS_Default_Slot);
-
-			SwitchPrimairyWeaponMesh(PlayerRef->GetEquippedWeaponIndexEnum());
-		}
-
-		break;
-
-	case EWeaponSlot::EWS_Third_Slot:
-
-		if (PlayerRef->GetWeaponSlotArray().Num() > 4)
-		{
-			PlayerRef->SetWeaponSlotIndex(EWeaponSlot::EWS_Default_Slot);
-
-			SwitchPrimairyWeaponMesh(LocalSlot);
-		}
-
-		else
-		{
-			PlayerRef->SetWeaponSlotIndex(EWeaponSlot::EWS_Default_Slot);
-
-			SwitchPrimairyWeaponMesh(LocalSlot);
-		}
-
-		break;
-
-	case EWeaponSlot::EWS_Fourth_Slot:
-		break;
-
-	default:
-		break;
-	}
-}
-
-void APlayerCharacterController::SwitchPrimairyWeaponMesh(EWeaponSlot Index)
-{
-	uint8 DefaultSlot = static_cast<uint8>(EWeaponSlot::EWS_Default_Slot);
-	uint8 Slot_One = static_cast<uint8>(EWeaponSlot::EWS_First_Slot);
-	uint8 Slot_Two = static_cast<uint8>(EWeaponSlot::EWS_Second_Slot);
-	uint8 Slot_Three = static_cast<uint8>(EWeaponSlot::EWS_Third_Slot);
-
-	uint8 LocalIndex = static_cast<uint8>(Index);
-	uint8 ArrayNum = PlayerRef->GetWeaponSlotArray().Num();
-
-	switch (Index)
-	{
-	case EWeaponSlot::EWS_Default_Slot:
-
-		if (ArrayNum >= 2)
-		{
-			PlayerRef->GetWeaponSlotArray()[DefaultSlot]->SetActorHiddenInGame(true);
-
-			PlayerRef->GetWeaponSlotArray()[Slot_One]->SetActorHiddenInGame(false);
-		}
-
-		break;
-
-	case EWeaponSlot::EWS_First_Slot:
-
-		if (ArrayNum >= 3)
-		{
-			PlayerRef->GetWeaponSlotArray()[Slot_One]->SetActorHiddenInGame(true);
-
-			PlayerRef->GetWeaponSlotArray()[Slot_Two]->SetActorHiddenInGame(false);
-		}
-
-		break;
-
-	case EWeaponSlot::EWS_Second_Slot:
-
-		if (ArrayNum >= 4)
-		{
-			PlayerRef->GetWeaponSlotArray()[Slot_Two]->SetActorHiddenInGame(true);
-
-			PlayerRef->GetWeaponSlotArray()[Slot_Three]->SetActorHiddenInGame(false);
-		}
-
-		break;
-
-	case EWeaponSlot::EWS_Third_Slot:
-
-		if (ArrayNum >= 5)
-		{
-			PlayerRef->GetWeaponSlotArray()[Slot_Three]->SetActorHiddenInGame(true);
-
-			PlayerRef->GetWeaponSlotArray()[DefaultSlot]->SetActorHiddenInGame(false);
-		}
-
-		break;
-
-	case EWeaponSlot::EWS_Fourth_Slot:
-		break;
-
-	default:
-		break;
-	}
 }
 
 void APlayerCharacterController::StopFiringWeapon() { PlayerRef->GetCurrentWeapon()->StopFire(); }

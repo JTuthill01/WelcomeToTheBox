@@ -6,6 +6,7 @@
 #include "Interfaces/Pickup/PickupInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "Weapons/WeaponBase/WeaponBase.h"
+#include "Structs/HexColors/Str_CustomHexColors.h"
 
 // Sets default values
 APickupBase::APickupBase()
@@ -44,12 +45,6 @@ void APickupBase::OnConstruction(const FTransform& Transform)
 	case EPickupType::EPT_None:
 		break;
 
-	case EPickupType::EPT_Weapon:
-
-		SetWeaponData(PickupWeaponName);
-
-		break;
-
 	case EPickupType::EPT_Health:
 
 		SetHealthData(BaseHealthType);
@@ -82,9 +77,6 @@ void APickupBase::InteractWithObject_Implementation()
 	switch (PickupBaseType)
 	{
 	case EPickupType::EPT_None:
-		break;
-
-	case EPickupType::EPT_Weapon:
 		break;
 
 	case EPickupType::EPT_Health:
@@ -130,9 +122,6 @@ void APickupBase::Setup()
 
 	if (IsValid(PlayerRef))
 		PlayerRef->Clear.AddDynamic(this, &APickupBase::OnClearViewport);
-
-	else
-		return;
 }
 
 void APickupBase::HealthPickup(EPickupHealthType InHealthType)
@@ -261,21 +250,6 @@ void APickupBase::SetData()
 	PickupData.ShotgunAmmoValue = PickupParser->SAmmoValue;
 }
 
-void APickupBase::SetWeaponPickupData()
-{
-	TObjectPtr<UStaticMesh> NewMesh = LoadObject<UStaticMesh>(this, *PickupParser->MeshFilePathString);
-
-	TObjectPtr<UMaterialInstance> NewInstance = LoadObject<UMaterialInstance>(this, *PickupParser->IconFilePathString);
-
-	if (IsValid(NewMesh))
-		BaseMesh->SetStaticMesh(NewMesh);
-
-	WeaponPickupStr.Icon = NewInstance;
-	WeaponPickupStr.PickupType = static_cast<EPickupType>(PickupParser->PType);
-	WeaponPickupStr.WeaponPickupName = FName(*PickupParser->PickupNameString);
-	WeaponPickupStr.PickupWidgetText = PickupParser->WidgetTextString;
-}
-
 void APickupBase::SetHealthData(EPickupHealthType Health)
 {
 	switch (Health)
@@ -369,167 +343,4 @@ void APickupBase::SetArmorData()
 	SetData();
 }
 
-void APickupBase::SetWeaponData(EWeaponName Name)
-{
-	switch (Name)
-	{
-	case EWeaponName::EWN_NONE:
-		break;
 
-	case EWeaponName::EWN_TT33:
-
-		PickupParser->SetWeaponObjectData("TT33");
-
-		PickupParser->WeaponPickupParser();
-
-		SetWeaponPickupData();
-
-		break;
-
-	case EWeaponName::EWN_AK47:
-
-		PickupParser->SetWeaponObjectData("AK47");
-
-		PickupParser->WeaponPickupParser();
-
-		SetWeaponPickupData();
-
-		break;
-
-	case EWeaponName::EWN_AmericanShotgun:
-
-		PickupParser->SetWeaponObjectData("AmericanShotgun");
-
-		PickupParser->WeaponPickupParser();
-
-		SetWeaponPickupData();
-
-		break;
-
-	case EWeaponName::EWN_BelgianAR:
-
-		PickupParser->SetWeaponObjectData("BelgianAR");
-
-		PickupParser->WeaponPickupParser();
-
-		SetWeaponPickupData();
-
-		break;
-
-	case EWeaponName::EWN_GermanSMG:
-
-		PickupParser->SetWeaponObjectData("GermanSMG");
-
-		PickupParser->WeaponPickupParser();
-
-		SetWeaponPickupData();
-
-		break;
-
-	case EWeaponName::EWN_HandCannon:
-
-		PickupParser->SetWeaponObjectData("HandCannon");
-
-		PickupParser->WeaponPickupParser();
-
-		SetWeaponPickupData();
-
-		break;
-
-	case EWeaponName::EWN_SKS:
-
-		PickupParser->SetWeaponObjectData("SKS");
-
-		PickupParser->WeaponPickupParser();
-
-		SetWeaponPickupData();
-
-		break;
-
-	case EWeaponName::EWN_XM82:
-
-		PickupParser->SetWeaponObjectData("XM82");
-
-		PickupParser->WeaponPickupParser();
-
-		SetWeaponPickupData();
-
-		break;
-
-	case EWeaponName::EWN_Bulldog:
-
-		PickupParser->SetWeaponObjectData("Bulldog");
-
-		PickupParser->WeaponPickupParser();
-
-		SetWeaponPickupData();
-
-		break;
-
-	case EWeaponName::EWN_L86:
-
-		PickupParser->SetWeaponObjectData("L86");
-
-		PickupParser->WeaponPickupParser();
-
-		SetWeaponPickupData();
-
-		break;
-
-	case EWeaponName::EWN_AK74:
-
-		PickupParser->SetWeaponObjectData("AK74");
-
-		PickupParser->WeaponPickupParser();
-
-		SetWeaponPickupData();
-
-		break;
-
-	case EWeaponName::EWN_M4A1:
-		break;
-
-	case EWeaponName::EWN_NavySMG:
-
-		PickupParser->SetWeaponObjectData("NavySMG");
-
-		PickupParser->WeaponPickupParser();
-
-		SetWeaponPickupData();
-
-		break;
-
-	case EWeaponName::EWN_ItalianShotgun:
-
-		PickupParser->SetWeaponObjectData("ItalianShotgun");
-
-		PickupParser->WeaponPickupParser();
-
-		SetWeaponPickupData();
-
-		break;
-
-	case EWeaponName::EWN_SVD:
-
-		PickupParser->SetWeaponObjectData("SVD");
-
-		PickupParser->WeaponPickupParser();
-
-		SetWeaponPickupData();
-
-		break;
-
-	case EWeaponName::EWN_ShortStrokeAR:
-
-		PickupParser->SetWeaponObjectData("ShortStrokeAR");
-
-		PickupParser->WeaponPickupParser();
-
-		SetWeaponPickupData();
-
-		break;
-
-	default:
-		break;
-	}
-}

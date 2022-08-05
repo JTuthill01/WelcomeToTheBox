@@ -10,8 +10,8 @@
 #include "Structs/HexColors/Str_CustomHexColors.h"
 
 // Sets default values
-APlayerCharacter::APlayerCharacter() : InteractableTraceTimer(0.25F), WeaponIndexEnum(EWeaponSlot::EWS_Default_Slot), MaxSlots(5), WeaponIndex(0), bIsDefaultSlotFull(false), bIsFirstSlotFull(false), 
-	bIsSecondSlotFull(false), bIsThirdSlotFull(false), bHasOpenSlot(true)
+APlayerCharacter::APlayerCharacter() : InteractableTraceTimer(0.25F), WeaponIndexEnum(EWeaponSlot::EWS_Default_Slot), MaxSlots(5), WeaponIndex(0), bIsFirstSlotFull(false),
+	bIsSecondSlotFull(false), bIsThirdSlotFull(false), bIsFourthSlotFull(false), bHasOpenSlot(true)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
@@ -68,18 +68,24 @@ void APlayerCharacter::SpawnInitialWeapon()
 
 	if (IsValid(CurrentWeapon))
 	{
-		CurrentWeapon->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
-			CurrentWeapon->GetSocketName());
+		WeaponIndex = 0;
 
-		CurrentAmmoHUD = CurrentWeapon->GetCurrentAmmo();
+		WeaponSlotArray.Insert(CurrentWeapon, 0);
 
-		MaxAmmoHUD = CurrentWeapon->GetCurrentTotalAmmo();
+		WeaponSlotArray[WeaponIndex]->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
+			WeaponSlotArray[WeaponIndex]->GetSocketName());
 
-		CurrentNameOfWeapon = CurrentWeapon->GetCurrentWeaponEnumName();
+		CurrentAmmoHUD = WeaponSlotArray[WeaponIndex]->GetCurrentAmmo();
 
-		WeaponSlotArray.Emplace(CurrentWeapon);
+		MaxAmmoHUD = WeaponSlotArray[WeaponIndex]->GetCurrentTotalAmmo();
 
-		bIsDefaultSlotFull = true;
+		CurrentNameOfWeapon = WeaponSlotArray[WeaponIndex]->GetCurrentWeaponEnumName();
+
+		WeaponIndexEnum = EWeaponSlot::EWS_First_Slot;
+
+		WeaponIndex = static_cast<uint8>(WeaponIndexEnum);
+
+		bIsFirstSlotFull = true;
 	}
 }
 
@@ -100,6 +106,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 void APlayerCharacter::PlayerDeath()
 {
+	/* Temp, only for debugging */
 	EndPlay(EEndPlayReason::Destroyed);
 }
 
@@ -114,7 +121,7 @@ void APlayerCharacter::ScanForInteractables()
 	TArray<AActor*> ActorsToIgnore;
 
 	ActorsToIgnore.Add(this);
-	ActorsToIgnore.Add(WeaponSlotArray[GetEquippedWeaponIndexUint()]);
+	ActorsToIgnore.Add(WeaponSlotArray[WeaponIndex]);
 
 	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldStatic));
 	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldDynamic));
@@ -145,7 +152,7 @@ void APlayerCharacter::InteractWithObject()
 	TArray<AActor*> ActorsToIgnore;
 
 	ActorsToIgnore.Add(this);
-	ActorsToIgnore.Add(CurrentWeapon);
+	ActorsToIgnore.Add(WeaponSlotArray[WeaponIndex]);
 
 	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldStatic));
 	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldDynamic));
@@ -190,219 +197,6 @@ void APlayerCharacter::PlayerReloadWeapon()
 
 	else
 		return;
-}
-
-void APlayerCharacter::SpawnWeaponFromPickup(TObjectPtr<class AWeaponBase> WeaponRef, TSubclassOf<class AWeaponBase> SpawnRef, bool& IsSuccessful)
-{
-	FActorSpawnParameters Params;
-	Params.Owner = this;
-	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-	FVector Location = Arms->GetComponentLocation();
-	FRotator Rotation = Arms->GetComponentRotation();
-
-	switch (WeaponIndexEnum)
-	{
-	case EWeaponSlot::EWS_Default_Slot:
-
-		if (!bIsDefaultSlotFull)
-		{
-			WeaponRef = GetWorld()->SpawnActor<AWeaponBase>(SpawnRef, Location, Rotation, Params);
-
-			if (IsValid(WeaponRef))
-			{
-				WeaponRef->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
-					WeaponRef->GetSocketName());
-
-				bIsDefaultSlotFull = true;
-
-				WeaponSlotArray.Insert(WeaponRef, 0);
-
-				WeaponIndexEnum = EWeaponSlot::EWS_Default_Slot;
-
-				IsSuccessful = true;
-			}
-
-			else
-			{
-				IsSuccessful = false;
-
-				break;
-			}
-		}
-
-		else if (!bIsFirstSlotFull)
-		{
-			SpawnWeaponFromPickup(WeaponRef, SpawnRef, IsSuccessful);
-
-			WeaponIndexEnum = EWeaponSlot::EWS_First_Slot;
-
-			IsSuccessful = true;
-		}
-
-		else
-		{
-			IsSuccessful = false;
-
-			bHasOpenSlot = false;
-		}
-
-		break;
-
-	case EWeaponSlot::EWS_First_Slot:
-
-		if (!bIsFirstSlotFull)
-		{
-			WeaponRef = GetWorld()->SpawnActor<AWeaponBase>(SpawnRef, Location, Rotation, Params);
-
-			if (IsValid(WeaponRef))
-			{
-				WeaponRef->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
-					WeaponRef->GetSocketName());
-
-				bIsFirstSlotFull = true;
-
-				WeaponSlotArray.Insert(WeaponRef, 1);
-
-				WeaponIndexEnum = EWeaponSlot::EWS_First_Slot;
-
-				IsSuccessful = true;
-			}
-
-			else
-			{
-				IsSuccessful = false;
-
-				break;
-			}
-		}
-
-		else if (!bIsSecondSlotFull)
-		{
-			SpawnWeaponFromPickup(WeaponRef, SpawnRef, IsSuccessful);
-
-			WeaponIndexEnum = EWeaponSlot::EWS_Second_Slot;
-
-			IsSuccessful = true;
-		}
-
-		else
-		{
-			IsSuccessful = false;
-
-			bHasOpenSlot = false;
-		}
-
-		break;
-
-	case EWeaponSlot::EWS_Second_Slot:
-
-		if (!bIsSecondSlotFull)
-		{
-			WeaponRef = GetWorld()->SpawnActor<AWeaponBase>(SpawnRef, Location, Rotation, Params);
-
-			if (IsValid(WeaponRef))
-			{
-				WeaponRef->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
-					WeaponRef->GetSocketName());
-
-				bIsSecondSlotFull = true;
-
-				WeaponSlotArray.Insert(WeaponRef, 2);
-
-				WeaponIndexEnum = EWeaponSlot::EWS_Second_Slot;
-
-				IsSuccessful = true;
-			}
-
-			else
-			{
-				IsSuccessful = false;
-
-				break;
-			}
-		}
-
-		else if (!bIsThirdSlotFull)
-		{
-			SpawnWeaponFromPickup(WeaponRef, SpawnRef, IsSuccessful);
-
-			WeaponIndexEnum = EWeaponSlot::EWS_Third_Slot;
-
-			IsSuccessful = true;
-		}
-
-		else
-		{
-			IsSuccessful = false;
-
-			bHasOpenSlot = false;
-		}
-
-		break;
-
-	case EWeaponSlot::EWS_Third_Slot:
-
-		if (!bIsThirdSlotFull)
-		{
-			WeaponRef = GetWorld()->SpawnActor<AWeaponBase>(SpawnRef, Location, Rotation, Params);
-
-			if (IsValid(WeaponRef))
-			{
-				WeaponRef->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
-					WeaponRef->GetSocketName());
-
-				bIsThirdSlotFull = true;
-
-				WeaponSlotArray.Insert(WeaponRef, 3);
-
-				WeaponIndexEnum = EWeaponSlot::EWS_Third_Slot;
-
-				IsSuccessful = true;
-			}
-
-			else
-			{
-				IsSuccessful = false;
-
-				break;
-			}
-		}
-
-		else if (!bIsDefaultSlotFull)
-		{
-			SpawnWeaponFromPickup(WeaponRef, SpawnRef, IsSuccessful);
-
-			WeaponIndexEnum = EWeaponSlot::EWS_Default_Slot;
-
-			IsSuccessful = true;
-		}
-
-		else
-		{
-			IsSuccessful = false;
-
-			bHasOpenSlot = false;
-		}
-
-		break;
-
-	case EWeaponSlot::EWS_Fourth_Slot:
-		break;
-
-	default:
-		break;
-	}
-}
-
-void APlayerCharacter::SwapWeaponFromPickup(TObjectPtr<class AWeaponBase> WeaponRef)
-{
-	uint8 TempIndex = static_cast<uint8>(WeaponIndexEnum);
-
-	if (!IsValid(WeaponRef) || !WeaponSlotArray.IsValidIndex(TempIndex))
-		return;
-
-
 }
 
 APlayerCharacter* APlayerCharacter::SetPlayerRef_Implementation() { return this; }

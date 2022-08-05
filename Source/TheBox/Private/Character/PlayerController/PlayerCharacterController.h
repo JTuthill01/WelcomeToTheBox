@@ -99,4 +99,7 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<class AWeaponBase> WeaponRef;
+
+private:
+	EWeaponSlot IndexEnum;
 };

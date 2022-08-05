@@ -3,7 +3,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Structs/PickupData/Str_PickupData.h"
-#include "Structs/WeaponPickup/Str_WeaponPickup.h"
 #include "Interfaces/Interact/InteractInterface.h"
 #include "Enums/PickupEnums/PickupEnums.h"
 #include "Enums/WeaponEnums/WeaponEnums.h"
@@ -19,7 +18,6 @@ public:
 	APickupBase();
 
 public:
-	FORCEINLINE void SetPickupWeaponName(EWeaponName NewName) { PickupWeaponName = NewName; }
 	FORCEINLINE void SetPickupBaseType(EPickupType Base) { PickupBaseType = Base; }
 
 public:
@@ -55,9 +53,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
 	EPickupAmmoType PickupAmmoType;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
-	EWeaponName PickupWeaponName;
-
 private:
 	UFUNCTION()
 	void OnClearViewport();
@@ -70,11 +65,9 @@ private:
 	void AmmoPickup(EPickupAmmoType InAmmoType);
 
 	void SetData();
-	void SetWeaponPickupData();
 	void SetHealthData(EPickupHealthType Health);
 	void SetAmmoData(EPickupAmmoType PickupAmmo);
 	void SetArmorData();
-	void SetWeaponData(EWeaponName Name);
 
 private:
 	UPROPERTY()
@@ -83,12 +76,7 @@ private:
 	UPROPERTY()
 	TObjectPtr<class UPickupComponent> PickupParser;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = WeaponPickup, meta = (AllowPrivateAccess = "true"))
-	TArray<TSubclassOf<class AWeaponBase>> WeaponPickupToSpawn;
-
 private:
-	FWeaponPickup WeaponPickupStr;
-
 	float HealthValue;
 	float ArmorValue;
 

@@ -266,3 +266,9 @@ bool AWeaponBase::CanShotgunFireOrReload() { return !WeaponAnimInstance->Montage
 void AWeaponBase::WeaponSetup() {}
 
 void AWeaponBase::StopFire() {}
+
+void AWeaponBase::InteractableFound_Implementation() {}
+
+void AWeaponBase::InteractWithObject_Implementation() {}
+
+void AWeaponBase::ClearViewport_Implementation() {}

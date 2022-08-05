@@ -76,11 +76,6 @@ public:
 	UFUNCTION()
 	void PlayerReloadWeapon();
 
-public:
-	void SpawnWeaponFromPickup(TObjectPtr<class AWeaponBase> WeaponRef, TSubclassOf<class AWeaponBase> SpawnRef, bool& IsSuccessful);
-
-	void SwapWeaponFromPickup(TObjectPtr<class AWeaponBase> WeaponRef);
-
 protected:
 	//Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -167,9 +162,9 @@ private:
 	uint8 MaxSlots;
 	uint8 WeaponIndex;
 
-	bool bIsDefaultSlotFull;
 	bool bIsFirstSlotFull;
 	bool bIsSecondSlotFull;
 	bool bIsThirdSlotFull;
+	bool bIsFourthSlotFull;
 	bool bHasOpenSlot;
 };

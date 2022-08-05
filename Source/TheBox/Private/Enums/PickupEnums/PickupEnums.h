@@ -2,7 +2,7 @@
 #pragma once
 
 UENUM(BlueprintType)
-enum class EPickupType : uint8 { EPT_None UMETA(DisplayName = "None"), EPT_Weapon UMETA(DisplayName = "Weapon"), EPT_Health UMETA(DisplayName = "Health"), EPT_Ammo UMETA(DisplayName = "Ammo"),
+enum class EPickupType : uint8 { EPT_None UMETA(DisplayName = "None"), EPT_Health UMETA(DisplayName = "Health"), EPT_Ammo UMETA(DisplayName = "Ammo"),
 	EPT_Armor UMETA(DisplayName = "Armor") };
 
 UENUM(BlueprintType)

@@ -5,6 +5,7 @@
 #include "Enums/WeaponEnums/WeaponEnums.h"
 #include "Structs/WeaponData/Str_WeaponStats.h"
 #include "Structs/WeaponDataStrings/Str_WeaponStringData.h"
+#include "Interfaces/Interact/InteractInterface.h"
 #include "WeaponBase.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FUpdateCurrentTotalAmmo, int32, TotalAmmoCount);
@@ -13,7 +14,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnWeaponReload, int32, CurrentMagA
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnShotgunReload, int32, CurrentAmount, int32, CurrentTotal);
 
 UCLASS()
-class AWeaponBase : public AActor
+class AWeaponBase : public AActor, public IInteractInterface
 {
 	GENERATED_BODY()
 
@@ -23,6 +24,8 @@ public:
 	FORCEINLINE TObjectPtr<USkeletalMeshComponent> GetWeaponMesh() const { return WeaponMesh; }
 	FORCEINLINE TObjectPtr<class UTexture2D> GetIcon() { return WeapStats.Icon; }
 	FORCEINLINE TObjectPtr<class USoundBase> GetMagTapSound() { return MagTapSound; }
+
+	FORCEINLINE TSubclassOf<AWeaponBase> GetSubClass() { return WeaponPickupToSpawn; }
 
 	FORCEINLINE FName GetSocketName() const { return SocketName; }
 
@@ -67,6 +70,13 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void OnConstruction(const FTransform& Transform) override;
+
+	/* Interface functions*/
+	virtual void InteractableFound_Implementation() override;
+
+	virtual void InteractWithObject_Implementation() override;
+
+	virtual void ClearViewport_Implementation() override;
 
 public:
 	UFUNCTION(BlueprintCallable)
@@ -161,6 +171,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Projectile)
 	TSubclassOf<class AProjectileBase> ProjectileToSpawn;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = WeaponPickupSpawn)
+	TSubclassOf<AWeaponBase> WeaponPickupToSpawn;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Enums)
 	EWeaponName WeaponName;
