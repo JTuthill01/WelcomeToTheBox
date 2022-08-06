@@ -53,21 +53,21 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
 	EPickupAmmoType PickupAmmoType;
 
+protected:
+	virtual void HealthPickup(EPickupHealthType InHealthType);
+	virtual void AmmoPickup(EPickupAmmoType InAmmoType);
+
+	virtual void SetData();
+	virtual void SetHealthData(EPickupHealthType Health);
+	virtual void SetAmmoData(EPickupAmmoType PickupAmmo);
+	virtual void SetArmorData();
+
 private:
 	UFUNCTION()
 	void OnClearViewport();
 
 	UFUNCTION()
 	void Setup();
-
-private:
-	void HealthPickup(EPickupHealthType InHealthType);
-	void AmmoPickup(EPickupAmmoType InAmmoType);
-
-	void SetData();
-	void SetHealthData(EPickupHealthType Health);
-	void SetAmmoData(EPickupAmmoType PickupAmmo);
-	void SetArmorData();
 
 private:
 	UPROPERTY()

@@ -1,4 +1,4 @@
-#include "Pickups/PickupBase.h"
+#include "Pickups/PickupBase/PickupBase.h"
 #include "Character/Player/PlayerCharacter.h"
 #include "Character/HealthComponent/PlayerHealthComponent.h"
 #include "Interfaces/Player/PlayerCharacterInterface.h"

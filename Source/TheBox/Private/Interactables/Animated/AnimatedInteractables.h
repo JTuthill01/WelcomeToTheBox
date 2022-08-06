@@ -23,6 +23,8 @@ protected:
 private:
 	void Open();
 
+	void Spawn();
+
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = SK_Mesh, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USkeletalMeshComponent> SKBaseMesh;
@@ -30,6 +32,13 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Anim, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UAnimationAsset> AnimToPlay;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FX, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UNiagaraSystem> CaseOpenFX;
+
 private:
 	bool bHasBeenOpned;
+
+	float CaseOpenTimer;
+
+	FTimerHandle CaseOpenTimerHandle;
 };

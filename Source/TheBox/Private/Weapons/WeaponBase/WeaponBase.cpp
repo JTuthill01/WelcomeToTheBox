@@ -226,7 +226,7 @@ void AWeaponBase::SpawnProjectile()
 	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	FTransform SpawnTransform;
-	FVector Scale{ FVector(1.F) };
+	FVector Scale{ FVector::OneVector };
 	FVector SocketLocation{ WeaponMesh->GetSocketLocation("Fire_FX_Slot") };
 	FRotator Rotation{ PlayerRef->GetControlRotation() };
 
@@ -267,8 +267,3 @@ void AWeaponBase::WeaponSetup() {}
 
 void AWeaponBase::StopFire() {}
 
-void AWeaponBase::InteractableFound_Implementation() {}
-
-void AWeaponBase::InteractWithObject_Implementation() {}
-
-void AWeaponBase::ClearViewport_Implementation() {}

@@ -43,7 +43,7 @@ void AAK47::WeaponFire()
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.AmmoEject, EjectTransform.GetTranslation(), EjectQuat.Rotator());
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.FireFX, FireTransform.GetTranslation(), FireQuat.Rotator());
 
-		WeaponMesh->GetAnimInstance()->Montage_Play(WeaponFireMontage);
+		WeaponAnimInstance->Montage_Play(WeaponFireMontage);
 	}
 }
 

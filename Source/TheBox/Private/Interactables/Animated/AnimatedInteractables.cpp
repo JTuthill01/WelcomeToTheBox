@@ -1,8 +1,8 @@
 #include "Interactables/Animated/AnimatedInteractables.h"
-#include "Weapons/WeaponBase/WeaponBase.h"
 #include "Character/Player/PlayerCharacter.h"
+#include "NiagaraFunctionLibrary.h"
 
-AAnimatedInteractables::AAnimatedInteractables() : bHasBeenOpned(false)
+AAnimatedInteractables::AAnimatedInteractables() : bHasBeenOpned(false), CaseOpenTimer(0.4F)
 {
 	PrimaryActorTick.bCanEverTick = false;
 
@@ -45,15 +45,18 @@ void AAnimatedInteractables::Open()
 
 	bHasBeenOpned = true;
 
-	FActorSpawnParameters Parms;
-	Parms.Owner = this;
-	Parms.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	GetWorldTimerManager().SetTimer(CaseOpenTimerHandle, this, &AAnimatedInteractables::Spawn, CaseOpenTimer, false);
+}
 
-	/* Temp code for weapon pickup spawning. IT ACTUALLY FUCKING WORKS!!!!!!!*/
+void AAnimatedInteractables::Spawn()
+{
+	GetWorldTimerManager().ClearTimer(CaseOpenTimerHandle);
 
-	FVector Loc{ SKBaseMesh->GetSocketLocation("SpawnSocket") };
+	CaseOpenTimer = 0.4F;
 
-	FRotator Rot{ SKBaseMesh->GetSocketRotation("SpawnSocket") };
+	FTransform FXTransform = SKBaseMesh->GetSocketTransform(L"SpawnSocket");
 
-	TObjectPtr<AWeaponBase> Temp = GetWorld()->SpawnActor<AWeaponBase>(PlayerRef->GetWeaponSlotArray()[0]->GetSubClass(), Loc, Rot, Parms);
+	FQuat FXQuat = FXTransform.GetRotation();
+
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), CaseOpenFX, FXTransform.GetTranslation(), FXQuat.Rotator());
 }
