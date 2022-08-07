@@ -61,7 +61,11 @@ void AProjectileBase::ProjectileStop(const FHitResult& HitResult)
 		ExplodeOnImpact(HitResult);
 
 	else
+	{
+		DealDamage(HitResult);
+
 		SpawnImpactFX(HitResult);
+	}
 }
 
 void AProjectileBase::ExplodeOnImpact(const FHitResult& HitResult)
@@ -90,18 +94,9 @@ void AProjectileBase::ExplodeOnImpact(const FHitResult& HitResult)
 	{
 		int32 Count = OutActors.Num();
 
-		TArray<AActor*> Ignore;
-		Ignore.Add(this);
-		Ignore.Add(PlayerRef->GetWeaponSlotArray()[Temp]);
-
 		for (int32 i = 0; i < Count; ++i)
-		{
-			if (OutActors[i]->GetClass() == APlayerCharacter::StaticClass())
-			{
-				const bool bWasDamageApplied = UGameplayStatics::ApplyRadialDamage(GetWorld(), CurrentWeaponStats.DamageAmount, HitResult.ImpactPoint, CurrentWeaponStats.DamageRadius, UDamageType::StaticClass(),
-					Ignore, this, GetInstigatorController(), true, ECollisionChannel::ECC_Pawn);
-			}
-		}
+			const bool bWasDamageApplied = UGameplayStatics::ApplyRadialDamage(GetWorld(), CurrentWeaponStats.DamageAmount, HitResult.ImpactPoint, CurrentWeaponStats.DamageRadius, UDamageType::StaticClass(),
+				ActorsToIgnore, this, GetInstigatorController(), true, ECollisionChannel::ECC_Visibility);
 	}
 }
 
@@ -147,5 +142,12 @@ void AProjectileBase::SpawnImpactFX(const FHitResult& HitResult)
 			}
 		}
 	}
+}
+
+void AProjectileBase::DealDamage(const FHitResult& HitResult)
+{
+	uint8 Temp = PlayerRef->GetEquippedWeaponIndexUint();
+
+	UGameplayStatics::ApplyPointDamage(HitResult.GetActor(), PlayerRef->GetWeaponSlotArray()[Temp]->GetDamageAmount(), HitResult.ImpactPoint, HitResult, GetInstigatorController(), this, UDamageType::StaticClass());
 }
 

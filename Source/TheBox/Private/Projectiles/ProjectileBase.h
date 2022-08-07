@@ -29,9 +29,6 @@ protected:
 	UFUNCTION()
 	virtual void ExplodeOnImpact(const FHitResult& HitResult);
 
-	UFUNCTION()
-	virtual void SpawnImpactFX(const FHitResult& HitResult);
-
 protected:
 	UPROPERTY()
 	TObjectPtr<class APlayerCharacter> PlayerRef;
@@ -53,4 +50,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	bool bIsCausingRadiusDamage;
+
+private:
+	void SpawnImpactFX(const FHitResult& HitResult);
+
+	void DealDamage(const FHitResult& HitResult);
 };

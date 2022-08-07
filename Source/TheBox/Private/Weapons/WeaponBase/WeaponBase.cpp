@@ -82,7 +82,11 @@ void AWeaponBase::BulletTrace()
 	const bool bHasBeenHit = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), Start, End, TraceObjects, true, ActorsToIgnore, EDrawDebugTrace::None, HitResult, true);
 
 	if (bHasBeenHit)
+	{
 		CreateImpactFX(HitResult);
+
+		UGameplayStatics::ApplyPointDamage(HitResult.GetActor(), WeapStats.DamageAmount, HitResult.ImpactPoint, HitResult, nullptr, this, UDamageType::StaticClass());
+	}
 }
 
 void AWeaponBase::CreateImpactFX(FHitResult HitResult)
@@ -215,7 +219,11 @@ void AWeaponBase::ShotgunFireMulti(int32 InShotgunPelletCount)
 
 		if (bHasHitOccured)
 			for (auto&& Result : OutResult)
+			{
 				CreateImpactFX(Result);
+
+				UGameplayStatics::ApplyPointDamage(Result.GetActor(), WeapStats.DamageAmount, Result.ImpactPoint, Result, nullptr, this, UDamageType::StaticClass());
+			}
 	}
 }
 
