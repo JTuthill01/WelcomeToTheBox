@@ -26,9 +26,6 @@ protected:
 	UFUNCTION()
 	virtual void ProjectileStop(const FHitResult& HitResult);
 
-	UFUNCTION()
-	virtual void ExplodeOnImpact(const FHitResult& HitResult);
-
 protected:
 	UPROPERTY()
 	TObjectPtr<class APlayerCharacter> PlayerRef;
@@ -52,6 +49,8 @@ protected:
 	bool bIsCausingRadiusDamage;
 
 private:
+	void ExplodeOnImpact(const FHitResult& HitResult);
+
 	void SpawnImpactFX(const FHitResult& HitResult);
 
 	void DealDamage(const FHitResult& HitResult);

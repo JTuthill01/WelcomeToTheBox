@@ -70,7 +70,9 @@ void APlayerCharacter::SpawnInitialWeapon()
 	{
 		WeaponIndex = 0;
 
-		WeaponSlotArray.Insert(CurrentWeapon, 0);
+		//WeaponSlotArray.Insert(CurrentWeapon, 0);
+
+		WeaponSlotArray.AddUnique(CurrentWeapon);
 
 		WeaponSlotArray[WeaponIndex]->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
 			WeaponSlotArray[WeaponIndex]->GetSocketName());

@@ -45,6 +45,12 @@ void APickupBase::OnConstruction(const FTransform& Transform)
 	case EPickupType::EPT_None:
 		break;
 
+	case EPickupType::EPT_Weapon:
+
+		SetWeaponData(PickupWeaponType);
+
+		break;
+
 	case EPickupType::EPT_Health:
 
 		SetHealthData(BaseHealthType);
@@ -68,6 +74,14 @@ void APickupBase::OnConstruction(const FTransform& Transform)
 	}
 }
 
+void APickupBase::Setup()
+{
+	PlayerRef = IPlayerCharacterInterface::Execute_SetPlayerRef(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+
+	if (IsValid(PlayerRef))
+		PlayerRef->Clear.AddDynamic(this, &APickupBase::OnClearViewport);
+}
+
 void APickupBase::InteractableFound_Implementation()
 {
 }
@@ -77,6 +91,14 @@ void APickupBase::InteractWithObject_Implementation()
 	switch (PickupBaseType)
 	{
 	case EPickupType::EPT_None:
+		break;
+
+	case EPickupType::EPT_Weapon:
+
+		WeaponPickup(PickupWeaponType);
+
+		OnClearViewport();
+
 		break;
 
 	case EPickupType::EPT_Health:
@@ -90,6 +112,8 @@ void APickupBase::InteractWithObject_Implementation()
 	case EPickupType::EPT_Ammo:
 
 		AmmoPickup(PickupAmmoType);
+
+		OnClearViewport();
 
 		break;
 
@@ -114,14 +138,6 @@ void APickupBase::InteractWithObject_Implementation()
 void APickupBase::OnClearViewport()
 {
 	
-}
-
-void APickupBase::Setup()
-{
-	PlayerRef = IPlayerCharacterInterface::Execute_SetPlayerRef(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
-
-	if (IsValid(PlayerRef))
-		PlayerRef->Clear.AddDynamic(this, &APickupBase::OnClearViewport);
 }
 
 void APickupBase::HealthPickup(EPickupHealthType InHealthType)
@@ -230,12 +246,7 @@ void APickupBase::AmmoPickup(EPickupAmmoType InAmmoType)
 
 void APickupBase::SetData()
 {
-	TObjectPtr<UStaticMesh> NewMesh = LoadObject<UStaticMesh>(this, *PickupParser->MeshFilePathString);
-
 	TObjectPtr<UMaterialInstance> NewInstance = LoadObject<UMaterialInstance>(this, *PickupParser->IconFilePathString);
-
-	if (IsValid(NewMesh))
-		BaseMesh->SetStaticMesh(NewMesh);
 
 	PickupData.PickupName = FName(*PickupParser->PickupNameString);
 	PickupData.Icon = NewInstance;
@@ -248,6 +259,16 @@ void APickupBase::SetData()
 	PickupData.PistolAmmoValue = PickupParser->PAmmoValue;
 	PickupData.RifleAmmoValue = PickupParser->RAmmoValue;
 	PickupData.ShotgunAmmoValue = PickupParser->SAmmoValue;
+}
+
+void APickupBase::SetDataWeapon()
+{
+	TObjectPtr<UMaterialInstance> NewInstance = LoadObject<UMaterialInstance>(this, *PickupParser->IconFilePathString);
+
+	PickupData.PickupName = FName(*PickupParser->PickupNameString);
+	PickupData.Icon = NewInstance;
+	PickupData.PickupType = static_cast<EPickupType>(PickupParser->PType);
+	PickupWeaponType = static_cast<EPickupWeaponType>(PickupParser->PWeaponType);
 }
 
 void APickupBase::SetHealthData(EPickupHealthType Health)
@@ -343,4 +364,172 @@ void APickupBase::SetArmorData()
 	SetData();
 }
 
+void APickupBase::WeaponPickup(EPickupWeaponType InWeaponType) 
+{
 
+}
+
+void APickupBase::SetWeaponData(EPickupWeaponType PickupWeapon) 
+{
+	switch (PickupWeapon)
+	{
+	case EPickupWeaponType::EPW_NONE:
+		break;
+
+	case EPickupWeaponType::EPW_TT33:
+
+		PickupParser->SetObjectData("TT33");
+
+		PickupParser->WeaponParser();
+
+		SetDataWeapon();
+
+		break;
+
+	case EPickupWeaponType::EPW_AK47:
+
+		PickupParser->SetObjectData("AK47");
+
+		PickupParser->WeaponParser();
+
+		SetDataWeapon();
+
+		break;
+
+	case EPickupWeaponType::EPW_AmericanShotgun:
+
+		PickupParser->SetObjectData("AmericanShotgun");
+
+		PickupParser->WeaponParser();
+
+		SetDataWeapon();
+
+		break;
+
+	case EPickupWeaponType::EPW_BelgianAR:
+
+		PickupParser->SetObjectData("BelgianAR");
+
+		PickupParser->WeaponParser();
+
+		SetDataWeapon();
+
+		break;
+
+	case EPickupWeaponType::EPW_GermanSMG:
+
+		PickupParser->SetObjectData("GermanSMG");
+
+		PickupParser->WeaponParser();
+
+		SetDataWeapon();
+
+		break;
+
+	case EPickupWeaponType::EPW_HandCannon:
+
+		PickupParser->SetObjectData("HandCannon");
+
+		PickupParser->WeaponParser();
+
+		SetDataWeapon();
+
+		break;
+
+	case EPickupWeaponType::EPW_SKS:
+
+		PickupParser->SetObjectData("SKS");
+
+		PickupParser->WeaponParser();
+
+		SetDataWeapon();
+
+		break;
+
+	case EPickupWeaponType::EPW_XM82:
+
+		PickupParser->SetObjectData("XM82");
+
+		PickupParser->WeaponParser();
+
+		SetDataWeapon();
+
+		break;
+
+	case EPickupWeaponType::EPW_Bulldog:
+
+		PickupParser->SetObjectData("Bulldog");
+
+		PickupParser->WeaponParser();
+
+		SetDataWeapon();
+
+		break;
+
+	case EPickupWeaponType::EPW_L86:
+
+		PickupParser->SetObjectData("L86");
+
+		PickupParser->WeaponParser();
+
+		SetDataWeapon();
+
+		break;
+
+	case EPickupWeaponType::EPW_AK74:
+
+		PickupParser->SetObjectData("AK74");
+
+		PickupParser->WeaponParser();
+
+		SetDataWeapon();
+
+		break;
+
+	case EPickupWeaponType::EPW_M4A1:
+		break;
+
+	case EPickupWeaponType::EPW_NavySMG:
+
+		PickupParser->SetObjectData("NavySMG");
+
+		PickupParser->WeaponParser();
+
+		SetDataWeapon();
+
+		break;
+
+	case EPickupWeaponType::EPW_ItalianShotgun:
+
+		PickupParser->SetObjectData("ItalianShotgun");
+
+		PickupParser->WeaponParser();
+
+		SetDataWeapon();
+
+		break;
+
+	case EPickupWeaponType::EPW_SVD:
+
+		PickupParser->SetObjectData("SVD");
+
+		PickupParser->WeaponParser();
+
+		SetDataWeapon();
+
+		break;
+
+	case EPickupWeaponType::EPW_ShortStrokeAR:
+
+		PickupParser->SetObjectData("ShortStrokeAR");
+
+		PickupParser->WeaponParser();
+
+		SetDataWeapon();
+
+		break;
+
+	default:
+		break;
+	}
+}

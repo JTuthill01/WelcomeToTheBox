@@ -9,4 +9,10 @@ class AWeaponAndAmmoPickup : public APickupBase
 {
 	GENERATED_BODY()
 	
+public:
+	AWeaponAndAmmoPickup();
+
+
+
+
 };

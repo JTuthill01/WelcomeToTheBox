@@ -86,6 +86,7 @@ void AProjectileBase::ExplodeOnImpact(const FHitResult& HitResult)
 	ActorsToIgnore.Add(this);
 
 	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldDynamic));
+	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldStatic));
 	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_Pawn));
 
 	const bool bHasSphereOverlapped = UKismetSystemLibrary::SphereOverlapActors(GetWorld(), HitResult.ImpactPoint, CurrentWeaponStats.DamageRadius, TraceObjects, nullptr, ActorsToIgnore, OutActors);

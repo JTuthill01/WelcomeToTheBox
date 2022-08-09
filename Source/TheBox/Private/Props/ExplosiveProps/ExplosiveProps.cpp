@@ -1,10 +1,6 @@
 #include "Props/ExplosiveProps/ExplosiveProps.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
-#include "Character/Player/PlayerCharacter.h"
-#include "Weapons/WeaponBase/WeaponBase.h"
-#include "Interfaces/Player/PlayerCharacterInterface.h"
-#include <Structs/HexColors/Str_CustomHexColors.h>
 
 // Sets default values
 AExplosiveProps::AExplosiveProps() : PropHealth(100.F), DamageRadius(550.F), DamageAmount(10.F), RemovalTimer(0.3F)
@@ -29,11 +25,6 @@ void AExplosiveProps::BeginPlay()
 	OnTakeAnyDamage.AddDynamic(this, &AExplosiveProps::PropTakeDamage);
 }
 
-void AExplosiveProps::PropTakeDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
-{
-	ChangePropHealth(Damage);
-}
-
 void AExplosiveProps::DealRadialDamage()
 {
 	TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjects;
@@ -41,6 +32,7 @@ void AExplosiveProps::DealRadialDamage()
 	TArray<AActor*> OutActors;
 
 	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldDynamic));
+	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldStatic));
 	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_Pawn));
 
 	const bool bHasSphereOverlapped = UKismetSystemLibrary::SphereOverlapActors(GetWorld(), PropMesh->GetRelativeLocation(), DamageRadius, TraceObjects, nullptr, ActorsToIgnore, OutActors);
@@ -96,3 +88,4 @@ void AExplosiveProps::Cleanup()
 	Destroy();
 }
 
+void AExplosiveProps::PropTakeDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser) { ChangePropHealth(Damage); }

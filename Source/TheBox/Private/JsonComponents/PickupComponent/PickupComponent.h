@@ -19,6 +19,9 @@ public:
 	UFUNCTION()
 	void Parser();
 
+	UFUNCTION()
+	void WeaponParser();
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -49,6 +52,8 @@ public:
 	uint8 PHealthType;
 
 	uint8 PAmmoType;
+
+	uint8 PWeaponType;
 
 #pragma endregion
 

@@ -218,12 +218,14 @@ void AWeaponBase::ShotgunFireMulti(int32 InShotgunPelletCount)
 		bHasHitOccured = UKismetSystemLibrary::LineTraceMultiForObjects(GetWorld(), Start, End, TraceObjects, true, ActorsToIgnore, EDrawDebugTrace::None, OutResult, true);
 
 		if (bHasHitOccured)
+		{
 			for (auto&& Result : OutResult)
 			{
 				CreateImpactFX(Result);
 
 				UGameplayStatics::ApplyPointDamage(Result.GetActor(), WeapStats.DamageAmount, Result.ImpactPoint, Result, nullptr, this, UDamageType::StaticClass());
 			}
+		}
 	}
 }
 

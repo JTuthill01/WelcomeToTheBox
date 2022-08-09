@@ -56,6 +56,35 @@ void UPickupComponent::Parser()
 	}
 }
 
+void UPickupComponent::WeaponParser()
+{
+	/* Creates a string ref to wherever the json file(s) are */
+	const FString JsonFilePath = FPaths::ProjectContentDir() + "/JsonFiles/WeaponPickup.json";
+	FString JsonString; /* Json converted to FString */
+
+	FFileHelper::LoadFileToString(JsonString, *JsonFilePath); /* Remember to dereference file path */
+
+	/* Create a json object to store the information from the json string */
+	TSharedPtr<FJsonObject> JsonObject = MakeShared<FJsonObject>();
+
+	/* The json reader is used to deserialize the json object later on */
+	TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(JsonString);
+
+	if (FJsonSerializer::Deserialize(JsonReader, JsonObject) && JsonObject.IsValid())
+	{
+		/* Gets whatever "object" from the json file you choose */
+		TSharedPtr<FJsonObject> DataObject = JsonObject->GetObjectField(ObjectString);
+
+		IconFilePathString = DataObject->GetStringField("Icon");
+
+		PickupNameString = DataObject->GetStringField("WeaponName");
+
+		PType = DataObject->GetIntegerField("PickupType");
+
+		PWeaponType = DataObject->GetIntegerField("PickupWeaponType");
+	}
+}
+
 void UPickupComponent::InitializerList()
 {
 			/* FStrings */
@@ -76,6 +105,8 @@ void UPickupComponent::InitializerList()
 	 PHealthType = 0;
 
 	 PAmmoType = 0;
+
+	 PWeaponType = 0;
 
 	 /* Floats */
 

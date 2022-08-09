@@ -35,6 +35,9 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FX, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UNiagaraSystem> CaseOpenFX;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Pickups, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class APickupBase> PickupToSpawn;
+
 private:
 	bool bHasBeenOpned;
 

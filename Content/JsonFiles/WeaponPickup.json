@@ -1,0 +1,115 @@
+{
+	"TT33": {
+		"WeaponName": "TT33",
+		"Icon": "Texture2D'/Game/_Main/Icons/TT33.TT33'",
+		"PickupType": 1,
+		"PickupWeaponType" : 1
+	},
+	"AK47": {
+		"WeaponName": "AK47",
+		"Icon": "Texture2D'/Game/_Main/Icons/AK47.AK47'",
+		"PickupType": 1,
+		"PickupWeaponType" : 2
+	},
+	"AmericanShotgun": {
+		"WeaponName": "American Shotgun",
+		"Icon": "Texture2D'/Game/_Main/Icons/American.American'",
+		"PickupType": 1,
+		"PickupWeaponType" : 3
+	},
+	"BelgianAR": {
+		"WeaponName": "Belgian AR",
+		"Icon": "Texture2D'/Game/_Main/Icons/BelgianAR.BelgianAR'",
+		"PickupType": 1,
+		"PickupWeaponType" : 4
+	},
+	"GermanSMG": {
+		"WeaponName": "German SMG",
+		"Icon": "Texture2D'/Game/_Main/Icons/GermanSMG.GermanSMG'",
+		"PickupType": 1,
+		"PickupWeaponType" : 5
+	},
+	"HandCannon": {
+		"WeaponName": "Hand Cannon",
+		"Icon": "Texture2D'/Game/_Main/Icons/HC.HC'",
+		"PickupType": 1, 
+		"PickupWeaponType" : 6
+	},
+	"SKS": {
+		"WeaponName": "SKS",
+		"Icon": "Texture2D'/Game/_Main/Icons/SKS.SKS'",
+		"PickupType": 1,
+		"PickupWeaponType" : 7
+	},
+	"XM82": {
+		"WeaponName": "XM82",
+		"Icon": "Texture2D'/Game/_Main/Icons/XM82.XM82'",
+		"PickupType": 1, 
+		"PickupWeaponType" : 8
+	},
+	"Bulldog": {
+		"WeaponName": "Bulldog",
+		"Icon": "Texture2D'/Game/_Main/Icons/Bulldog.Bulldog'",
+		"PickupType": 1, 
+		"PickupWeaponType" : 9
+	},
+	"L86": {
+		"WeaponName": "L86",
+		"Icon": "Texture2D'/Game/_Main/Icons/L86.L86'",
+		"PickupType": 1, 
+		"PickupWeaponType" : 10
+	},
+	"AK74": {
+		"WeaponName": "AK74U",
+		"Icon": "Texture2D'/Game/_Main/Icons/AK74U.AK74U'",
+		"PickupType": 1,
+		"PickupWeaponType" : 11
+	},
+	"M4A1": {
+		"Name": "M4A1",
+		"CurrentMagTotal": 0,
+		"MaxMagTotal": 0,
+		"CurrentTotalAmmo": 0,
+		"MaxTotalAmmo": 0,
+		"LowAmmo": 0,
+		"CrosshairIndex": 0,
+		"WeaponIndex": 11,
+		"DamageAmount": 0,
+		"CriciticalHitChance": 0,
+		"DamageRadius": 0,
+		"WeaponName": "None",
+		"Icon": "None",
+		"FireType": 1,
+		"RackSlideSound": "None",
+		"MagOutSound": "None",
+		"MagInSound": "None",
+		"FireSound": "None",
+		"AmmoEject": "None",
+		"FireFX": "None",
+		"WeaponType" : 2
+	},
+	"NavySMG": {
+		"WeaponName": "Navy SMG",
+		"Icon": "Texture2D'/Game/_Main/Icons/NavySMG.NavySMG'",
+		"PickupType": 1,
+		"PickupWeaponType" : 13
+	},
+	"ItalianShotgun": {
+		"WeaponName": "ItalianShotgun",
+		"Icon": "Texture2D'/Game/_Main/Icons/Italian.Italian'",
+		"PickupType": 1,
+		"PickupWeaponType" : 14
+	},
+	"SVD": {
+		"WeaponName": "SVD",
+		"Icon": "Texture2D'/Game/_Main/Icons/SVD.SVD'",
+		"PickupType": 1,
+		"PickupWeaponType" : 15
+	},
+	"ShortStrokeAR": {
+		"WeaponName": "Short Stroke AR",
+		"Icon": "Texture2D'/Game/_Main/Icons/ShortStroke.ShortStroke'",
+		"PickupType": 1, 
+		"PickupWeaponType" : 16
+	}
+}

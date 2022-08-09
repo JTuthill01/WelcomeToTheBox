@@ -1,6 +1,7 @@
 #include "Interactables/Animated/AnimatedInteractables.h"
 #include "Character/Player/PlayerCharacter.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Pickups/PickupBase/PickupBase.h"
 
 AAnimatedInteractables::AAnimatedInteractables() : bHasBeenOpned(false), CaseOpenTimer(0.4F)
 {
@@ -59,4 +60,6 @@ void AAnimatedInteractables::Spawn()
 	FQuat FXQuat = FXTransform.GetRotation();
 
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), CaseOpenFX, FXTransform.GetTranslation(), FXQuat.Rotator());
+
+	GetWorld()->SpawnActor<APickupBase>(PickupToSpawn, FXTransform);
 }

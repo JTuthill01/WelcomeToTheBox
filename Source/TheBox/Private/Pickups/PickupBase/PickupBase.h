@@ -41,9 +41,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Data)
 	FPickupData PickupData;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Data)
-	TObjectPtr<UDataTable> PickupDataTable;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
 	EPickupType PickupBaseType;
 
@@ -53,30 +50,36 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
 	EPickupAmmoType PickupAmmoType;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
+	EPickupWeaponType PickupWeaponType;
+
 protected:
-	virtual void HealthPickup(EPickupHealthType InHealthType);
-	virtual void AmmoPickup(EPickupAmmoType InAmmoType);
+	 void HealthPickup(EPickupHealthType InHealthType);
+	 void AmmoPickup(EPickupAmmoType InAmmoType);
+	 void WeaponPickup(EPickupWeaponType InWeaponType);
 
-	virtual void SetData();
-	virtual void SetHealthData(EPickupHealthType Health);
-	virtual void SetAmmoData(EPickupAmmoType PickupAmmo);
-	virtual void SetArmorData();
+	void SetData();
+	void SetDataWeapon();
+	void SetArmorData();
+	void SetHealthData(EPickupHealthType Health);
+	void SetAmmoData(EPickupAmmoType PickupAmmo);
+	void SetWeaponData(EPickupWeaponType PickupWeapon);
 
-private:
+protected:
 	UFUNCTION()
 	void OnClearViewport();
 
 	UFUNCTION()
 	void Setup();
 
-private:
+protected:
 	UPROPERTY()
 	TObjectPtr<class APlayerCharacter> PlayerRef;
 
 	UPROPERTY()
 	TObjectPtr<class UPickupComponent> PickupParser;
 
-private:
+protected:
 	float HealthValue;
 	float ArmorValue;
 

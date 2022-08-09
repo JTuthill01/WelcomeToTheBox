@@ -12,3 +12,9 @@ enum class EPickupHealthType : uint8 { EPH_None UMETA(DisplayName = "None"), EPH
 UENUM(BlueprintType)
 enum class EPickupAmmoType : uint8 { EPA_None UMETA(DisplayName = "None"), EPH_PistolAmmo UMETA(DisplayName = "Pistol Ammo"), EPS_RifleAmmo UMETA(DisplayName = "Rifle Ammo"), 
 	EPA_ShotgunAmmo UMETA(DisplayName = "Shotgun Ammo")};
+
+UENUM(BlueprintType)
+enum class EPickupWeaponType : uint8 { EPW_NONE UMETA(DisplayName = "None"), EPW_TT33 UMETA(DisplayName = "TT33"), EPW_AK47 UMETA(DisplayName = "AK47"), EPW_AmericanShotgun UMETA(DisplayName = "American Shotgun"), 
+	EPW_BelgianAR UMETA(DisplayName = "Belgian AR"), EPW_GermanSMG UMETA(DisplayName = "German SMG"), EPW_HandCannon UMETA(DisplayName = "Hand Cannon"), EPW_SKS UMETA(DisplayName = "SKS"), 
+	EPW_XM82 UMETA(DisplayName = "XM82"), EPW_Bulldog UMETA(DisplayName = "Bulldog"), EPW_L86 UMETA(DisplayName = "L86"), EPW_AK74 UMETA(DisplayName = "AK74"), EPW_M4A1 UMETA(DisplayName = "M4A1"), 
+	EPW_NavySMG UMETA(DisplayName = "Navy SMG"), EPW_ItalianShotgun UMETA(DisplayName = "Italian Shotgun"), EPW_SVD UMETA(DisplayName = "SVD"), EPW_ShortStrokeAR UMETA(DisplayName = "ShortStrokeAR") };
