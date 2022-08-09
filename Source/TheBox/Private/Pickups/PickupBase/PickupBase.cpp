@@ -95,7 +95,7 @@ void APickupBase::InteractWithObject_Implementation()
 
 	case EPickupType::EPT_Weapon:
 
-		WeaponPickup(PickupWeaponType);
+		WeaponPickup(WeaponName);
 
 		OnClearViewport();
 
@@ -138,6 +138,34 @@ void APickupBase::InteractWithObject_Implementation()
 void APickupBase::OnClearViewport()
 {
 	
+}
+
+void APickupBase::WeaponPickup(EWeaponName InWeaponName)
+{
+	uint8 Num = PlayerRef->GetWeaponSlotArray().Num();
+
+	bool bIsSuccessful;
+
+	for (uint8 i = 0; i < Num; ++i)
+	{
+		if (PlayerRef->GetWeaponSlotArray()[i]->GetCurrentWeaponEnumName() == InWeaponName)
+		{
+			AmmoPickup(PickupAmmoType);
+
+			Destroy();
+		}
+
+		else
+		{
+			PlayerRef->SpawnWeapon(WeaponToSpawn, bIsSuccessful);
+
+			if (bIsSuccessful)
+				Destroy();
+
+			else
+				break;
+		}
+	}
 }
 
 void APickupBase::HealthPickup(EPickupHealthType InHealthType)
@@ -364,11 +392,6 @@ void APickupBase::SetArmorData()
 	SetData();
 }
 
-void APickupBase::WeaponPickup(EPickupWeaponType InWeaponType) 
-{
-
-}
-
 void APickupBase::SetWeaponData(EPickupWeaponType PickupWeapon) 
 {
 	switch (PickupWeapon)
@@ -384,6 +407,8 @@ void APickupBase::SetWeaponData(EPickupWeaponType PickupWeapon)
 
 		SetDataWeapon();
 
+		WeaponName = EWeaponName::EWN_TT33;
+
 		break;
 
 	case EPickupWeaponType::EPW_AK47:
@@ -393,6 +418,8 @@ void APickupBase::SetWeaponData(EPickupWeaponType PickupWeapon)
 		PickupParser->WeaponParser();
 
 		SetDataWeapon();
+
+		WeaponName = EWeaponName::EWN_AK47;
 
 		break;
 
@@ -404,6 +431,8 @@ void APickupBase::SetWeaponData(EPickupWeaponType PickupWeapon)
 
 		SetDataWeapon();
 
+		WeaponName = EWeaponName::EWN_AmericanShotgun;
+
 		break;
 
 	case EPickupWeaponType::EPW_BelgianAR:
@@ -413,6 +442,8 @@ void APickupBase::SetWeaponData(EPickupWeaponType PickupWeapon)
 		PickupParser->WeaponParser();
 
 		SetDataWeapon();
+
+		WeaponName = EWeaponName::EWN_BelgianAR;
 
 		break;
 
@@ -424,6 +455,8 @@ void APickupBase::SetWeaponData(EPickupWeaponType PickupWeapon)
 
 		SetDataWeapon();
 
+		WeaponName = EWeaponName::EWN_GermanSMG;
+
 		break;
 
 	case EPickupWeaponType::EPW_HandCannon:
@@ -433,6 +466,8 @@ void APickupBase::SetWeaponData(EPickupWeaponType PickupWeapon)
 		PickupParser->WeaponParser();
 
 		SetDataWeapon();
+
+		WeaponName = EWeaponName::EWN_HandCannon;
 
 		break;
 
@@ -444,6 +479,8 @@ void APickupBase::SetWeaponData(EPickupWeaponType PickupWeapon)
 
 		SetDataWeapon();
 
+		WeaponName = EWeaponName::EWN_SKS;
+
 		break;
 
 	case EPickupWeaponType::EPW_XM82:
@@ -453,6 +490,8 @@ void APickupBase::SetWeaponData(EPickupWeaponType PickupWeapon)
 		PickupParser->WeaponParser();
 
 		SetDataWeapon();
+
+		WeaponName = EWeaponName::EWN_XM82;
 
 		break;
 
@@ -464,6 +503,8 @@ void APickupBase::SetWeaponData(EPickupWeaponType PickupWeapon)
 
 		SetDataWeapon();
 
+		WeaponName = EWeaponName::EWN_Bulldog;
+
 		break;
 
 	case EPickupWeaponType::EPW_L86:
@@ -474,6 +515,8 @@ void APickupBase::SetWeaponData(EPickupWeaponType PickupWeapon)
 
 		SetDataWeapon();
 
+		WeaponName = EWeaponName::EWN_L86;
+
 		break;
 
 	case EPickupWeaponType::EPW_AK74:
@@ -483,6 +526,8 @@ void APickupBase::SetWeaponData(EPickupWeaponType PickupWeapon)
 		PickupParser->WeaponParser();
 
 		SetDataWeapon();
+
+		WeaponName = EWeaponName::EWN_AK74;
 
 		break;
 
@@ -497,6 +542,8 @@ void APickupBase::SetWeaponData(EPickupWeaponType PickupWeapon)
 
 		SetDataWeapon();
 
+		WeaponName = EWeaponName::EWN_NavySMG;
+
 		break;
 
 	case EPickupWeaponType::EPW_ItalianShotgun:
@@ -506,6 +553,8 @@ void APickupBase::SetWeaponData(EPickupWeaponType PickupWeapon)
 		PickupParser->WeaponParser();
 
 		SetDataWeapon();
+
+		WeaponName = EWeaponName::EWN_ItalianShotgun;
 
 		break;
 
@@ -517,6 +566,8 @@ void APickupBase::SetWeaponData(EPickupWeaponType PickupWeapon)
 
 		SetDataWeapon();
 
+		WeaponName = EWeaponName::EWN_SVD;
+
 		break;
 
 	case EPickupWeaponType::EPW_ShortStrokeAR:
@@ -526,6 +577,8 @@ void APickupBase::SetWeaponData(EPickupWeaponType PickupWeapon)
 		PickupParser->WeaponParser();
 
 		SetDataWeapon();
+
+		WeaponName = EWeaponName::EWN_ShortStrokeAR;
 
 		break;
 

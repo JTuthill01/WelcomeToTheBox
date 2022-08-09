@@ -76,6 +76,9 @@ public:
 	UFUNCTION()
 	void PlayerReloadWeapon();
 
+	UFUNCTION()
+	void SpawnWeapon(TSubclassOf<class AWeaponBase> SpawnRef, bool& IsSuccessful);
+
 protected:
 	//Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -107,6 +110,27 @@ private:
 	UPROPERTY()
 	TObjectPtr<UAnimInstance> PlayerAnimInstance;
 
+#pragma region Weapon Slots
+
+	
+
+	UPROPERTY()
+	TObjectPtr<class AWeaponBase> CurrentWeapon;
+
+	UPROPERTY()
+	TObjectPtr<class AWeaponBase> WeaponSlot_01;
+
+	UPROPERTY()
+	TObjectPtr<class AWeaponBase> WeaponSlot_02;
+
+	UPROPERTY()
+	TObjectPtr<class AWeaponBase> WeaponSlot_03;
+
+	UPROPERTY()
+	TObjectPtr<class AWeaponBase> WeaponSlot_04;
+
+#pragma endregion
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UCameraComponent> Camera;
 
@@ -115,9 +139,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = HealthComp, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UPlayerHealthComponent> HealthComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Weapons, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class AWeaponBase> CurrentWeapon;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Weapons, meta = (AllowPrivateAccess = "true"))
 	TArray<TObjectPtr<class AWeaponBase>> WeaponSlotArray;

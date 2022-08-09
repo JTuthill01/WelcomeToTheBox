@@ -38,6 +38,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Mesh)
 	TObjectPtr<UStaticMeshComponent> BaseMesh;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Weapon)
+	TSubclassOf<class AWeaponBase> WeaponToSpawn;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Weapon)
+	EWeaponName WeaponName;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Data)
 	FPickupData PickupData;
 
@@ -56,7 +62,7 @@ protected:
 protected:
 	 void HealthPickup(EPickupHealthType InHealthType);
 	 void AmmoPickup(EPickupAmmoType InAmmoType);
-	 void WeaponPickup(EPickupWeaponType InWeaponType);
+	 void WeaponPickup(EWeaponName InWeaponName);
 
 	void SetData();
 	void SetDataWeapon();

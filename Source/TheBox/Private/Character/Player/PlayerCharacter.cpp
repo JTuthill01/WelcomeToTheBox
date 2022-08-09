@@ -201,6 +201,219 @@ void APlayerCharacter::PlayerReloadWeapon()
 		return;
 }
 
+void APlayerCharacter::SpawnWeapon(TSubclassOf<class AWeaponBase> SpawnRef, bool& IsSuccessful)
+{
+	FActorSpawnParameters Params;
+	Params.Owner = this;
+	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	FVector Location = Arms->GetComponentLocation();
+	FRotator Rotation = Arms->GetComponentRotation();
+
+	switch (WeaponIndexEnum)
+	{
+	case EWeaponSlot::EWS_First_Slot:
+
+		if (!bIsFirstSlotFull)
+		{
+			WeaponSlot_01 = GetWorld()->SpawnActor<AWeaponBase>(SpawnRef, Location, Rotation, Params);
+
+			if (IsValid(WeaponSlot_01))
+			{
+				WeaponSlot_01->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
+					WeaponSlot_01->GetSocketName());
+
+				bIsFirstSlotFull = true;
+
+				WeaponSlotArray.AddUnique(WeaponSlot_01);
+
+				WeaponIndexEnum = EWeaponSlot::EWS_First_Slot;
+
+				IsSuccessful = true;
+
+				break;
+			}
+
+			else
+			{
+				IsSuccessful = false;
+
+				break;
+			}
+		}
+
+		else if (!bIsSecondSlotFull)
+		{
+			WeaponIndexEnum = EWeaponSlot::EWS_Second_Slot;
+
+			SpawnWeapon(SpawnRef, IsSuccessful);
+
+			break;
+		}
+
+		else
+		{
+			IsSuccessful = false;
+
+			WeaponIndexEnum = EWeaponSlot::EWS_First_Slot;
+
+			bHasOpenSlot = false;
+
+			break;
+		}
+
+		break;
+
+	case EWeaponSlot::EWS_Second_Slot:
+
+		if (!bIsSecondSlotFull)
+		{
+			WeaponSlot_02 = GetWorld()->SpawnActor<AWeaponBase>(SpawnRef, Location, Rotation, Params);
+
+			if (IsValid(WeaponSlot_02))
+			{
+				WeaponSlot_02->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
+					WeaponSlot_02->GetSocketName());
+
+				GEngine->AddOnScreenDebugMessage(-1, 6.F, FCustomColorsFromHex::HazelGreen(), L"Ref IsValid");
+
+				bIsSecondSlotFull = true;
+
+				WeaponSlotArray.AddUnique(WeaponSlot_02);
+
+				WeaponIndexEnum = EWeaponSlot::EWS_Second_Slot;
+
+				IsSuccessful = true;
+
+				break;
+			}
+
+			else
+			{
+				IsSuccessful = false;
+
+				WeaponIndexEnum = EWeaponSlot::EWS_First_Slot;
+
+				break;
+			}
+		}
+
+		else if (!bIsThirdSlotFull)
+		{
+			WeaponIndexEnum = EWeaponSlot::EWS_Third_Slot;
+
+			SpawnWeapon(SpawnRef, IsSuccessful);
+
+			break;
+		}
+
+		else
+		{
+			IsSuccessful = false;
+
+			bHasOpenSlot = false;
+
+			break;
+		}
+
+		break;
+
+	case EWeaponSlot::EWS_Third_Slot:
+
+		if (!bIsThirdSlotFull)
+		{
+			WeaponSlot_03 = GetWorld()->SpawnActor<AWeaponBase>(SpawnRef, Location, Rotation, Params);
+
+			if (IsValid(WeaponSlot_03))
+			{
+				WeaponSlot_03->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
+					WeaponSlot_03->GetSocketName());
+
+				bIsThirdSlotFull = true;
+
+				WeaponSlotArray.AddUnique(WeaponSlot_03);
+
+				WeaponIndexEnum = EWeaponSlot::EWS_Third_Slot;
+
+				IsSuccessful = true;
+			}
+
+			else
+			{
+				IsSuccessful = false;
+
+				break;
+			}
+		}
+
+		else if (!bIsFourthSlotFull)
+		{
+			WeaponIndexEnum = EWeaponSlot::EWS_Fourth_Slot;
+
+			SpawnWeapon(SpawnRef, IsSuccessful);
+		}
+
+		else
+		{
+			IsSuccessful = false;
+
+			bHasOpenSlot = false;
+		}
+
+		break;
+
+	case EWeaponSlot::EWS_Fourth_Slot:
+
+		if (!bIsFourthSlotFull)
+		{
+			WeaponSlot_04 = GetWorld()->SpawnActor<AWeaponBase>(SpawnRef, Location, Rotation, Params);
+
+			if (IsValid(WeaponSlot_04))
+			{
+				WeaponSlot_04->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
+					WeaponSlot_04->GetSocketName());
+
+				bIsFourthSlotFull = true;
+
+				WeaponSlotArray.AddUnique(WeaponSlot_04);
+
+				WeaponIndexEnum = EWeaponSlot::EWS_Fourth_Slot;
+
+				IsSuccessful = true;
+			}
+
+			else
+			{
+				IsSuccessful = false;
+
+				break;
+			}
+		}
+
+		else if (!bIsFirstSlotFull)
+		{
+			WeaponIndexEnum = EWeaponSlot::EWS_First_Slot;
+
+			SpawnWeapon(SpawnRef, IsSuccessful);
+		}
+
+		else
+		{
+			IsSuccessful = false;
+
+			bHasOpenSlot = false;
+		}
+
+		break;
+
+	case EWeaponSlot::EWS_Default_Slot:
+		break;
+
+	default:
+		break;
+	}
+}
+
 APlayerCharacter* APlayerCharacter::SetPlayerRef_Implementation() { return this; }
 
 
