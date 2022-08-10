@@ -64,7 +64,7 @@ void APlayerCharacter::SpawnInitialWeapon()
 
 	WeaponSlot_01 = GetWorld()->SpawnActor<AWeaponBase>(InitialWeaponToSpawn, Location, Rotation, Params);
 
-	WeaponSlotArray.Reserve(MaxSlots);
+	WeaponSlotArray.Init(WeaponSlot_01, 4);
 
 	if (IsValid(WeaponSlot_01))
 	{
@@ -288,7 +288,7 @@ void APlayerCharacter::SpawnWeapon(TSubclassOf<class AWeaponBase> SpawnRef, bool
 
 				bIsSecondSlotFull = true;
 
-				WeaponSlotArray.AddUnique(WeaponSlot_02);
+				WeaponSlotArray.Insert(WeaponSlot_02, 1);
 
 				WeaponSlotArray[SecondSlot]->SetWeaponName(WeaponSlot_02->GetCurrentWeaponEnumName());
 
@@ -350,7 +350,7 @@ void APlayerCharacter::SpawnWeapon(TSubclassOf<class AWeaponBase> SpawnRef, bool
 
 				bIsThirdSlotFull = true;
 
-				WeaponSlotArray.AddUnique(WeaponSlot_03);
+				WeaponSlotArray.Insert(WeaponSlot_03, 2);
 
 				WeaponIndexEnum = EWeaponSlot::EWS_Third_Slot;
 

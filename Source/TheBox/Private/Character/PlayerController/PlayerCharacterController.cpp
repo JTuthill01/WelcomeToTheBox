@@ -171,7 +171,7 @@ void APlayerCharacterController::SwapWeapon()
 	
 }
 
-void APlayerCharacterController::StopFiringWeapon() { PlayerRef->GetCurrentWeapon()->StopFire(); }
+void APlayerCharacterController::StopFiringWeapon() { PlayerRef->WeaponSlotArray[PlayerRef->GetEquippedWeaponIndexUint()]->StopFire(); }
 
 void APlayerCharacterController::Jump() { GetCharacter()->Jump(); }
 

@@ -13,7 +13,7 @@ void UMagTapAnimNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBa
 		{
 			uint8 Temp = PlayerRef->GetEquippedWeaponIndexUint();
 
-			UGameplayStatics::SpawnSoundAttached(PlayerRef->GetWeaponSlotArray()[Temp]->GetMagTapSound(), PlayerRef->GetCurrentWeapon()->GetWeaponMesh());
+			UGameplayStatics::SpawnSoundAttached(PlayerRef->GetWeaponSlotArray()[Temp]->GetMagTapSound(), PlayerRef->WeaponSlotArray[Temp]->GetWeaponMesh());
 		}
 	}
 }

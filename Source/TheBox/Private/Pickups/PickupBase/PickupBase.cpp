@@ -157,6 +157,8 @@ void APickupBase::WeaponPickup(EWeaponName InWeaponName)
 
 		else
 		{
+			GEngine->AddOnScreenDebugMessage(-1, 6.F, FCustomColorsFromHex::NeonPurple(), L"True, tripped");
+
 			PlayerRef->SpawnWeapon(WeaponToSpawn, bIsSuccessful);
 
 			if (bIsSuccessful)
