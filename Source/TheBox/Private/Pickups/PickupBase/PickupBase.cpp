@@ -142,17 +142,17 @@ void APickupBase::OnClearViewport()
 
 void APickupBase::WeaponPickup(EWeaponName InWeaponName)
 {
-	uint8 Num = PlayerRef->GetWeaponSlotArray().Num();
+	uint8 Num = PlayerRef->WeaponSlotArray.Num();
 
 	bool bIsSuccessful;
 
 	for (uint8 i = 0; i < Num; ++i)
 	{
-		if (PlayerRef->GetWeaponSlotArray()[i]->GetCurrentWeaponEnumName() == InWeaponName)
+		if (PlayerRef->WeaponSlotArray[i]->GetCurrentWeaponEnumName() == InWeaponName)
 		{
-			AmmoPickup(PickupAmmoType);
+			GEngine->AddOnScreenDebugMessage(-1, 6.F, FCustomColorsFromHex::NeonGreen(), L"False, tripped");
 
-			Destroy();
+			break;
 		}
 
 		else
@@ -585,4 +585,8 @@ void APickupBase::SetWeaponData(EPickupWeaponType PickupWeapon)
 	default:
 		break;
 	}
+}
+
+void APickupBase::TestFunc()
+{
 }

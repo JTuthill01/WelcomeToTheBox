@@ -140,7 +140,7 @@ void APlayerCharacterController::FireWeapon()
 
 void APlayerCharacterController::WeaponReload()
 {
-	if (!IsValid(PlayerRef) || !IsValid(PlayerRef->GetCurrentWeapon()))
+	if (!IsValid(PlayerRef) || !PlayerRef->GetWeaponSlotArray().IsValidIndex(PlayerRef->GetEquippedWeaponIndexUint()))
 		return;
 
 	uint8 Temp = PlayerRef->GetEquippedWeaponIndexUint();

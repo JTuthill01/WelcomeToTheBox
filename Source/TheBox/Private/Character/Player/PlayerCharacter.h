@@ -12,6 +12,7 @@ class UInputAction;
 class UInputMappingContext;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnClearViewport);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponSwap);
 
 UCLASS()
 class APlayerCharacter : public ACharacter, public IPlayerCharacterInterface
@@ -93,9 +94,13 @@ private:
 private:
 	void Initialize();
 
+	void ShowWeapon();
 public:
 	UPROPERTY(BlueprintAssignable)
 	FOnClearViewport Clear;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnWeaponSwap OnSwap;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = ShotgunMontages)
 	TArray<TObjectPtr<class UAnimMontage>>ItalianReloadMonatge;
@@ -106,13 +111,14 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = ShotgunMontages)
 	TArray<TObjectPtr<class UAnimMontage>>BulldogReloadMonatge;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Weapons)
+	TArray<TObjectPtr<class AWeaponBase>> WeaponSlotArray;
+
 private:
 	UPROPERTY()
 	TObjectPtr<UAnimInstance> PlayerAnimInstance;
 
 #pragma region Weapon Slots
-
-	
 
 	UPROPERTY()
 	TObjectPtr<class AWeaponBase> CurrentWeapon;
@@ -139,9 +145,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = HealthComp, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UPlayerHealthComponent> HealthComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Weapons, meta = (AllowPrivateAccess = "true"))
-	TArray<TObjectPtr<class AWeaponBase>> WeaponSlotArray;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Weapons, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AWeaponBase> InitialWeaponToSpawn;

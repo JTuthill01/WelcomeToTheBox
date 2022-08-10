@@ -62,17 +62,15 @@ void APlayerCharacter::SpawnInitialWeapon()
 	FVector Location = Arms->GetComponentLocation();
 	FRotator Rotation = Arms->GetComponentRotation();
 
-	CurrentWeapon = GetWorld()->SpawnActor<AWeaponBase>(InitialWeaponToSpawn, Location, Rotation, Params);
+	WeaponSlot_01 = GetWorld()->SpawnActor<AWeaponBase>(InitialWeaponToSpawn, Location, Rotation, Params);
 
 	WeaponSlotArray.Reserve(MaxSlots);
 
-	if (IsValid(CurrentWeapon))
+	if (IsValid(WeaponSlot_01))
 	{
 		WeaponIndex = 0;
 
-		//WeaponSlotArray.Insert(CurrentWeapon, 0);
-
-		WeaponSlotArray.AddUnique(CurrentWeapon);
+		WeaponSlotArray.AddUnique(WeaponSlot_01);
 
 		WeaponSlotArray[WeaponIndex]->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
 			WeaponSlotArray[WeaponIndex]->GetSocketName());
@@ -210,6 +208,11 @@ void APlayerCharacter::SpawnWeapon(TSubclassOf<class AWeaponBase> SpawnRef, bool
 	FVector Location = Arms->GetComponentLocation();
 	FRotator Rotation = Arms->GetComponentRotation();
 
+	uint8 FirstSlot = 0;
+	uint8 SecondSlot = 1;
+	uint8 ThirdSlot = 2;
+	uint8 FourthSlot = 3;
+
 	switch (WeaponIndexEnum)
 	{
 	case EWeaponSlot::EWS_First_Slot:
@@ -229,7 +232,15 @@ void APlayerCharacter::SpawnWeapon(TSubclassOf<class AWeaponBase> SpawnRef, bool
 
 				WeaponIndexEnum = EWeaponSlot::EWS_First_Slot;
 
+				WeaponSlotArray[FourthSlot]->SetActorHiddenInGame(true);
+
+				WeaponSlotArray[FirstSlot]->SetActorHiddenInGame(false);
+
+				WeaponIndex = static_cast<uint8>(WeaponIndexEnum);
+
 				IsSuccessful = true;
+
+				OnSwap.Broadcast();
 
 				break;
 			}
@@ -275,15 +286,23 @@ void APlayerCharacter::SpawnWeapon(TSubclassOf<class AWeaponBase> SpawnRef, bool
 				WeaponSlot_02->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
 					WeaponSlot_02->GetSocketName());
 
-				GEngine->AddOnScreenDebugMessage(-1, 6.F, FCustomColorsFromHex::HazelGreen(), L"Ref IsValid");
-
 				bIsSecondSlotFull = true;
 
 				WeaponSlotArray.AddUnique(WeaponSlot_02);
 
+				WeaponSlotArray[SecondSlot]->SetWeaponName(WeaponSlot_02->GetCurrentWeaponEnumName());
+
 				WeaponIndexEnum = EWeaponSlot::EWS_Second_Slot;
 
+				WeaponSlotArray[FirstSlot]->SetActorHiddenInGame(true);
+
+				WeaponSlotArray[SecondSlot]->SetActorHiddenInGame(false);
+
+				WeaponIndex = static_cast<uint8>(WeaponIndexEnum);
+
 				IsSuccessful = true;
+
+				OnSwap.Broadcast();
 
 				break;
 			}
@@ -335,7 +354,15 @@ void APlayerCharacter::SpawnWeapon(TSubclassOf<class AWeaponBase> SpawnRef, bool
 
 				WeaponIndexEnum = EWeaponSlot::EWS_Third_Slot;
 
+				WeaponSlotArray[SecondSlot]->SetActorHiddenInGame(true);
+
+				WeaponSlotArray[ThirdSlot]->SetActorHiddenInGame(false);
+
+				WeaponIndex = static_cast<uint8>(WeaponIndexEnum);
+
 				IsSuccessful = true;
+
+				OnSwap.Broadcast();
 			}
 
 			else
@@ -379,7 +406,15 @@ void APlayerCharacter::SpawnWeapon(TSubclassOf<class AWeaponBase> SpawnRef, bool
 
 				WeaponIndexEnum = EWeaponSlot::EWS_Fourth_Slot;
 
+				WeaponSlotArray[ThirdSlot]->SetActorHiddenInGame(true);
+
+				WeaponSlotArray[FourthSlot]->SetActorHiddenInGame(false);
+
+				WeaponIndex = static_cast<uint8>(WeaponIndexEnum);
+
 				IsSuccessful = true;
+
+				OnSwap.Broadcast();
 			}
 
 			else
@@ -412,6 +447,11 @@ void APlayerCharacter::SpawnWeapon(TSubclassOf<class AWeaponBase> SpawnRef, bool
 	default:
 		break;
 	}
+}
+
+void APlayerCharacter::ShowWeapon()
+{
+
 }
 
 APlayerCharacter* APlayerCharacter::SetPlayerRef_Implementation() { return this; }

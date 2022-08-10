@@ -59,7 +59,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
 	EPickupWeaponType PickupWeaponType;
 
-protected:
+private:
 	 void HealthPickup(EPickupHealthType InHealthType);
 	 void AmmoPickup(EPickupAmmoType InAmmoType);
 	 void WeaponPickup(EWeaponName InWeaponName);
@@ -70,6 +70,8 @@ protected:
 	void SetHealthData(EPickupHealthType Health);
 	void SetAmmoData(EPickupAmmoType PickupAmmo);
 	void SetWeaponData(EPickupWeaponType PickupWeapon);
+
+	void TestFunc();
 
 protected:
 	UFUNCTION()

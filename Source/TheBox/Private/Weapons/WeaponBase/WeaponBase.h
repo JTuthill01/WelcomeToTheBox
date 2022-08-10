@@ -41,6 +41,7 @@ public:
 #pragma endregion
 
 	FORCEINLINE void SetCanShgotgunFireOrReload(bool bReset) { bCanShotgunFireOrReload = bReset; }
+	FORCEINLINE void SetWeaponName(EWeaponName NewName) { WeaponName = NewName; }
 
 #pragma region Blueprint Getters
 
