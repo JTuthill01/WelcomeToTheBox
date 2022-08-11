@@ -3,7 +3,7 @@
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
-AExplosiveProps::AExplosiveProps() : PropHealth(100.F), DamageRadius(550.F), DamageAmount(10.F), RemovalTimer(0.3F)
+AExplosiveProps::AExplosiveProps() : DamageRadius(550.F), DamageAmount(10.F), PropHealth(100.F), RemovalTimer(0.3F)
 {
 	PropMesh = CreateDefaultSubobject<UStaticMeshComponent>(L"Prop");
 	PropMesh->SetCastShadow(false);

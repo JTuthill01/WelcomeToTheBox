@@ -142,32 +142,18 @@ void APickupBase::OnClearViewport()
 
 void APickupBase::WeaponPickup(EWeaponName InWeaponName)
 {
-	uint8 Num = PlayerRef->WeaponSlotArray.Num();
-
 	bool bIsSuccessful;
 
-	for (uint8 i = 0; i < Num; ++i)
+	if (!PlayerRef->GetWeaponMap().Contains(InWeaponName))
 	{
-		if (PlayerRef->WeaponSlotArray[i]->GetCurrentWeaponEnumName() == InWeaponName)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 6.F, FCustomColorsFromHex::NeonGreen(), L"False, tripped");
+		PlayerRef->SpawnWeaponMap(WeaponToSpawn, bIsSuccessful);
 
-			break;
-		}
-
-		else
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 6.F, FCustomColorsFromHex::NeonPurple(), L"True, tripped");
-
-			PlayerRef->SpawnWeapon(WeaponToSpawn, bIsSuccessful);
-
-			if (bIsSuccessful)
-				Destroy();
-
-			else
-				break;
-		}
+		if (bIsSuccessful)
+			Destroy();
 	}
+
+	else
+		return;
 }
 
 void APickupBase::HealthPickup(EPickupHealthType InHealthType)
@@ -217,10 +203,8 @@ void APickupBase::HealthPickup(EPickupHealthType InHealthType)
 
 void APickupBase::AmmoPickup(EPickupAmmoType InAmmoType)
 {
-	if (!IsValid(PlayerRef) && !PlayerRef->GetWeaponSlotArray().IsValidIndex(PlayerRef->GetEquippedWeaponIndexUint()))
+	if (!IsValid(PlayerRef))
 		return;
-
-	uint8 Temp = PlayerRef->GetEquippedWeaponIndexUint();
 
 	switch (InAmmoType)
 	{
@@ -229,11 +213,11 @@ void APickupBase::AmmoPickup(EPickupAmmoType InAmmoType)
 
 	case EPickupAmmoType::EPH_PistolAmmo:
 
-		if (PlayerRef->GetWeaponSlotArray()[Temp]->GetWeaponType() == EWeaponType::EWT_Pistol)
+		if (PlayerRef->GetWeaponMap()[PlayerRef->GetCurrentWeaponName()]->GetWeaponType() == EWeaponType::EWT_Pistol)
 		{
-			if (!PlayerRef->GetWeaponSlotArray()[Temp]->IsAmmoFull())
+			if (!PlayerRef->GetWeaponMap()[PlayerRef->GetCurrentWeaponName()]->IsAmmoFull())
 			{
-				PlayerRef->GetWeaponSlotArray()[Temp]->SetTotalAmmo(PickupData.PistolAmmoValue);
+				PlayerRef->GetWeaponMap()[PlayerRef->GetCurrentWeaponName()]->SetTotalAmmo(PickupData.PistolAmmoValue);
 
 				Destroy();
 			}
@@ -243,11 +227,11 @@ void APickupBase::AmmoPickup(EPickupAmmoType InAmmoType)
 
 	case EPickupAmmoType::EPS_RifleAmmo:
 
-		if (PlayerRef->GetWeaponSlotArray()[Temp]->GetWeaponType() == EWeaponType::EWT_Rifle)
+		if (PlayerRef->GetWeaponMap()[PlayerRef->GetCurrentWeaponName()]->GetWeaponType() == EWeaponType::EWT_Rifle)
 		{
-			if (!PlayerRef->GetWeaponSlotArray()[Temp]->IsAmmoFull())
+			if (!PlayerRef->GetWeaponMap()[PlayerRef->GetCurrentWeaponName()]->IsAmmoFull())
 			{
-				PlayerRef->GetWeaponSlotArray()[Temp]->SetTotalAmmo(PickupData.RifleAmmoValue);
+				PlayerRef->GetWeaponMap()[PlayerRef->GetCurrentWeaponName()]->SetTotalAmmo(PickupData.RifleAmmoValue);
 
 				Destroy();
 			}
@@ -257,11 +241,11 @@ void APickupBase::AmmoPickup(EPickupAmmoType InAmmoType)
 
 	case EPickupAmmoType::EPA_ShotgunAmmo:
 
-		if (PlayerRef->GetWeaponSlotArray()[Temp]->GetWeaponType() == EWeaponType::EWT_Shotgun)
+		if (PlayerRef->GetWeaponMap()[PlayerRef->GetCurrentWeaponName()]->GetWeaponType() == EWeaponType::EWT_Shotgun)
 		{
-			if (!PlayerRef->GetWeaponSlotArray()[Temp]->IsAmmoFull())
+			if (!PlayerRef->GetWeaponMap()[PlayerRef->GetCurrentWeaponName()]->IsAmmoFull())
 			{
-				PlayerRef->GetWeaponSlotArray()[Temp]->SetTotalAmmo(PickupData.ShotgunAmmoValue);
+				PlayerRef->GetWeaponMap()[PlayerRef->GetCurrentWeaponName()]->SetTotalAmmo(PickupData.ShotgunAmmoValue);
 
 				Destroy();
 			}

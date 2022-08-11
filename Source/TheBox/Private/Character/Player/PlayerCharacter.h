@@ -31,8 +31,7 @@ public:
 	FORCEINLINE TObjectPtr<class UCameraComponent> GetPlayerCamera() { return Camera; }
 	FORCEINLINE TObjectPtr<class UPlayerHealthComponent> GetHealthComponent() { return HealthComponent; }
 	FORCEINLINE TObjectPtr<UAnimInstance> GetPlayerAnimInstance() { return PlayerAnimInstance; }
-
-	FORCEINLINE EWeaponSlot GetEquippedWeaponIndexEnum() { return WeaponIndexEnum; }
+	FORCEINLINE TMap<EWeaponName, AWeaponBase*> GetWeaponMap() { return WeaponMap; }
 
 	FORCEINLINE bool HasOpenWeaponSlot() { return bHasOpenSlot; }
 
@@ -41,13 +40,7 @@ public:
 #pragma region Blueprint and C++ Getters
 
 	UFUNCTION(BlueprintPure, BlueprintCallable)
-	FORCEINLINE TArray<AWeaponBase*> GetWeaponSlotArray() { return WeaponSlotArray; }
-
-	UFUNCTION(BlueprintPure, BlueprintCallable)
-	FORCEINLINE class AWeaponBase* GetCurrentWeapon() { return CurrentWeapon; }
-
-	UFUNCTION(BlueprintPure, BlueprintCallable)
-	FORCEINLINE uint8 GetEquippedWeaponIndexUint() { return WeaponIndex = static_cast<uint8>(WeaponIndexEnum); }
+	FORCEINLINE EWeaponName GetCurrentWeaponName() { return CurrentNameOfWeapon; }
 
 #pragma endregion
 
@@ -78,7 +71,7 @@ public:
 	void PlayerReloadWeapon();
 
 	UFUNCTION()
-	void SpawnWeapon(TSubclassOf<class AWeaponBase> SpawnRef, bool& IsSuccessful);
+	void SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, bool& IsSuccessful);
 
 protected:
 	//Called when the game starts or when spawned
@@ -94,7 +87,6 @@ private:
 private:
 	void Initialize();
 
-	void ShowWeapon();
 public:
 	UPROPERTY(BlueprintAssignable)
 	FOnClearViewport Clear;
@@ -111,9 +103,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = ShotgunMontages)
 	TArray<TObjectPtr<class UAnimMontage>>BulldogReloadMonatge;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Weapons)
-	TArray<TObjectPtr<class AWeaponBase>> WeaponSlotArray;
-
 private:
 	UPROPERTY()
 	TObjectPtr<UAnimInstance> PlayerAnimInstance;
@@ -121,19 +110,19 @@ private:
 #pragma region Weapon Slots
 
 	UPROPERTY()
-	TObjectPtr<class AWeaponBase> CurrentWeapon;
+	class AWeaponBase* CurrentWeapon;
 
 	UPROPERTY()
-	TObjectPtr<class AWeaponBase> WeaponSlot_01;
+	class AWeaponBase* WeaponSlot_01;
 
 	UPROPERTY()
-	TObjectPtr<class AWeaponBase> WeaponSlot_02;
+	class AWeaponBase* WeaponSlot_02;
 
 	UPROPERTY()
-	TObjectPtr<class AWeaponBase> WeaponSlot_03;
+	class AWeaponBase* WeaponSlot_03;
 
 	UPROPERTY()
-	TObjectPtr<class AWeaponBase> WeaponSlot_04;
+	class AWeaponBase* WeaponSlot_04;
 
 #pragma endregion
 
@@ -145,6 +134,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = HealthComp, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UPlayerHealthComponent> HealthComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Weapons, meta = (AllowPrivateAccess = "true"))
+	TMap<EWeaponName, AWeaponBase*> WeaponMap; /** If this works rename later */
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Weapons, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AWeaponBase> InitialWeaponToSpawn;

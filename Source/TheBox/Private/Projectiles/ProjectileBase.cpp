@@ -70,19 +70,17 @@ void AProjectileBase::ProjectileStop(const FHitResult& HitResult)
 
 void AProjectileBase::ExplodeOnImpact(const FHitResult& HitResult)
 {
-	if (!IsValid(PlayerRef) || !PlayerRef->GetWeaponSlotArray().IsValidIndex(PlayerRef->GetEquippedWeaponIndexUint()))
+	if (!IsValid(PlayerRef))
 		return;
 
-	uint8 Temp = PlayerRef->GetEquippedWeaponIndexUint();
-
-	CurrentWeaponStats.DamageRadius = PlayerRef->GetWeaponSlotArray()[Temp]->GetDamageRadius();
-	CurrentWeaponStats.DamageAmount = PlayerRef->GetWeaponSlotArray()[Temp]->GetDamageAmount();
+	CurrentWeaponStats.DamageRadius = PlayerRef->GetWeaponMap()[PlayerRef->GetCurrentWeaponName()]->GetDamageRadius();
+	CurrentWeaponStats.DamageAmount = PlayerRef->GetWeaponMap()[PlayerRef->GetCurrentWeaponName()]->GetDamageAmount();
 	
 	TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjects;
 	TArray<AActor*> ActorsToIgnore;
 	TArray<AActor*> OutActors;
 
-	ActorsToIgnore.Add(PlayerRef->GetWeaponSlotArray()[Temp]);
+	ActorsToIgnore.Add(PlayerRef->GetWeaponMap()[PlayerRef->GetCurrentWeaponName()]);
 	ActorsToIgnore.Add(this);
 
 	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldDynamic));
@@ -147,8 +145,7 @@ void AProjectileBase::SpawnImpactFX(const FHitResult& HitResult)
 
 void AProjectileBase::DealDamage(const FHitResult& HitResult)
 {
-	uint8 Temp = PlayerRef->GetEquippedWeaponIndexUint();
-
-	UGameplayStatics::ApplyPointDamage(HitResult.GetActor(), PlayerRef->GetWeaponSlotArray()[Temp]->GetDamageAmount(), HitResult.ImpactPoint, HitResult, GetInstigatorController(), this, UDamageType::StaticClass());
+	UGameplayStatics::ApplyPointDamage(HitResult.GetActor(), PlayerRef->GetWeaponMap()[PlayerRef->GetCurrentWeaponName()]->GetDamageAmount(), HitResult.ImpactPoint, HitResult, GetInstigatorController(), 
+		this, UDamageType::StaticClass());
 }
 

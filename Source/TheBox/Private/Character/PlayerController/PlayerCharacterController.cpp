@@ -119,19 +119,19 @@ void APlayerCharacterController::Interact()
 
 void APlayerCharacterController::FireWeapon()
 {
-	if (!IsValid(PlayerRef) || !PlayerRef->GetWeaponSlotArray().IsValidIndex(PlayerRef->GetEquippedWeaponIndexUint()))
+	if (!IsValid(PlayerRef))
 		return;
 
-	uint8 Temp = PlayerRef->GetEquippedWeaponIndexUint();
+	EWeaponName TempName = PlayerRef->GetCurrentWeaponName();
 
-	if (PlayerRef->GetWeaponSlotArray()[Temp]->CanFireOrReload() && PlayerRef->GetWeaponSlotArray()[Temp]->MagHasAmmo())
+	if (PlayerRef->GetWeaponMap()[TempName]->CanFireOrReload() && PlayerRef->GetWeaponMap()[TempName]->MagHasAmmo())
 	{
-		PlayerRef->GetWeaponSlotArray()[Temp]->WeaponFire();
+		PlayerRef->GetWeaponMap()[TempName]->WeaponFire();
 
 		PlayerRef->PlayerFireWeapon();
 	}
 
-	else if (!PlayerRef->GetWeaponSlotArray()[Temp]->MagHasAmmo() && PlayerRef->GetWeaponSlotArray()[Temp]->HasAmmoForReload())
+	else if (!PlayerRef->GetWeaponMap()[TempName]->MagHasAmmo() && PlayerRef->GetWeaponMap()[TempName]->HasAmmoForReload())
 		WeaponReload();
 
 	else
@@ -140,24 +140,24 @@ void APlayerCharacterController::FireWeapon()
 
 void APlayerCharacterController::WeaponReload()
 {
-	if (!IsValid(PlayerRef) || !PlayerRef->GetWeaponSlotArray().IsValidIndex(PlayerRef->GetEquippedWeaponIndexUint()))
+	if (!IsValid(PlayerRef))
 		return;
 
-	uint8 Temp = PlayerRef->GetEquippedWeaponIndexUint();
+	EWeaponName TempName = PlayerRef->GetCurrentWeaponName();
 
-	EWeaponType WeaponTypeEnum = PlayerRef->GetWeaponSlotArray()[Temp]->GetWeaponType();
+	EWeaponType WeaponTypeEnum = PlayerRef->GetWeaponMap()[TempName]->GetWeaponType();
 	
 	if (WeaponTypeEnum == EWeaponType::EWT_Shotgun)
 	{
-		if (PlayerRef->GetWeaponSlotArray()[Temp]->CanShotgunFireOrReload())
+		if (PlayerRef->GetWeaponMap()[TempName]->CanShotgunFireOrReload())
 		{
-			PlayerRef->GetWeaponSlotArray()[Temp]->ShotgunReloadStart();
+			PlayerRef->GetWeaponMap()[TempName]->ShotgunReloadStart();
 		}
 	}
 
-	else if (PlayerRef->GetWeaponSlotArray()[Temp]->CanFireOrReload())
+	else if (PlayerRef->GetWeaponMap()[TempName]->CanFireOrReload())
 	{
-		PlayerRef->GetWeaponSlotArray()[Temp]->WeaponReload();
+		PlayerRef->GetWeaponMap()[TempName]->WeaponReload();
 
 		PlayerRef->PlayerReloadWeapon();
 	}
@@ -171,7 +171,7 @@ void APlayerCharacterController::SwapWeapon()
 	
 }
 
-void APlayerCharacterController::StopFiringWeapon() { PlayerRef->WeaponSlotArray[PlayerRef->GetEquippedWeaponIndexUint()]->StopFire(); }
+void APlayerCharacterController::StopFiringWeapon() { PlayerRef->GetWeaponMap()[PlayerRef->GetCurrentWeaponName()]->StopFire(); }
 
 void APlayerCharacterController::Jump() { GetCharacter()->Jump(); }
 
