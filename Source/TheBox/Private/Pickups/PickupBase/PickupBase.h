@@ -87,9 +87,11 @@ protected:
 	UPROPERTY()
 	TObjectPtr<class UPickupComponent> PickupParser;
 
-protected:
+private:
 	float HealthValue;
 	float ArmorValue;
+
+	int32 MaxWeapons;
 
 	uint8 InName;
 };

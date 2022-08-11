@@ -237,9 +237,9 @@ void APlayerCharacter::SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, b
 
 				OnSwap.Broadcast();
 
-				//WeaponMap[PreviousWeapon]->SetActorHiddenInGame(true);
+				WeaponMap[PreviousWeapon]->SetActorHiddenInGame(true);
 
-				//WeaponMap[CurrentNameOfWeapon]->SetActorHiddenInGame(false);
+				WeaponMap[CurrentNameOfWeapon]->SetActorHiddenInGame(false);
 
 				break;
 			}

@@ -9,7 +9,7 @@
 #include "Structs/HexColors/Str_CustomHexColors.h"
 
 // Sets default values
-APickupBase::APickupBase()
+APickupBase::APickupBase() : HealthValue(0.F), ArmorValue(0.F), MaxWeapons(4)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
@@ -144,7 +144,7 @@ void APickupBase::WeaponPickup(EWeaponName InWeaponName)
 {
 	bool bIsSuccessful;
 
-	if (!PlayerRef->GetWeaponMap().Contains(InWeaponName))
+	if (!PlayerRef->GetWeaponMap().Find(InWeaponName) && PlayerRef->GetWeaponMap().Num() <= MaxWeapons)
 	{
 		PlayerRef->SpawnWeaponMap(WeaponToSpawn, bIsSuccessful);
 

@@ -168,7 +168,8 @@ void APlayerCharacterController::WeaponReload()
 
 void APlayerCharacterController::SwapWeapon()
 {
-	
+	//if (PlayerRef->GetWeaponMap().Num() >= 2)
+
 }
 
 void APlayerCharacterController::StopFiringWeapon() { PlayerRef->GetWeaponMap()[PlayerRef->GetCurrentWeaponName()]->StopFire(); }
