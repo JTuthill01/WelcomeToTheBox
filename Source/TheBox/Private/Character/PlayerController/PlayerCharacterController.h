@@ -82,7 +82,6 @@ protected:
 	void WeaponReload();
 	void SwapWeapon();
 	void SwitchPrimairyWeapon();
-	void SwitchPrimairyWeaponMesh(EWeaponSlot Index);
 
 #pragma endregion
 

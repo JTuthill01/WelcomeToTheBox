@@ -10,7 +10,7 @@
 #include "Structs/HexColors/Str_CustomHexColors.h"
 
 // Sets default values
-APlayerCharacter::APlayerCharacter() : InteractableTraceTimer(0.25F), WeaponIndexEnum(EWeaponSlot::EWS_Default_Slot), MaxSlots(5), WeaponIndex(0), bIsFirstSlotFull(false),
+APlayerCharacter::APlayerCharacter() : InteractableTraceTimer(0.25F), WeaponIndexEnum(EWeaponSlot::EWS_Default_Slot), bIsFirstSlotFull(false),
 	bIsSecondSlotFull(false), bIsThirdSlotFull(false), bIsFourthSlotFull(false), bHasOpenSlot(true)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -68,22 +68,20 @@ void APlayerCharacter::SpawnInitialWeapon()
 
 	if (IsValid(WeaponSlot_01))
 	{
-		WeaponIndex = 0;
+		WeaponMap.Emplace(WeaponSlot_01->GetCurrentWeaponEnumName(), WeaponSlot_01);
+
+		WeaponMap[WeaponSlot_01->GetCurrentWeaponEnumName()]->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
+			WeaponMap[WeaponSlot_01->GetCurrentWeaponEnumName()]->GetSocketName());
 
 		CurrentNameOfWeapon = WeaponSlot_01->GetCurrentWeaponEnumName();
 
-		WeaponMap.Emplace(CurrentNameOfWeapon, WeaponSlot_01);
+		PreviousWeapon_01 = WeaponSlot_01->GetCurrentWeaponEnumName();
 
-		WeaponMap[CurrentNameOfWeapon]->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
-			WeaponMap[CurrentNameOfWeapon]->GetSocketName());
+		CurrentAmmoHUD = WeaponMap[WeaponSlot_01->GetCurrentWeaponEnumName()]->GetCurrentAmmo();
 
-		CurrentAmmoHUD = WeaponMap[CurrentNameOfWeapon]->GetCurrentAmmo();
-
-		MaxAmmoHUD = WeaponMap[CurrentNameOfWeapon]->GetCurrentTotalAmmo();
+		MaxAmmoHUD = WeaponMap[WeaponSlot_01->GetCurrentWeaponEnumName()]->GetCurrentTotalAmmo();
 
 		WeaponIndexEnum = EWeaponSlot::EWS_First_Slot;
-
-		WeaponIndex = static_cast<uint8>(WeaponIndexEnum);
 
 		bIsFirstSlotFull = true;
 	}
@@ -121,7 +119,7 @@ void APlayerCharacter::ScanForInteractables()
 	TArray<AActor*> ActorsToIgnore;
 
 	ActorsToIgnore.Add(this);
-	ActorsToIgnore.Add(WeaponMap[CurrentNameOfWeapon]);
+	ActorsToIgnore.Add(WeaponMap[WeaponSlot_01->GetCurrentWeaponEnumName()]);
 
 	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldStatic));
 	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldDynamic));
@@ -152,7 +150,7 @@ void APlayerCharacter::InteractWithObject()
 	TArray<AActor*> ActorsToIgnore;
 
 	ActorsToIgnore.Add(this);
-	ActorsToIgnore.Add(WeaponMap[CurrentNameOfWeapon]);
+	ActorsToIgnore.Add(WeaponMap[WeaponSlot_01->GetCurrentWeaponEnumName()]);
 
 	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldStatic));
 	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldDynamic));
@@ -218,28 +216,20 @@ void APlayerCharacter::SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, b
 
 			if (IsValid(WeaponSlot_01))
 			{
-				WeaponSlot_01->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
-					WeaponSlot_01->GetSocketName());
+				WeaponMap.Emplace(WeaponSlot_01->GetCurrentWeaponEnumName(), WeaponSlot_01);
 
-				const EWeaponName PreviousWeapon = CurrentNameOfWeapon;
-
-				CurrentNameOfWeapon = WeaponSlot_01->GetCurrentWeaponEnumName();
+				WeaponMap[WeaponSlot_01->GetCurrentWeaponEnumName()]->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
+					WeaponMap[WeaponSlot_01->GetCurrentWeaponEnumName()]->GetSocketName());
 
 				bIsFirstSlotFull = true;
 
 				WeaponIndexEnum = EWeaponSlot::EWS_First_Slot;
 
-				WeaponMap.Emplace(CurrentNameOfWeapon, WeaponSlot_01);
-				
-				WeaponIndex = static_cast<uint8>(WeaponIndexEnum);
+				PreviousWeapon_01 = WeaponSlot_01->GetCurrentWeaponEnumName();
 
 				IsSuccessful = true;
 
 				OnSwap.Broadcast();
-
-				WeaponMap[PreviousWeapon]->SetActorHiddenInGame(true);
-
-				WeaponMap[CurrentNameOfWeapon]->SetActorHiddenInGame(false);
 
 				break;
 			}
@@ -282,10 +272,10 @@ void APlayerCharacter::SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, b
 
 			if (IsValid(WeaponSlot_02))
 			{
-				WeaponSlot_02->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
-					WeaponSlot_02->GetSocketName());
+				WeaponMap.Emplace(WeaponSlot_02->GetCurrentWeaponEnumName(), WeaponSlot_02);
 
-				const EWeaponName PreviousWeapon = CurrentNameOfWeapon;
+				WeaponMap[WeaponSlot_02->GetCurrentWeaponEnumName()]->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
+					WeaponMap[WeaponSlot_02->GetCurrentWeaponEnumName()]->GetSocketName());
 
 				CurrentNameOfWeapon = WeaponSlot_02->GetCurrentWeaponEnumName();
 
@@ -293,17 +283,15 @@ void APlayerCharacter::SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, b
 
 				WeaponIndexEnum = EWeaponSlot::EWS_Second_Slot;
 
-				WeaponMap.Emplace(CurrentNameOfWeapon, WeaponSlot_02);
-
-				WeaponIndex = static_cast<uint8>(WeaponIndexEnum);
-
 				IsSuccessful = true;
 
+				WeaponMap[PreviousWeapon_01]->SetActorHiddenInGame(true);
+
+				WeaponMap[WeaponSlot_02->GetCurrentWeaponEnumName()]->SetActorHiddenInGame(false);
+
+				PreviousWeapon_02 = WeaponSlot_02->GetCurrentWeaponEnumName();
+
 				OnSwap.Broadcast();
-
-				WeaponMap[PreviousWeapon]->SetActorHiddenInGame(true);
-
-				WeaponMap[CurrentNameOfWeapon]->SetActorHiddenInGame(false);
 
 				break;
 			}
@@ -346,10 +334,10 @@ void APlayerCharacter::SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, b
 
 			if (IsValid(WeaponSlot_03))
 			{
-				WeaponSlot_03->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
-					WeaponSlot_03->GetSocketName());
+				WeaponMap.Emplace(WeaponSlot_03->GetCurrentWeaponEnumName(), WeaponSlot_03);
 
-				const EWeaponName PreviousWeapon = CurrentNameOfWeapon;
+				WeaponMap[WeaponSlot_03->GetCurrentWeaponEnumName()]->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
+					WeaponMap[WeaponSlot_03->GetCurrentWeaponEnumName()]->GetSocketName());
 
 				CurrentNameOfWeapon = WeaponSlot_03->GetCurrentWeaponEnumName();
 
@@ -357,17 +345,15 @@ void APlayerCharacter::SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, b
 
 				WeaponIndexEnum = EWeaponSlot::EWS_Third_Slot;
 
-				WeaponMap.Emplace(CurrentNameOfWeapon, WeaponSlot_03);
-
-				WeaponIndex = static_cast<uint8>(WeaponIndexEnum);
-
 				IsSuccessful = true;
 
+				WeaponMap[PreviousWeapon_02]->SetActorHiddenInGame(true);
+
+				WeaponMap[WeaponSlot_03->GetCurrentWeaponEnumName()]->SetActorHiddenInGame(false);
+
+				PreviousWeapon_03 = WeaponSlot_03->GetCurrentWeaponEnumName();
+
 				OnSwap.Broadcast();
-
-				WeaponMap[PreviousWeapon]->SetActorHiddenInGame(true);
-
-				WeaponMap[CurrentNameOfWeapon]->SetActorHiddenInGame(false);
 			}
 
 			else
@@ -402,10 +388,10 @@ void APlayerCharacter::SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, b
 
 			if (IsValid(WeaponSlot_04))
 			{
-				WeaponSlot_04->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
-					WeaponSlot_04->GetSocketName());
+				WeaponMap.Emplace(WeaponSlot_04->GetCurrentWeaponEnumName(), WeaponSlot_04);
 
-				const EWeaponName PreviousWeapon = CurrentNameOfWeapon;
+				WeaponMap[WeaponSlot_04->GetCurrentWeaponEnumName()]->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
+					WeaponMap[WeaponSlot_04->GetCurrentWeaponEnumName()]->GetSocketName());
 
 				CurrentNameOfWeapon = WeaponSlot_04->GetCurrentWeaponEnumName();
 
@@ -413,17 +399,15 @@ void APlayerCharacter::SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, b
 
 				WeaponIndexEnum = EWeaponSlot::EWS_Fourth_Slot;
 
-				WeaponMap.Emplace(CurrentNameOfWeapon, WeaponSlot_04);
-
-				WeaponIndex = static_cast<uint8>(WeaponIndexEnum);
-
 				IsSuccessful = true;
 
+				WeaponMap[PreviousWeapon_03]->SetActorHiddenInGame(true);
+
+				WeaponMap[WeaponSlot_04->GetCurrentWeaponEnumName()]->SetActorHiddenInGame(false);
+
+				PreviousWeapon_04 = WeaponSlot_04->GetCurrentWeaponEnumName();
+
 				OnSwap.Broadcast();
-
-				WeaponMap[PreviousWeapon]->SetActorHiddenInGame(true);
-
-				WeaponMap[CurrentNameOfWeapon]->SetActorHiddenInGame(false);
 			}
 
 			else

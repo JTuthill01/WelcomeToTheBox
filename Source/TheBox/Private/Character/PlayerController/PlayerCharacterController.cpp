@@ -84,8 +84,8 @@ void APlayerCharacterController::SetupInputComponent()
 		if (WeaponSwapAction)
 			PlayerEnhancedInputComponent->BindAction(WeaponSwapAction, ETriggerEvent::Triggered, this, &APlayerCharacterController::SwapWeapon);
 
-		/*if (PrimairyWeaponSwitchAction)
-			PlayerEnhancedInputComponent->BindAction(PrimairyWeaponSwitchAction, ETriggerEvent::Triggered, this, &APlayerCharacterController::SwitchPrimairyWeapon);*/
+		if (PrimairyWeaponSwitchAction)
+			PlayerEnhancedInputComponent->BindAction(PrimairyWeaponSwitchAction, ETriggerEvent::Triggered, this, &APlayerCharacterController::SwitchPrimairyWeapon);
 	}
 }
 
@@ -166,11 +166,17 @@ void APlayerCharacterController::WeaponReload()
 		return;
 }
 
-void APlayerCharacterController::SwapWeapon()
+void APlayerCharacterController::SwitchPrimairyWeapon()
 {
-	//if (PlayerRef->GetWeaponMap().Num() >= 2)
+	if (PlayerRef->GetWeaponMap().Num() >= 3)
+	{
+		PlayerRef->GetWeaponMap()[PlayerRef->PreviousWeapon_02]->SetActorHiddenInGame(true);
 
+		PlayerRef->GetWeaponMap()[PlayerRef->GetCurrentWeaponName()]->SetActorHiddenInGame(false);
+	}
 }
+
+void APlayerCharacterController::SwapWeapon() {}
 
 void APlayerCharacterController::StopFiringWeapon() { PlayerRef->GetWeaponMap()[PlayerRef->GetCurrentWeaponName()]->StopFire(); }
 

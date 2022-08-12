@@ -31,7 +31,9 @@ public:
 	FORCEINLINE TObjectPtr<class UCameraComponent> GetPlayerCamera() { return Camera; }
 	FORCEINLINE TObjectPtr<class UPlayerHealthComponent> GetHealthComponent() { return HealthComponent; }
 	FORCEINLINE TObjectPtr<UAnimInstance> GetPlayerAnimInstance() { return PlayerAnimInstance; }
-	FORCEINLINE TMap<EWeaponName, AWeaponBase*> GetWeaponMap() { return WeaponMap; }
+	FORCEINLINE TMap<EWeaponName, TObjectPtr<AWeaponBase>> GetWeaponMap() { return WeaponMap; }
+
+	FORCEINLINE EWeaponSlot GetCurrentSlotIndex() { return WeaponIndexEnum; }
 
 	FORCEINLINE bool HasOpenWeaponSlot() { return bHasOpenSlot; }
 
@@ -104,27 +106,26 @@ public:
 	TArray<TObjectPtr<class UAnimMontage>>BulldogReloadMonatge;
 
 private:
-	UPROPERTY()
-	TObjectPtr<UAnimInstance> PlayerAnimInstance;
 
 #pragma region Weapon Slots
 
 	UPROPERTY()
-	class AWeaponBase* CurrentWeapon;
+	TObjectPtr<class AWeaponBase> WeaponSlot_01;
 
 	UPROPERTY()
-	class AWeaponBase* WeaponSlot_01;
+	TObjectPtr<class AWeaponBase> WeaponSlot_02;
 
 	UPROPERTY()
-	class AWeaponBase* WeaponSlot_02;
+	TObjectPtr<class AWeaponBase> WeaponSlot_03;
 
 	UPROPERTY()
-	class AWeaponBase* WeaponSlot_03;
-
-	UPROPERTY()
-	class AWeaponBase* WeaponSlot_04;
+	TObjectPtr<class AWeaponBase> WeaponSlot_04;
 
 #pragma endregion
+
+private:
+	UPROPERTY()
+	TObjectPtr<UAnimInstance> PlayerAnimInstance;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UCameraComponent> Camera;
@@ -135,8 +136,8 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = HealthComp, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UPlayerHealthComponent> HealthComponent;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Weapons, meta = (AllowPrivateAccess = "true"))
-	TMap<EWeaponName, AWeaponBase*> WeaponMap; /** If this works rename later */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Weapons, meta = (AllowPrivateAccess = "true"))
+	TMap<EWeaponName, TObjectPtr<AWeaponBase>> WeaponMap; /** If this works rename later */
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Weapons, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AWeaponBase> InitialWeaponToSpawn;
@@ -172,11 +173,13 @@ private:
 	UPROPERTY()
 	FTimerHandle InteractableTraceTimerHandle;
 
-private:
+public:
 	EWeaponSlot WeaponIndexEnum;
 
-	uint8 MaxSlots;
-	uint8 WeaponIndex;
+	EWeaponName PreviousWeapon_01;
+	EWeaponName PreviousWeapon_02;
+	EWeaponName PreviousWeapon_03;
+	EWeaponName PreviousWeapon_04;
 
 	bool bIsFirstSlotFull;
 	bool bIsSecondSlotFull;
