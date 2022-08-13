@@ -25,29 +25,40 @@ public:
 
 public:
 
+	EWeaponName PreviousWeapon_01;
+	EWeaponName PreviousWeapon_02;
+	EWeaponName PreviousWeapon_03;
+	EWeaponName PreviousWeapon_04;
+
+public:
+
 #pragma region C++ only Getters
 
-	FORCEINLINE TObjectPtr<USkeletalMeshComponent> GetPlayerArms() { return Arms; }
-	FORCEINLINE TObjectPtr<class UCameraComponent> GetPlayerCamera() { return Camera; }
-	FORCEINLINE TObjectPtr<class UPlayerHealthComponent> GetHealthComponent() { return HealthComponent; }
-	FORCEINLINE TObjectPtr<UAnimInstance> GetPlayerAnimInstance() { return PlayerAnimInstance; }
-	FORCEINLINE TMap<EWeaponName, TObjectPtr<AWeaponBase>> GetWeaponMap() { return WeaponMap; }
+	FORCEINLINE TObjectPtr<USkeletalMeshComponent> GetPlayerArms() const { return Arms; }
+	FORCEINLINE TObjectPtr<class UCameraComponent> GetPlayerCamera() const { return Camera; }
+	FORCEINLINE TObjectPtr<class UPlayerHealthComponent> GetHealthComponent() const { return HealthComponent; }
+	FORCEINLINE TObjectPtr<UAnimInstance> GetPlayerAnimInstance() const { return PlayerAnimInstance; }
+	FORCEINLINE TMap<EWeaponName, TObjectPtr<AWeaponBase>> GetWeaponMap() const { return WeaponMap; }
 
-	FORCEINLINE EWeaponSlot GetCurrentSlotIndex() { return WeaponIndexEnum; }
+	FORCEINLINE EWeaponSlot GetCurrentSlotIndex() const { return WeaponIndexEnum; }
 
-	FORCEINLINE bool HasOpenWeaponSlot() { return bHasOpenSlot; }
+	FORCEINLINE int32 GetWeaponIndex() const { return WeaponIndex; }
+
+	FORCEINLINE bool HasOpenWeaponSlot() const { return bHasOpenSlot; }
 
 #pragma endregion
 
 #pragma region Blueprint and C++ Getters
 
 	UFUNCTION(BlueprintPure, BlueprintCallable)
-	FORCEINLINE EWeaponName GetCurrentWeaponName() { return CurrentNameOfWeapon; }
+	FORCEINLINE EWeaponName GetCurrentWeaponName() const { return CurrentNameOfWeapon; }
 
 #pragma endregion
 
 	/* Setter for the EWeaponSlot Enum, used in PlayerCharacterController for switching weapons */
 	FORCEINLINE void SetWeaponSlotIndex(EWeaponSlot NewValue) { WeaponIndexEnum = NewValue; }
+
+	FORCEINLINE void SetWeaponIndex(int32 InNewValue) { WeaponIndex = InNewValue; }
 
 public:	
 	//Called every frame
@@ -89,6 +100,8 @@ private:
 private:
 	void Initialize();
 
+	void SpawnInitialWeapon();
+
 public:
 	UPROPERTY(BlueprintAssignable)
 	FOnClearViewport Clear;
@@ -105,7 +118,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = ShotgunMontages)
 	TArray<TObjectPtr<class UAnimMontage>>BulldogReloadMonatge;
 
-private:
+public:
 
 #pragma region Weapon Slots
 
@@ -164,22 +177,16 @@ private:
 	EWeaponName CurrentNameOfWeapon;
 
 private:
-	void SpawnInitialWeapon();
-
-private:
 	UPROPERTY()
 	float InteractableTraceTimer;
 
 	UPROPERTY()
 	FTimerHandle InteractableTraceTimerHandle;
 
-public:
+private:
 	EWeaponSlot WeaponIndexEnum;
 
-	EWeaponName PreviousWeapon_01;
-	EWeaponName PreviousWeapon_02;
-	EWeaponName PreviousWeapon_03;
-	EWeaponName PreviousWeapon_04;
+	int32 WeaponIndex;
 
 	bool bIsFirstSlotFull;
 	bool bIsSecondSlotFull;

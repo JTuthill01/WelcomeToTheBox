@@ -10,7 +10,7 @@
 #include "Structs/HexColors/Str_CustomHexColors.h"
 
 // Sets default values
-APlayerCharacter::APlayerCharacter() : InteractableTraceTimer(0.25F), WeaponIndexEnum(EWeaponSlot::EWS_Default_Slot), bIsFirstSlotFull(false),
+APlayerCharacter::APlayerCharacter() : InteractableTraceTimer(0.25F), WeaponIndexEnum(EWeaponSlot::EWS_Default_Slot), WeaponIndex(0), bIsFirstSlotFull(false),
 	bIsSecondSlotFull(false), bIsThirdSlotFull(false), bIsFourthSlotFull(false), bHasOpenSlot(true)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.

@@ -166,17 +166,16 @@ void APlayerCharacterController::WeaponReload()
 		return;
 }
 
-void APlayerCharacterController::SwitchPrimairyWeapon()
+void APlayerCharacterController::SwapWeapon()
 {
-	if (PlayerRef->GetWeaponMap().Num() >= 3)
-	{
-		PlayerRef->GetWeaponMap()[PlayerRef->PreviousWeapon_02]->SetActorHiddenInGame(true);
-
-		PlayerRef->GetWeaponMap()[PlayerRef->GetCurrentWeaponName()]->SetActorHiddenInGame(false);
-	}
 }
 
-void APlayerCharacterController::SwapWeapon() {}
+void APlayerCharacterController::SwitchPrimairyWeapon()
+{
+	uint8 Num = PlayerRef->GetWeaponMap().Num();
+
+	return;
+}
 
 void APlayerCharacterController::StopFiringWeapon() { PlayerRef->GetWeaponMap()[PlayerRef->GetCurrentWeaponName()]->StopFire(); }
 
