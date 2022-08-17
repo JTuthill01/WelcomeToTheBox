@@ -9,6 +9,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Grenades/Grenade.h"
 #include "Structs/HexColors/Str_CustomHexColors.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter() : InteractableTraceTimer(0.25F), WeaponIndexEnum(EWeaponSlot::EWS_Default_Slot), WeaponIndex(0), bIsFirstSlotFull(false),
@@ -165,20 +166,6 @@ void APlayerCharacter::InteractWithObject()
 			if (HitResult.GetActor()->GetClass()->ImplementsInterface(UInteractInterface::StaticClass()))
 				IInteractInterface::Execute_InteractWithObject(HitResult.GetActor());
 		}
-	}
-}
-
-void APlayerCharacter::ThrowGrenade()
-{
-	Grenade = GetWorld()->SpawnActor<AGrenade>(GrenadeToSpawn);
-
-	if (IsValid(Grenade))
-	{
-		Grenade->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale, GrenadeSocketName);
-
-		Grenade->GetGrenadeInstance()->Montage_Play(Grenade->GetGrenadeMontage());
-
-		PlayerAnimInstance->Montage_Play(ThrowGrenadeMontage);
 	}
 }
 
@@ -457,8 +444,32 @@ void APlayerCharacter::SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, b
 	}
 }
 
+void APlayerCharacter::ThrowGrenade()
+{
+	Grenade = GetWorld()->SpawnActor<AGrenade>(GrenadeToSpawn);
+
+	if (IsValid(Grenade))
+	{
+		Grenade->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale, GrenadeSocketName);
+
+		Grenade->GetGrenadeInstance()->Montage_Play(Grenade->GetGrenadeMontage());
+
+		PlayerAnimInstance->Montage_Play(ThrowGrenadeMontage);
+	}
+
+	else
+		return;
+}
+
+void APlayerCharacter::OnGrenadeReleased()
+{
+	if (IsValid(Grenade))
+		Grenade->OnGrenadeThrow(UKismetMathLibrary::GetForwardVector(GetControlRotation()));
+}
+
+void APlayerCharacter::SetWeaponVisibility(bool ShouldBeHidden) { WeaponMap[CurrentNameOfWeapon]->SetActorHiddenInGame(ShouldBeHidden); }
+
 APlayerCharacter* APlayerCharacter::SetPlayerRef_Implementation() { return this; }
 
-void APlayerCharacter::SetWeaponVisibility(bool ShouldBeHidden) { GetWeaponMap()[CurrentNameOfWeapon]->SetActorHiddenInGame(ShouldBeHidden); }
 
 

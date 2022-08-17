@@ -88,7 +88,7 @@ void APlayerCharacterController::SetupInputComponent()
 			PlayerEnhancedInputComponent->BindAction(PrimairyWeaponSwitchAction, ETriggerEvent::Triggered, this, &APlayerCharacterController::SwitchPrimairyWeapon);
 
 		if (GrenadeThrowAction)
-			PlayerEnhancedInputComponent->BindAction(GrenadeThrowAction, ETriggerEvent::Triggered, this, &APlayerCharacterController::ThrowGrenade);
+			PlayerEnhancedInputComponent->BindAction(GrenadeThrowAction, ETriggerEvent::Started, this, &APlayerCharacterController::ThrowGrenade);
 	}
 }
 

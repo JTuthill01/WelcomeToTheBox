@@ -14,12 +14,20 @@ public:
 	AGrenade();
 
 public:
-	TObjectPtr<UAnimMontage> GetGrenadeMontage() { return ThrowMontage; }
-	TObjectPtr<UAnimInstance> GetGrenadeInstance() { return GrenadeInstance; }
+	/** Getters */
+	FORCEINLINE TObjectPtr<UAnimMontage> GetGrenadeMontage() { return ThrowMontage; }
+	FORCEINLINE TObjectPtr<UAnimInstance> GetGrenadeInstance() { return GrenadeInstance; }
+
+public:
+	void OnGrenadeThrow(FVector ForwardVector);
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+private:
+	UFUNCTION()
+	void Explode();
 
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Mesh, meta = (AllowPrivateAccess = "true"))
@@ -28,11 +36,24 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Animations, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UAnimMontage> ThrowMontage;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FX, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class USoundBase> ExplosionSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FX, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UNiagaraSystem> ExplosionFX;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Damage, meta = (AllowPrivateAccess = "true"))
+	float DamageRadius;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Damage, meta = (AllowPrivateAccess = "true"))
+	float DamageAmount;
+
 private:
 	UPROPERTY()
 	TObjectPtr<UAnimInstance> GrenadeInstance;
 
 private:
-	int32 CurrentNumGrenades;
-	int32 MaxNumGrenades;
+	float ExplosionTimer;
+
+	FTimerHandle ExplosionTimerHandle;
 };

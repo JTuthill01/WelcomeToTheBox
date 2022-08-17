@@ -87,6 +87,9 @@ public:
 	void PlayerReloadWeapon();
 
 	UFUNCTION()
+	void OnGrenadeReleased();
+
+	UFUNCTION()
 	void SetWeaponVisibility(bool ShouldBeHidden);
 
 	UFUNCTION()
