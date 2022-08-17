@@ -7,6 +7,7 @@
 #include "Character/HealthComponent/PlayerHealthComponent.h"
 #include "Interfaces/Interact/InteractInterface.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Grenades/Grenade.h"
 #include "Structs/HexColors/Str_CustomHexColors.h"
 
 // Sets default values
@@ -164,6 +165,20 @@ void APlayerCharacter::InteractWithObject()
 			if (HitResult.GetActor()->GetClass()->ImplementsInterface(UInteractInterface::StaticClass()))
 				IInteractInterface::Execute_InteractWithObject(HitResult.GetActor());
 		}
+	}
+}
+
+void APlayerCharacter::ThrowGrenade()
+{
+	Grenade = GetWorld()->SpawnActor<AGrenade>(GrenadeToSpawn);
+
+	if (IsValid(Grenade))
+	{
+		Grenade->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale, GrenadeSocketName);
+
+		Grenade->GetGrenadeInstance()->Montage_Play(Grenade->GetGrenadeMontage());
+
+		PlayerAnimInstance->Montage_Play(ThrowGrenadeMontage);
 	}
 }
 
@@ -443,5 +458,7 @@ void APlayerCharacter::SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, b
 }
 
 APlayerCharacter* APlayerCharacter::SetPlayerRef_Implementation() { return this; }
+
+void APlayerCharacter::SetWeaponVisibility(bool ShouldBeHidden) { GetWeaponMap()[CurrentNameOfWeapon]->SetActorHiddenInGame(ShouldBeHidden); }
 
 

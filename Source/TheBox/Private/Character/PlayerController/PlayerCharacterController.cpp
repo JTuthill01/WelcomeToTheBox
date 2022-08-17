@@ -86,6 +86,9 @@ void APlayerCharacterController::SetupInputComponent()
 
 		if (PrimairyWeaponSwitchAction)
 			PlayerEnhancedInputComponent->BindAction(PrimairyWeaponSwitchAction, ETriggerEvent::Triggered, this, &APlayerCharacterController::SwitchPrimairyWeapon);
+
+		if (GrenadeThrowAction)
+			PlayerEnhancedInputComponent->BindAction(GrenadeThrowAction, ETriggerEvent::Triggered, this, &APlayerCharacterController::ThrowGrenade);
 	}
 }
 
@@ -166,6 +169,15 @@ void APlayerCharacterController::WeaponReload()
 		return;
 }
 
+void APlayerCharacterController::ThrowGrenade()
+{
+	if (!PlayerRef->GetWeaponMap()[PlayerRef->GetCurrentWeaponName()]->IsWeaponFiringOrReloading())
+		PlayerRef->ThrowGrenade();
+
+	else
+		return;
+}
+
 void APlayerCharacterController::SwapWeapon()
 {
 }
@@ -174,7 +186,34 @@ void APlayerCharacterController::SwitchPrimairyWeapon()
 {
 	uint8 Num = PlayerRef->GetWeaponMap().Num();
 
-	return;
+	if (Num == 2)
+	{
+		PlayerRef->GetWeaponMap()[PlayerRef->WeaponSlot_01->GetCurrentWeaponEnumName()]->SetActorHiddenInGame(true);
+
+		PlayerRef->GetWeaponMap()[PlayerRef->PreviousWeapon_02]->SetActorHiddenInGame(false);
+
+		PlayerRef->SetWeaponName(PlayerRef->PreviousWeapon_02);
+	}
+
+	if (Num == 3)
+	{
+		PlayerRef->GetWeaponMap()[PlayerRef->WeaponSlot_03->GetCurrentWeaponEnumName()]->SetActorHiddenInGame(true);
+
+		PlayerRef->GetWeaponMap()[PlayerRef->PreviousWeapon_01]->SetActorHiddenInGame(false);
+
+		PlayerRef->SetWeaponName(PlayerRef->PreviousWeapon_01);
+
+		PlayerRef->OnSwap.Broadcast();
+	}
+
+	else if (Num == 4)
+	{
+		PlayerRef->GetWeaponMap()[PlayerRef->WeaponSlot_04->GetCurrentWeaponEnumName()]->SetActorHiddenInGame(true);
+
+		PlayerRef->GetWeaponMap()[PlayerRef->PreviousWeapon_01]->SetActorHiddenInGame(false);
+
+		PlayerRef->SetWeaponName(PlayerRef->PreviousWeapon_01);
+	}
 }
 
 void APlayerCharacterController::StopFiringWeapon() { PlayerRef->GetWeaponMap()[PlayerRef->GetCurrentWeaponName()]->StopFire(); }

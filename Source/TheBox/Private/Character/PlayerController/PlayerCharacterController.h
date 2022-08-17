@@ -54,6 +54,9 @@ protected:
 	UInputAction* WeaponFireAction;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Input)
+	UInputAction* GrenadeThrowAction;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Input)
 	UInputAction* WeaponReloadAction;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Input)
@@ -80,6 +83,7 @@ protected:
 	void FireWeapon();
 	void StopFiringWeapon();
 	void WeaponReload();
+	void ThrowGrenade();
 	void SwapWeapon();
 	void SwitchPrimairyWeapon();
 

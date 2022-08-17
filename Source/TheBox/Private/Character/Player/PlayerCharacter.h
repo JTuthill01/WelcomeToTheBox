@@ -58,7 +58,7 @@ public:
 	/* Setter for the EWeaponSlot Enum, used in PlayerCharacterController for switching weapons */
 	FORCEINLINE void SetWeaponSlotIndex(EWeaponSlot NewValue) { WeaponIndexEnum = NewValue; }
 
-	FORCEINLINE void SetWeaponIndex(int32 InNewValue) { WeaponIndex = InNewValue; }
+	FORCEINLINE void SetWeaponName(EWeaponName NewName) { CurrentNameOfWeapon = NewName; }
 
 public:	
 	//Called every frame
@@ -78,10 +78,16 @@ public:
 	void InteractWithObject();
 
 	UFUNCTION()
+	void ThrowGrenade();
+
+	UFUNCTION()
 	void PlayerFireWeapon();
 
 	UFUNCTION()
 	void PlayerReloadWeapon();
+
+	UFUNCTION()
+	void SetWeaponVisibility(bool ShouldBeHidden);
 
 	UFUNCTION()
 	void SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, bool& IsSuccessful);
@@ -140,6 +146,9 @@ private:
 	UPROPERTY()
 	TObjectPtr<UAnimInstance> PlayerAnimInstance;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Grenades, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class AGrenade> Grenade;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UCameraComponent> Camera;
 
@@ -155,6 +164,12 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Weapons, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AWeaponBase> InitialWeaponToSpawn;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Grenades, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class AGrenade> GrenadeToSpawn;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Grenades, meta = (AllowPrivateAccess = "true"))
+	FName GrenadeSocketName;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Montages, meta = (AllowPrivateAccess = "true"))
 	TArray<TObjectPtr<UAnimMontage>> PlayerWeaponFireMontage;
 
@@ -163,6 +178,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Montages, meta = (AllowPrivateAccess = "true"))
 	TArray<TObjectPtr<UAnimMontage>> PlayerWeaponRaiseMontage;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Montages, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UAnimMontage> ThrowGrenadeMontage;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Colors, meta = (AllowPrivateAccess = "true"))
 	FCustomColors UserColors;

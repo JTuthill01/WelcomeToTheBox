@@ -273,6 +273,8 @@ bool AWeaponBase::IsAmmoFull() { return WeapStats.CurrentTotalAmmo >= WeapStats.
 
 bool AWeaponBase::CanShotgunFireOrReload() { return !WeaponAnimInstance->Montage_IsPlaying(WeaponFireMontage) && bCanShotgunFireOrReload && HasAmmoForReload() && !IsMagFull(); }
 
+bool AWeaponBase::IsWeaponFiringOrReloading() { return WeaponAnimInstance->Montage_IsPlaying(WeaponFireMontage) || WeaponAnimInstance->Montage_IsPlaying(WeaponReloadMontage); }
+
 void AWeaponBase::WeaponSetup() {}
 
 void AWeaponBase::StopFire() {}

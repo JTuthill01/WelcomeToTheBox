@@ -97,6 +97,8 @@ public:
 
 	bool CanShotgunFireOrReload();
 
+	bool IsWeaponFiringOrReloading();
+
 public:
 	UPROPERTY(BlueprintAssignable)
 	FUpdateCurrentTotalAmmo OnNewTotalAmmo;
