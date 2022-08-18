@@ -13,6 +13,7 @@ class UInputMappingContext;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnClearViewport);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponSwap);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGrenadeThrown);
 
 UCLASS()
 class APlayerCharacter : public ACharacter, public IPlayerCharacterInterface
@@ -59,6 +60,8 @@ public:
 	FORCEINLINE void SetWeaponSlotIndex(EWeaponSlot NewValue) { WeaponIndexEnum = NewValue; }
 
 	FORCEINLINE void SetWeaponName(EWeaponName NewName) { CurrentNameOfWeapon = NewName; }
+
+	FORCEINLINE void SetGrenadeCount(int32 NewCount);
 
 public:	
 	//Called every frame
@@ -117,6 +120,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnWeaponSwap OnSwap;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnGrenadeThrown OnGrenadeThrown;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = ShotgunMontages)
 	TArray<TObjectPtr<class UAnimMontage>>ItalianReloadMonatge;
@@ -189,10 +195,10 @@ private:
 	FCustomColors UserColors;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = HUDVariables, meta = (AllowPrivateAccess = "true"))
-	int32 CurrentAmmoHUD;
+	int32 MaxGrenades;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = HUDVariables, meta = (AllowPrivateAccess = "true"))
-	int32 MaxAmmoHUD;
+	int32 CurrentGrenades;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = HUDVariables, meta = (AllowPrivateAccess = "true"))
 	EWeaponName CurrentNameOfWeapon;

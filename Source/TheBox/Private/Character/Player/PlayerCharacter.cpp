@@ -12,7 +12,7 @@
 #include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
-APlayerCharacter::APlayerCharacter() : InteractableTraceTimer(0.25F), WeaponIndexEnum(EWeaponSlot::EWS_Default_Slot), WeaponIndex(0), bIsFirstSlotFull(false),
+APlayerCharacter::APlayerCharacter() : MaxGrenades(4), CurrentGrenades(MaxGrenades), InteractableTraceTimer(0.25F), WeaponIndexEnum(EWeaponSlot::EWS_Default_Slot), WeaponIndex(0), bIsFirstSlotFull(false),
 	bIsSecondSlotFull(false), bIsThirdSlotFull(false), bIsFourthSlotFull(false), bHasOpenSlot(true)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -79,9 +79,9 @@ void APlayerCharacter::SpawnInitialWeapon()
 
 		PreviousWeapon_01 = WeaponSlot_01->GetCurrentWeaponEnumName();
 
-		CurrentAmmoHUD = WeaponMap[WeaponSlot_01->GetCurrentWeaponEnumName()]->GetCurrentAmmo();
+		WeaponMap[WeaponSlot_01->GetCurrentWeaponEnumName()]->GetCurrentAmmo();
 
-		MaxAmmoHUD = WeaponMap[WeaponSlot_01->GetCurrentWeaponEnumName()]->GetCurrentTotalAmmo();
+		WeaponMap[WeaponSlot_01->GetCurrentWeaponEnumName()]->GetCurrentTotalAmmo();
 
 		WeaponIndexEnum = EWeaponSlot::EWS_First_Slot;
 
@@ -444,21 +444,51 @@ void APlayerCharacter::SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, b
 	}
 }
 
-void APlayerCharacter::ThrowGrenade()
+void APlayerCharacter::SetGrenadeCount(int32 NewCount)
 {
-	Grenade = GetWorld()->SpawnActor<AGrenade>(GrenadeToSpawn);
-
-	if (IsValid(Grenade))
+	if (CurrentGrenades < MaxGrenades)
 	{
-		Grenade->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale, GrenadeSocketName);
+		CurrentGrenades += NewCount;
 
-		Grenade->GetGrenadeInstance()->Montage_Play(Grenade->GetGrenadeMontage());
-
-		PlayerAnimInstance->Montage_Play(ThrowGrenadeMontage);
+		if (CurrentGrenades > MaxGrenades)
+			CurrentGrenades = FMath::Clamp(CurrentGrenades, NewCount, MaxGrenades);
 	}
 
-	else
+	else if (CurrentGrenades == MaxGrenades)
 		return;
+}
+
+void APlayerCharacter::ThrowGrenade()
+{
+	if (CurrentGrenades <= 0)
+	{
+		CurrentGrenades = FMath::Clamp(CurrentGrenades, 0, MaxGrenades);
+
+		return;
+	}
+
+	else if (CurrentGrenades >= 1)
+	{
+		Grenade = GetWorld()->SpawnActor<AGrenade>(GrenadeToSpawn);
+
+		if (IsValid(Grenade))
+		{
+			CurrentGrenades--;
+
+			OnGrenadeThrown.Broadcast();
+
+			GEngine->AddOnScreenDebugMessage(-1, 6.F, FCustomColorsFromHex::NeonYellow(), L"Grenade Count: " + FString::FromInt(CurrentGrenades));
+
+			Grenade->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale, GrenadeSocketName);
+
+			Grenade->GetGrenadeInstance()->Montage_Play(Grenade->GetGrenadeMontage());
+
+			PlayerAnimInstance->Montage_Play(ThrowGrenadeMontage);
+		}
+
+		else
+			return;
+	}
 }
 
 void APlayerCharacter::OnGrenadeReleased()
