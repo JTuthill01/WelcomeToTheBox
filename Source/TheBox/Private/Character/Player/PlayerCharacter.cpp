@@ -477,8 +477,6 @@ void APlayerCharacter::ThrowGrenade()
 
 			OnGrenadeThrown.Broadcast();
 
-			GEngine->AddOnScreenDebugMessage(-1, 6.F, FCustomColorsFromHex::NeonYellow(), L"Grenade Count: " + FString::FromInt(CurrentGrenades));
-
 			Grenade->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale, GrenadeSocketName);
 
 			Grenade->GetGrenadeInstance()->Montage_Play(Grenade->GetGrenadeMontage());

@@ -35,6 +35,9 @@ protected:
 	virtual void BeginPlay() override;
 
 protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = PickupRoot)
+	TObjectPtr<class USceneComponent> PickupRoot;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Mesh)
 	TObjectPtr<UStaticMeshComponent> BaseMesh;
 

@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Enums/GrenadeEnums/GrenadeTypeEnum.h"
 #include "Grenade.generated.h"
 
 UCLASS()
@@ -27,6 +28,9 @@ protected:
 
 private:
 	UFUNCTION()
+	void TypeSwitch();
+
+	UFUNCTION()
 	void Explode();
 
 private:
@@ -41,6 +45,9 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FX, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UNiagaraSystem> ExplosionFX;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum, meta = (AllowPrivateAccess = "true"))
+	EGrenadeType GrenadeType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Damage, meta = (AllowPrivateAccess = "true"))
 	float DamageRadius;

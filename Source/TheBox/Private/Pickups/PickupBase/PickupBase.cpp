@@ -13,9 +13,12 @@ APickupBase::APickupBase() : HealthValue(0.F), ArmorValue(0.F), MaxWeapons(4)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
+	
+	PickupRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Pickup Root"));
+	SetRootComponent(PickupRoot);
 
 	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Base Mesh"));
-	BaseMesh->SetupAttachment(RootComponent);
+	BaseMesh->SetupAttachment(PickupRoot);
 	BaseMesh->SetCastShadow(false);
 	BaseMesh->SetCollisionObjectType(ECollisionChannel::ECC_WorldStatic);
 

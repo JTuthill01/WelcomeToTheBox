@@ -23,14 +23,47 @@ void AGrenade::BeginPlay()
 	{
 		GrenadeInstance = GrenadeMesh->GetAnimInstance();
 
-		GetWorldTimerManager().SetTimer(ExplosionTimerHandle, this, &AGrenade::Explode, ExplosionTimer, false);
+		GetWorldTimerManager().SetTimer(ExplosionTimerHandle, this, &AGrenade::TypeSwitch, ExplosionTimer, false);
+	}
+}
+
+void AGrenade::TypeSwitch()
+{
+	GetWorldTimerManager().ClearTimer(ExplosionTimerHandle);
+
+	switch (GrenadeType)
+	{
+	case EGrenadeType::EGT_None:
+		break;
+
+	case EGrenadeType::EGT_Frag:
+
+		Explode();
+
+		break;
+
+	case EGrenadeType::EGT_Incendary:
+		break;
+
+	case EGrenadeType::EGT_Electric:
+		break;
+
+	case EGrenadeType::EGT_FlashBang:
+		break;
+
+	case EGrenadeType::EGT_Corrosive:
+		break;
+
+	case EGrenadeType::EGT_Smoke:
+		break;
+
+	default:
+		break;
 	}
 }
 
 void AGrenade::Explode()
 {
-	GetWorldTimerManager().ClearTimer(ExplosionTimerHandle);
-
 	UGameplayStatics::SpawnSoundAttached(ExplosionSound, GrenadeMesh);
 
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionFX, GrenadeMesh->GetRelativeLocation(), GrenadeMesh->GetRelativeRotation());
