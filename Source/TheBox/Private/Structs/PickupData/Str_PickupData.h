@@ -32,6 +32,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Enums)
 	EPickupAmmoType PickupAmmoType;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Enums)
+	EPickupGrenadeType PickupGrenadeType;
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Health)
 	float HealthPackValue;
 	
@@ -46,4 +49,7 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Ammo)
 	int32 ShotgunAmmoValue;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Grenade)
+	int32 GrenadePickupValue;
 };

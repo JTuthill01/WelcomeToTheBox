@@ -6,6 +6,7 @@
 #include "Interfaces/Interact/InteractInterface.h"
 #include "Enums/PickupEnums/PickupEnums.h"
 #include "Enums/WeaponEnums/WeaponEnums.h"
+#include "Enums/GrenadeEnums/GrenadeTypeEnum.h"
 #include "PickupBase.generated.h"
 
 UCLASS()
@@ -62,10 +63,17 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
 	EPickupWeaponType PickupWeaponType;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
+	EPickupGrenadeType PickupGrenadeType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
+	EGrenadeType GrenadeTypeEnum;
+
 private:
 	 void HealthPickup(EPickupHealthType InHealthType);
 	 void AmmoPickup(EPickupAmmoType InAmmoType);
 	 void WeaponPickup(EWeaponName InWeaponName);
+	 void GrenadePickup();
 
 	void SetData();
 	void SetDataWeapon();
@@ -73,8 +81,7 @@ private:
 	void SetHealthData(EPickupHealthType Health);
 	void SetAmmoData(EPickupAmmoType PickupAmmo);
 	void SetWeaponData(EPickupWeaponType PickupWeapon);
-
-	void TestFunc();
+	void SetGrenadeData(EPickupGrenadeType Grenade);
 
 protected:
 	UFUNCTION()

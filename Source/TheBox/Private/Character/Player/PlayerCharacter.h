@@ -14,6 +14,7 @@ class UInputMappingContext;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnClearViewport);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponSwap);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGrenadeThrown);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGrenadePickup);
 
 UCLASS()
 class APlayerCharacter : public ACharacter, public IPlayerCharacterInterface
@@ -44,6 +45,7 @@ public:
 	FORCEINLINE EWeaponSlot GetCurrentSlotIndex() const { return WeaponIndexEnum; }
 
 	FORCEINLINE int32 GetWeaponIndex() const { return WeaponIndex; }
+	FORCEINLINE int32 GetGrenadeCount() const { return CurrentGrenades; }
 
 	FORCEINLINE bool HasOpenWeaponSlot() const { return bHasOpenSlot; }
 
@@ -56,12 +58,12 @@ public:
 
 #pragma endregion
 
-	/* Setter for the EWeaponSlot Enum, used in PlayerCharacterController for switching weapons */
+	/** Setter for the EWeaponSlot Enum, used in PlayerCharacterController for switching weapons */
 	FORCEINLINE void SetWeaponSlotIndex(EWeaponSlot NewValue) { WeaponIndexEnum = NewValue; }
 
 	FORCEINLINE void SetWeaponName(EWeaponName NewName) { CurrentNameOfWeapon = NewName; }
 
-	FORCEINLINE void SetGrenadeCount(int32 NewCount);
+	FORCEINLINE bool HasMaxGrenades() { return CurrentGrenades >= MaxGrenades; }
 
 public:	
 	//Called every frame
@@ -91,6 +93,9 @@ public:
 
 	UFUNCTION()
 	void OnGrenadeReleased();
+
+	UFUNCTION()
+	void SetGrenadeCount(int32 NewCount);
 
 	UFUNCTION()
 	void SetWeaponVisibility(bool ShouldBeHidden);
@@ -123,6 +128,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnGrenadeThrown OnGrenadeThrown;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnGrenadePickup OnGrenadePickup;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = ShotgunMontages)
 	TArray<TObjectPtr<class UAnimMontage>>ItalianReloadMonatge;

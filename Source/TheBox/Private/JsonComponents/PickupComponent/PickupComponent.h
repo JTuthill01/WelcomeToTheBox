@@ -55,6 +55,8 @@ public:
 
 	uint8 PWeaponType;
 
+	uint8 PGrenadeType;
+
 #pragma endregion
 
 #pragma region floats
@@ -72,6 +74,8 @@ public:
 	int32 RAmmoValue;
 
 	int32 SAmmoValue;
+
+	int32 GrenadeValue;
 
 #pragma endregion
 

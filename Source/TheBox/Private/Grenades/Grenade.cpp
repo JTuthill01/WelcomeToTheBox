@@ -3,7 +3,7 @@
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
-AGrenade::AGrenade() : DamageRadius(500.F), DamageAmount(12.F), ExplosionTimer(4.F)
+AGrenade::AGrenade() : GrenadeType(EGrenadeType::EGT_None),  DamageRadius(500.F), DamageAmount(12.F), ExplosionTimer(4.F)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
@@ -43,6 +43,9 @@ void AGrenade::TypeSwitch()
 		break;
 
 	case EGrenadeType::EGT_Incendary:
+
+		Explode();
+
 		break;
 
 	case EGrenadeType::EGT_Electric:
@@ -55,6 +58,9 @@ void AGrenade::TypeSwitch()
 		break;
 
 	case EGrenadeType::EGT_Smoke:
+
+		Smoke();
+
 		break;
 
 	default:
@@ -88,12 +94,20 @@ void AGrenade::Explode()
 	Destroy();
 }
 
+void AGrenade::Smoke()
+{
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionFX, GrenadeMesh->GetRelativeLocation(), GrenadeMesh->GetRelativeRotation());
+
+	Destroy();
+}
+
 void AGrenade::OnGrenadeThrow(FVector ForwardVector)
 {
 	ForwardVector *= 2'500.F;
 
 	GrenadeMesh->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
 	GrenadeMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	GrenadeMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
 	GrenadeMesh->SetSimulatePhysics(true);
 	GrenadeMesh->SetPhysicsLinearVelocity(FVector::ZeroVector);
 	GrenadeMesh->AddImpulse(ForwardVector);

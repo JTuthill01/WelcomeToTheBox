@@ -11,4 +11,6 @@ class UIncendiaryDamageType : public UDamageType
 	
 public:
 	UIncendiaryDamageType();
+
+	void SetOnFire();
 };

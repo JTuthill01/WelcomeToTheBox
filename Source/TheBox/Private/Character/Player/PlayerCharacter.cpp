@@ -452,6 +452,8 @@ void APlayerCharacter::SetGrenadeCount(int32 NewCount)
 
 		if (CurrentGrenades > MaxGrenades)
 			CurrentGrenades = FMath::Clamp(CurrentGrenades, NewCount, MaxGrenades);
+
+		OnGrenadePickup.Broadcast();
 	}
 
 	else if (CurrentGrenades == MaxGrenades)

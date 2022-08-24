@@ -1,67 +1,67 @@
 {
 	"TT33": {
 		"WeaponName": "TT33",
-		"Icon": "Texture2D'/Game/_Main/Icons/TT33.TT33'",
+		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_TT33.MI_TT33'",
 		"PickupType": 1,
 		"PickupWeaponType" : 1
 	},
 	"AK47": {
 		"WeaponName": "AK47",
-		"Icon": "Texture2D'/Game/_Main/Icons/AK47.AK47'",
+		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_AK47.MI_AK47'",
 		"PickupType": 1,
 		"PickupWeaponType" : 2
 	},
 	"AmericanShotgun": {
 		"WeaponName": "American Shotgun",
-		"Icon": "Texture2D'/Game/_Main/Icons/American.American'",
+		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_American.MI_American'",
 		"PickupType": 1,
 		"PickupWeaponType" : 3
 	},
 	"BelgianAR": {
 		"WeaponName": "Belgian AR",
-		"Icon": "Texture2D'/Game/_Main/Icons/BelgianAR.BelgianAR'",
+		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_BelgianAR.MI_BelgianAR'",
 		"PickupType": 1,
 		"PickupWeaponType" : 4
 	},
 	"GermanSMG": {
 		"WeaponName": "German SMG",
-		"Icon": "Texture2D'/Game/_Main/Icons/GermanSMG.GermanSMG'",
+		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_GermanSMG.MI_GermanSMG'",
 		"PickupType": 1,
 		"PickupWeaponType" : 5
 	},
 	"HandCannon": {
 		"WeaponName": "Hand Cannon",
-		"Icon": "Texture2D'/Game/_Main/Icons/HC.HC'",
+		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_HandCannon.MI_HandCannon'",
 		"PickupType": 1, 
 		"PickupWeaponType" : 6
 	},
 	"SKS": {
 		"WeaponName": "SKS",
-		"Icon": "Texture2D'/Game/_Main/Icons/SKS.SKS'",
+		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_SKS.MI_SKS'",
 		"PickupType": 1,
 		"PickupWeaponType" : 7
 	},
 	"XM82": {
 		"WeaponName": "XM82",
-		"Icon": "Texture2D'/Game/_Main/Icons/XM82.XM82'",
+		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_XM82.MI_XM82'",
 		"PickupType": 1, 
 		"PickupWeaponType" : 8
 	},
 	"Bulldog": {
 		"WeaponName": "Bulldog",
-		"Icon": "Texture2D'/Game/_Main/Icons/Bulldog.Bulldog'",
+		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_Bulldog.MI_Bulldog'",
 		"PickupType": 1, 
 		"PickupWeaponType" : 9
 	},
 	"L86": {
 		"WeaponName": "L86",
-		"Icon": "Texture2D'/Game/_Main/Icons/L86.L86'",
+		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_L86.MI_L86'",
 		"PickupType": 1, 
 		"PickupWeaponType" : 10
 	},
 	"AK74": {
 		"WeaponName": "AK74U",
-		"Icon": "Texture2D'/Game/_Main/Icons/AK74U.AK74U'",
+		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_AK74U.MI_AK74U'",
 		"PickupType": 1,
 		"PickupWeaponType" : 11
 	},
@@ -90,25 +90,25 @@
 	},
 	"NavySMG": {
 		"WeaponName": "Navy SMG",
-		"Icon": "Texture2D'/Game/_Main/Icons/NavySMG.NavySMG'",
+		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_NavySMG.MI_NavySMG'",
 		"PickupType": 1,
 		"PickupWeaponType" : 13
 	},
 	"ItalianShotgun": {
 		"WeaponName": "ItalianShotgun",
-		"Icon": "Texture2D'/Game/_Main/Icons/Italian.Italian'",
+		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_Italian.MI_Italian'",
 		"PickupType": 1,
 		"PickupWeaponType" : 14
 	},
 	"SVD": {
 		"WeaponName": "SVD",
-		"Icon": "Texture2D'/Game/_Main/Icons/SVD.SVD'",
+		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_SVD.MI_SVD'",
 		"PickupType": 1,
 		"PickupWeaponType" : 15
 	},
 	"ShortStrokeAR": {
 		"WeaponName": "Short Stroke AR",
-		"Icon": "Texture2D'/Game/_Main/Icons/ShortStroke.ShortStroke'",
+		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_ShortStroke.MI_ShortStroke'",
 		"PickupType": 1, 
 		"PickupWeaponType" : 16
 	}

@@ -14,3 +14,7 @@ UIncendiaryDamageType::UIncendiaryDamageType()
 
 	DamageFalloff = 1.F;
 }
+
+void UIncendiaryDamageType::SetOnFire()
+{
+}

@@ -19,6 +19,11 @@ public:
 	FORCEINLINE TObjectPtr<UAnimMontage> GetGrenadeMontage() { return ThrowMontage; }
 	FORCEINLINE TObjectPtr<UAnimInstance> GetGrenadeInstance() { return GrenadeInstance; }
 
+	FORCEINLINE EGrenadeType GetGrenadeType() { return GrenadeType; }
+
+	/** Grenade Enum Setter */
+	FORCEINLINE void SetGrenadeEnum(EGrenadeType NewGrenadeType) { GrenadeType = NewGrenadeType; }
+
 public:
 	void OnGrenadeThrow(FVector ForwardVector);
 
@@ -32,6 +37,9 @@ private:
 
 	UFUNCTION()
 	void Explode();
+
+	UFUNCTION()
+	void Smoke();
 
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Mesh, meta = (AllowPrivateAccess = "true"))

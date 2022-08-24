@@ -14,7 +14,7 @@ void UPlayerHealthComponent::BeginPlay()
 	Super::BeginPlay();
 
 	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UPlayerHealthComponent::TakeDamage);
-	GetOwner()->OnTakeRadialDamage.AddDynamic(this, &UPlayerHealthComponent::TakeRadialDamage);
+	//GetOwner()->OnTakeRadialDamage.AddDynamic(this, &UPlayerHealthComponent::TakeRadialDamage);
 }
 
 // Called every frame

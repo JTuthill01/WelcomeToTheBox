@@ -72,6 +72,12 @@ void APickupBase::OnConstruction(const FTransform& Transform)
 
 		break;
 
+	case EPickupType::EPT_Grenade:
+
+		SetGrenadeData(PickupGrenadeType);
+
+		break;
+
 	default:
 		break;
 	}
@@ -133,6 +139,12 @@ void APickupBase::InteractWithObject_Implementation()
 
 		break;
 
+	case EPickupType::EPT_Grenade:
+
+		GrenadePickup();
+
+		break;
+
 	default:
 		break;
 	}
@@ -153,6 +165,25 @@ void APickupBase::WeaponPickup(EWeaponName InWeaponName)
 
 		if (bIsSuccessful)
 			Destroy();
+	}
+
+	else
+		return;
+}
+
+void APickupBase::GrenadePickup()
+{
+	if (IsValid(PlayerRef))
+	{
+		if (!PlayerRef->HasMaxGrenades())
+		{
+			PlayerRef->SetGrenadeCount(PickupData.GrenadePickupValue);
+
+			Destroy();
+		}
+
+		else
+			return;
 	}
 
 	else
@@ -271,11 +302,13 @@ void APickupBase::SetData()
 	PickupData.PickupType = static_cast<EPickupType>(PickupParser->PType);
 	PickupData.PickupHealthType = static_cast<EPickupHealthType>(PickupParser->PHealthType);
 	PickupData.PickupAmmoType = static_cast<EPickupAmmoType>(PickupParser->PAmmoType);
+	PickupData.PickupGrenadeType = static_cast<EPickupGrenadeType>(PickupParser->PGrenadeType);
 	PickupData.HealthPackValue = PickupParser->HealthValue;
 	PickupData.ArmorValue = PickupParser->ArmValue;
 	PickupData.PistolAmmoValue = PickupParser->PAmmoValue;
 	PickupData.RifleAmmoValue = PickupParser->RAmmoValue;
 	PickupData.ShotgunAmmoValue = PickupParser->SAmmoValue;
+	PickupData.GrenadePickupValue = PickupParser->GrenadeValue;
 }
 
 void APickupBase::SetDataWeapon()
@@ -576,6 +609,75 @@ void APickupBase::SetWeaponData(EPickupWeaponType PickupWeapon)
 	}
 }
 
-void APickupBase::TestFunc()
+void APickupBase::SetGrenadeData(EPickupGrenadeType Grenade)
 {
+	switch (Grenade)
+	{
+	case EPickupGrenadeType::EPGT_None:
+		break;
+
+	case EPickupGrenadeType::EPGT_Frag:
+
+		PickupParser->SetObjectData("Frag_Grenade");
+
+		PickupParser->Parser();
+
+		SetData();
+
+		break;
+
+	case EPickupGrenadeType::EPGT_Incendary:
+
+		PickupParser->SetObjectData("Incendary_Grenade");
+
+		PickupParser->Parser();
+
+		SetData();
+
+		break;
+
+	case EPickupGrenadeType::EPGT_Electric:
+
+		PickupParser->SetObjectData("Electric_Grenade");
+
+		PickupParser->Parser();
+
+		SetData();
+
+		break;
+
+	case EPickupGrenadeType::EPGT_FlashBang:
+
+		PickupParser->SetObjectData("FlashBang_Grenade");
+
+		PickupParser->Parser();
+
+		SetData();
+
+		break;
+
+	case EPickupGrenadeType::EPGT_Corrosive:
+
+		PickupParser->SetObjectData("Corrosive_Grenade");
+
+		PickupParser->Parser();
+
+		SetData();
+
+		break;
+
+	case EPickupGrenadeType::EPGT_Smoke:
+
+		PickupParser->SetObjectData("Smoke_Grenade");
+
+		PickupParser->Parser();
+
+		SetData();
+
+		break;
+
+	default:
+		break;
+	}
 }
+

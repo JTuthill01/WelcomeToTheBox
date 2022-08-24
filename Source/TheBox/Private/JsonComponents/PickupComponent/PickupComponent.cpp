@@ -44,6 +44,8 @@ void UPickupComponent::Parser()
 
 		PAmmoType = DataObject->GetIntegerField("PickupAmmoType");
 
+		PGrenadeType = DataObject->GetIntegerField("PickupGrenadeType");
+
 		HealthValue = DataObject->GetNumberField("HealthPackValue");
 
 		ArmValue = DataObject->GetNumberField("ArmorValue");
@@ -53,6 +55,8 @@ void UPickupComponent::Parser()
 		RAmmoValue = DataObject->GetIntegerField("RifleAmmoValue");
 
 		SAmmoValue = DataObject->GetIntegerField("ShotgunAmmoValue");
+
+		GrenadeValue = DataObject->GetIntegerField("GrenadeValue");
 	}
 }
 
@@ -108,6 +112,8 @@ void UPickupComponent::InitializerList()
 
 	 PWeaponType = 0;
 
+	 PGrenadeType = 0;
+
 	 /* Floats */
 
 	 HealthValue = 0.F;
@@ -121,6 +127,8 @@ void UPickupComponent::InitializerList()
 	 RAmmoValue = 0;
 
 	 SAmmoValue = 0;
+
+	 GrenadeValue = 0;
 }
 
 

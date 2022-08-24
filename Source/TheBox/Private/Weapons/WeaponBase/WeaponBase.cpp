@@ -16,7 +16,7 @@ AWeaponBase::AWeaponBase() : SocketName(NAME_None), ShotgunPellets(6), Range(4'5
 	FireQuat(FQuat(0.F)), InUintToEnum(0), ShotgunReloadStartIndex(0), ShotgunReloadLoopIndex(1), ShotgunReloadEndIndex(2)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	WeaponRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Weapon Root"));
 	SetRootComponent(WeaponRoot);
