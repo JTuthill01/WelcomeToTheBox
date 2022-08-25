@@ -77,12 +77,12 @@ void UPlayerHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, cons
 	PlayerHealthAndArmorUpdate.Broadcast(CurrentArmor, CurrentHealth);
 }
 
-void UPlayerHealthComponent::TakeRadialDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, FVector Origin, FHitResult HitInfo, AController* InstigatedBy, AActor* DamageCauser)
-{
-	ChangeHealthAndArmor(Damage);
-
-	PlayerHealthAndArmorUpdate.Broadcast(CurrentArmor, CurrentHealth);
-}
+//void UPlayerHealthComponent::TakeRadialDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, FVector Origin, FHitResult HitInfo, AController* InstigatedBy, AActor* DamageCauser)
+//{
+//	ChangeHealthAndArmor(Damage);
+//
+//	PlayerHealthAndArmorUpdate.Broadcast(CurrentArmor, CurrentHealth);
+//}
 
 bool UPlayerHealthComponent::IsPlayerAlive() { return CurrentHealth > 0.F; }
 
