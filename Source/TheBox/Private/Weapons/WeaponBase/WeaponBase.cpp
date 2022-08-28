@@ -10,6 +10,7 @@
 #include "JsonComponents/WeaponComponent/WeaponComponentParser.h"
 #include "Structs/HexColors/Str_CustomHexColors.h"
 #include "Projectiles/ProjectileBase.h"
+#include "Widgets/Reload/ReloadWidget.h"
 
 // Sets default values
 AWeaponBase::AWeaponBase() : SocketName(NAME_None), ShotgunPellets(6), Range(4'500), SpreadAngle(8.89F), bCanShotgunFireOrReload(true), EjectQuat(FQuat(0.F)),
@@ -145,6 +146,8 @@ void AWeaponBase::WeaponFire()
 	if (WeapStats.CurrentMagTotal <= 0)
 		WeapStats.CurrentMagTotal = 0;
 
+	SpawnReloadWidget();
+
 	switch (WeapStats.FireType)
 	{
 	case EWeaponFireType::EWFT_None:
@@ -175,6 +178,8 @@ void AWeaponBase::WeaponFire()
 
 void AWeaponBase::WeaponReload()
 {
+	HideReloadWidget();
+
 	if (!IsValid(PlayerRef))
 		return;
 
@@ -253,6 +258,35 @@ void AWeaponBase::SetTotalAmmo(int32 NewAmmoValue)
 		WeapStats.CurrentTotalAmmo = WeapStats.MaxTotalAmmo;
 
 	OnNewTotalAmmo.Broadcast(WeapStats.CurrentTotalAmmo);
+}
+
+void AWeaponBase::SpawnReloadWidget()
+{
+	if (WeapStats.CurrentMagTotal <= WeapStats.LowAmmo)
+	{
+		if (!IsValid(ReloadWidget))
+		{
+			ReloadWidget = CreateWidget<UReloadWidget>(GetWorld(), ReloadWidgetSub);
+
+			if (IsValid(ReloadWidget))
+				ReloadWidget->AddToViewport(-1);
+
+			else
+				return;
+		}
+
+		else if (!ReloadWidget->IsInViewport())
+			ReloadWidget->AddToViewport(-1);
+
+		else if (ReloadWidget->IsInViewport() && ReloadWidget->GetVisibility() == ESlateVisibility::Collapsed)
+			ReloadWidget->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void AWeaponBase::HideReloadWidget()
+{
+	if (IsValid(ReloadWidget))
+		ReloadWidget->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void AWeaponBase::ShotgunReloadStart() {}

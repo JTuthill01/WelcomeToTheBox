@@ -295,6 +295,9 @@ void APickupBase::AmmoPickup(EPickupAmmoType InAmmoType)
 void APickupBase::SetData()
 {
 	TObjectPtr<UMaterialInstance> NewInstance = LoadObject<UMaterialInstance>(this, *PickupParser->IconFilePathString);
+	TObjectPtr<UStaticMesh> NewMesh = LoadObject<UStaticMesh>(this, *PickupParser->MeshFilePathString);
+
+	BaseMesh->SetStaticMesh(NewMesh);
 
 	PickupData.PickupName = FName(*PickupParser->PickupNameString);
 	PickupData.Icon = NewInstance;
@@ -314,6 +317,9 @@ void APickupBase::SetData()
 void APickupBase::SetDataWeapon()
 {
 	TObjectPtr<UMaterialInstance> NewInstance = LoadObject<UMaterialInstance>(this, *PickupParser->IconFilePathString);
+	TObjectPtr<UStaticMesh> NewMesh = LoadObject<UStaticMesh>(this, *PickupParser->MeshFilePathString);
+
+	BaseMesh->SetStaticMesh(NewMesh);
 
 	PickupData.PickupName = FName(*PickupParser->PickupNameString);
 	PickupData.Icon = NewInstance;

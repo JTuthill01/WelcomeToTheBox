@@ -1,112 +1,111 @@
 {
 	"TT33": {
+		"PickupMesh": "StaticMesh'/Game/_Main/CustomStaticMeshes/SM_Weapons/SM_TT33.SM_TT33'",
 		"WeaponName": "TT33",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_TT33.MI_TT33'",
 		"PickupType": 1,
 		"PickupWeaponType" : 1
 	},
 	"AK47": {
+		"PickupMesh": "StaticMesh'/Game/_Main/CustomStaticMeshes/SM_Weapons/SM_AK47.SM_AK47'",
 		"WeaponName": "AK47",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_AK47.MI_AK47'",
 		"PickupType": 1,
 		"PickupWeaponType" : 2
 	},
 	"AmericanShotgun": {
+		"PickupMesh": "StaticMesh'/Game/_Main/CustomStaticMeshes/SM_Weapons/SM_AmericanShotgun.SM_AmericanShotgun'",
 		"WeaponName": "American Shotgun",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_American.MI_American'",
 		"PickupType": 1,
 		"PickupWeaponType" : 3
 	},
 	"BelgianAR": {
+		"PickupMesh": "StaticMesh'/Game/_Main/CustomStaticMeshes/SM_Weapons/SM_BelgianAR.SM_BelgianAR'",
 		"WeaponName": "Belgian AR",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_BelgianAR.MI_BelgianAR'",
 		"PickupType": 1,
 		"PickupWeaponType" : 4
 	},
 	"GermanSMG": {
+		"PickupMesh": "StaticMesh'/Game/_Main/CustomStaticMeshes/SM_Weapons/SM_GermanSMG.SM_GermanSMG'",
 		"WeaponName": "German SMG",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_GermanSMG.MI_GermanSMG'",
 		"PickupType": 1,
 		"PickupWeaponType" : 5
 	},
 	"HandCannon": {
+		"PickupMesh": "StaticMesh'/Game/_Main/CustomStaticMeshes/SM_Weapons/SM_HandCannon.SM_HandCannon'",
 		"WeaponName": "Hand Cannon",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_HandCannon.MI_HandCannon'",
 		"PickupType": 1, 
 		"PickupWeaponType" : 6
 	},
 	"SKS": {
+		"PickupMesh": "StaticMesh'/Game/_Main/CustomStaticMeshes/SM_Weapons/SM_SKS.SM_SKS'",
 		"WeaponName": "SKS",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_SKS.MI_SKS'",
 		"PickupType": 1,
 		"PickupWeaponType" : 7
 	},
 	"XM82": {
+		"PickupMesh": "StaticMesh'/Game/_Main/CustomStaticMeshes/SM_Weapons/SM_XM82.SM_XM82'",
 		"WeaponName": "XM82",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_XM82.MI_XM82'",
 		"PickupType": 1, 
 		"PickupWeaponType" : 8
 	},
 	"Bulldog": {
+		"PickupMesh": "StaticMesh'/Game/_Main/CustomStaticMeshes/SM_Weapons/SM_Bulldog.SM_Bulldog'",
 		"WeaponName": "Bulldog",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_Bulldog.MI_Bulldog'",
 		"PickupType": 1, 
 		"PickupWeaponType" : 9
 	},
 	"L86": {
+		"PickupMesh": "StaticMesh'/Game/_Main/CustomStaticMeshes/SM_Weapons/SM_L86.SM_L86'",
 		"WeaponName": "L86",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_L86.MI_L86'",
 		"PickupType": 1, 
 		"PickupWeaponType" : 10
 	},
 	"AK74": {
+		"PickupMesh": "StaticMesh'/Game/_Main/CustomStaticMeshes/SM_Weapons/SM_AK74U.SM_AK74U'",
 		"WeaponName": "AK74U",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_AK74U.MI_AK74U'",
 		"PickupType": 1,
 		"PickupWeaponType" : 11
 	},
 	"M4A1": {
+		"PickupMesh": "",
 		"Name": "M4A1",
-		"CurrentMagTotal": 0,
-		"MaxMagTotal": 0,
-		"CurrentTotalAmmo": 0,
-		"MaxTotalAmmo": 0,
-		"LowAmmo": 0,
-		"CrosshairIndex": 0,
-		"WeaponIndex": 11,
-		"DamageAmount": 0,
-		"CriciticalHitChance": 0,
-		"DamageRadius": 0,
 		"WeaponName": "None",
 		"Icon": "None",
-		"FireType": 1,
-		"RackSlideSound": "None",
-		"MagOutSound": "None",
-		"MagInSound": "None",
-		"FireSound": "None",
-		"AmmoEject": "None",
-		"FireFX": "None",
 		"WeaponType" : 2
 	},
 	"NavySMG": {
+		"PickupMesh": "StaticMesh'/Game/_Main/CustomStaticMeshes/SM_Weapons/SM_NavySMG.SM_NavySMG'",
 		"WeaponName": "Navy SMG",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_NavySMG.MI_NavySMG'",
 		"PickupType": 1,
 		"PickupWeaponType" : 13
 	},
 	"ItalianShotgun": {
+		"PickupMesh": "StaticMesh'/Game/_Main/CustomStaticMeshes/SM_Weapons/SM_ItalianShotgun.SM_ItalianShotgun'",
 		"WeaponName": "ItalianShotgun",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_Italian.MI_Italian'",
 		"PickupType": 1,
 		"PickupWeaponType" : 14
 	},
 	"SVD": {
+		"PickupMesh": "StaticMesh'/Game/_Main/CustomStaticMeshes/SM_Weapons/SM_SVD.SM_SVD'",
 		"WeaponName": "SVD",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_SVD.MI_SVD'",
 		"PickupType": 1,
 		"PickupWeaponType" : 15
 	},
 	"ShortStrokeAR": {
+		"PickupMesh": "StaticMesh'/Game/_Main/CustomStaticMeshes/SM_Weapons/SM_ShortStrokeAR.SM_ShortStrokeAR'",
 		"WeaponName": "Short Stroke AR",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_ShortStroke.MI_ShortStroke'",
 		"PickupType": 1, 

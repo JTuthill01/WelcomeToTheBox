@@ -19,7 +19,17 @@ public:
 	APickupBase();
 
 public:
+	FORCEINLINE TSubclassOf<class AWeaponBase> GetWeaponSubClass() { return WeaponToSpawn; }
+
+public:
 	FORCEINLINE void SetPickupBaseType(EPickupType Base) { PickupBaseType = Base; }
+	FORCEINLINE void SetWeaponPickupName(EPickupWeaponType NewName) { PickupWeaponType = NewName; }
+	FORCEINLINE void SetHealthPickupType(EPickupHealthType NewHealth) { BaseHealthType = NewHealth; }
+	FORCEINLINE void SetGrenadePickupType(EPickupGrenadeType Type) { PickupGrenadeType = Type; }
+	FORCEINLINE void SetAmmoPickupType(EPickupAmmoType AmmoType) { PickupAmmoType = AmmoType; }
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE void SetWeaponSpawn(TSubclassOf<class AWeaponBase> NewWeapon) { WeaponToSpawn = NewWeapon; }
 
 public:
 	// Called every frame

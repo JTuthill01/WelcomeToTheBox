@@ -8,7 +8,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerDeath);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHealthAndArmorUpdate, float, ArmorUpdate, float, HealthUpdate);
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( BlueprintType, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UPlayerHealthComponent : public UActorComponent, public IPickupInterface
 {
 	GENERATED_BODY()

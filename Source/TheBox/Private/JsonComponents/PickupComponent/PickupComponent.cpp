@@ -79,6 +79,8 @@ void UPickupComponent::WeaponParser()
 		/* Gets whatever "object" from the json file you choose */
 		TSharedPtr<FJsonObject> DataObject = JsonObject->GetObjectField(ObjectString);
 
+		MeshFilePathString = DataObject->GetStringField("PickupMesh");
+
 		IconFilePathString = DataObject->GetStringField("Icon");
 
 		PickupNameString = DataObject->GetStringField("WeaponName");

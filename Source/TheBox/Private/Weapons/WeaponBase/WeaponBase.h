@@ -139,6 +139,9 @@ protected:
 	TObjectPtr<UAnimInstance> WeaponAnimInstance;
 
 	UPROPERTY()
+	TObjectPtr<class UReloadWidget> ReloadWidget;
+
+	UPROPERTY()
 	FWeaponStringData WeaponFilePaths;
 
 	UPROPERTY()
@@ -164,6 +167,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Projectile)
 	TSubclassOf<class AProjectileBase> ProjectileToSpawn;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Widget)
+	TSubclassOf<class UUserWidget> ReloadWidgetSub;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Enums)
 	EWeaponName WeaponName;
@@ -207,4 +213,8 @@ private:
 	void SpawnProjectile();
 
 	void InitializeVariables();
+
+	void SpawnReloadWidget();
+
+	void HideReloadWidget();
 };
