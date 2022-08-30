@@ -4,7 +4,7 @@
 #include "Kismet/GameplayStatics.h"
 #include <Structs/HexColors/Str_CustomHexColors.h>
 
-AAnimatedInteractables::AAnimatedInteractables() : PickupIndex(0), bIsWeaponContainer(false), MaxNumToSpawn(0), bHasBeenOpned(false), CaseOpenTimer(0.6F)
+AAnimatedInteractables::AAnimatedInteractables() : MaxNumToSpawn(0), PickupIndex(0), bIsWeaponContainer(false), bHasBeenOpned(false), CaseOpenTimer(0.6F)
 {
 	PrimaryActorTick.bCanEverTick = false;
 
@@ -22,10 +22,7 @@ void AAnimatedInteractables::BeginPlay()
 {
 	Super::BeginPlay();
 
-	PickupIndex = FMath::RandRange(0, MaxNumToSpawn);
-
-	if (IsValid(SKBaseMesh))
-		SpawnTransform = SKBaseMesh->GetSocketTransform(L"SpawnSocket");
+	SpawnSetup();
 }
 
 void AAnimatedInteractables::InteractableFound_Implementation()
@@ -46,6 +43,25 @@ void AAnimatedInteractables::InteractWithObject_Implementation()
 	Open();
 }
 
+void AAnimatedInteractables::SpawnSetup()
+{
+	PickupIndex = FMath::RandRange(0, MaxNumToSpawn);
+
+	if (IsValid(SKBaseMesh))
+		SpawnTransform = SKBaseMesh->GetSocketTransform(L"SpawnSocket");
+
+	TempPickupPtr = GetWorld()->SpawnActorDeferred<APickupBase>(PickupToSpawn, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+
+	TempPickupPtr->SetPickupBaseType(PickupEnum);
+
+	SetPickupData(PickupEnum);
+
+	UGameplayStatics::FinishSpawningActor(TempPickupPtr, SpawnTransform);
+
+	if (IsValid(TempPickupPtr))
+		TempPickupPtr->SetActorHiddenInGame(true);
+}
+
 void AAnimatedInteractables::Open()
 {
 	SKBaseMesh->PlayAnimation(AnimToPlay, false);
@@ -54,14 +70,8 @@ void AAnimatedInteractables::Open()
 
 	GetWorldTimerManager().SetTimer(CaseOpenTimerHandle, this, &AAnimatedInteractables::Spawn, CaseOpenTimer, false);
 
-	TempPickupPtr = GetWorld()->SpawnActorDeferred<APickupBase>(PickupToSpawn, SpawnTransform);
-
 	if (bIsWeaponContainer)
 		OnWeaponSpawned.Broadcast(PickupIndex);
-
-	TempPickupPtr->SetPickupBaseType(PickupEnum);
-
-	SetPickupData(PickupEnum);
 }
 
 void AAnimatedInteractables::Spawn()
@@ -70,7 +80,8 @@ void AAnimatedInteractables::Spawn()
 
 	CaseOpenTimer = 0.6F;
 
-	UGameplayStatics::FinishSpawningActor(TempPickupPtr, SpawnTransform);
+	if (IsValid(TempPickupPtr))
+		TempPickupPtr->SetActorHiddenInGame(false);
 }
 
 void AAnimatedInteractables::SetPickupData(EPickupType InType)

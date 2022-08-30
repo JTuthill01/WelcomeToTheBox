@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Structs/PickupData/Str_PickupData.h"
+#include "Structs/CustomStrings/Str_ReusableStrings.h"
 #include "Interfaces/Interact/InteractInterface.h"
 #include "Enums/PickupEnums/PickupEnums.h"
 #include "Enums/WeaponEnums/WeaponEnums.h"
@@ -41,9 +42,16 @@ public:
 
 	virtual void InteractWithObject_Implementation() override;
 
+public:
+	void LoadBlueprintData(FString InFilePath);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapon)
+	TSubclassOf<class AWeaponBase> WeaponToSpawn;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = PickupRoot)
@@ -51,9 +59,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Mesh)
 	TObjectPtr<UStaticMeshComponent> BaseMesh;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Weapon)
-	TSubclassOf<class AWeaponBase> WeaponToSpawn;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Weapon)
 	EWeaponName WeaponName;
@@ -107,6 +112,12 @@ protected:
 	UPROPERTY()
 	TObjectPtr<class UPickupComponent> PickupParser;
 
+	UPROPERTY()
+	TObjectPtr<class USoundBase> PickupSFX;
+
+	UPROPERTY()
+	TSubclassOf<class AWeaponBase> ToSpawn;
+
 private:
 	float HealthValue;
 	float ArmorValue;
@@ -114,4 +125,6 @@ private:
 	int32 MaxWeapons;
 
 	uint8 InName;
+
+	EPickupType BaseType;
 };

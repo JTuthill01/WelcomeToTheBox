@@ -85,6 +85,10 @@ void UPickupComponent::WeaponParser()
 
 		PickupNameString = DataObject->GetStringField("WeaponName");
 
+		PickupSoundFilePath = DataObject->GetStringField("PickupSFXPath");
+
+		WeaponBlueprintFilePathString = DataObject->GetStringField("WeaponBlueprintPath");
+
 		PType = DataObject->GetIntegerField("PickupType");
 
 		PWeaponType = DataObject->GetIntegerField("PickupWeaponType");

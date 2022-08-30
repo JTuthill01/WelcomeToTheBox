@@ -13,7 +13,9 @@
 		"PistolAmmoValue": 0,
 		"RifleAmmoValue": 0,
 		"ShotgunAmmoValue": 0,
-		"GrenadeValue": 0
+		"GrenadeValue": 0,
+		"PickupGrenadeType": 0,
+		"PickupSFXPath": "SoundWave'/Game/Pickup_SFX/Wavs/health/Pickup_Healthpack_Medium_V2_Wav.Pickup_Healthpack_Medium_V2_Wav'"
 	},
 	"Health_Medium": {
 		"Name": "HealthMedium",
@@ -29,7 +31,9 @@
 		"PistolAmmoValue": 0,
 		"RifleAmmoValue": 0,
 		"ShotgunAmmoValue": 0,
-		"GrenadeValue": 0
+		"GrenadeValue": 0,
+		"PickupGrenadeType": 0,
+		"PickupSFXPath": "SoundWave'/Game/Pickup_SFX/Wavs/health/Pickup_Healthpack_Medium_Wav.Pickup_Healthpack_Medium_Wav'"
 	},
 	"Health_Large": {
 		"Name": "HealthLarge",
@@ -45,7 +49,9 @@
 		"PistolAmmoValue": 0,
 		"RifleAmmoValue": 0,
 		"ShotgunAmmoValue": 0,
-		"GrenadeValue": 0
+		"GrenadeValue": 0,
+		"PickupGrenadeType": 0,
+		"PickupSFXPath": "SoundWave'/Game/Pickup_SFX/Wavs/health/Pickup_Healthpack_Big_Wav.Pickup_Healthpack_Big_Wav'"
 	},
 	"PistolAmmo": {
 		"Name": "PistolAmmo",
@@ -61,7 +67,9 @@
 		"PistolAmmoValue": 10,
 		"RifleAmmoValue": 0,
 		"ShotgunAmmoValue": 0,
-		"GrenadeValue": 0
+		"GrenadeValue": 0,
+		"PickupGrenadeType": 0,
+		"PickupSFXPath": "SoundWave'/Game/Pickup_SFX/Wavs/weapons_and_ammo/Ammo_Pickup_09.Ammo_Pickup_09'"
 	},
 	"RifleAmmo": {
 		"Name": "RifleAmmo",
@@ -77,7 +85,9 @@
 		"PistolAmmoValue": 0,
 		"RifleAmmoValue": 15,
 		"ShotgunAmmoValue": 0,
-		"GrenadeValue": 0
+		"GrenadeValue": 0,
+		"PickupGrenadeType": 0,
+		"PickupSFXPath": "SoundWave'/Game/Pickup_SFX/Wavs/weapons_and_ammo/Ammo_Pickup_10.Ammo_Pickup_10'"
 	},
 	"ShotgunAmmo": {
 		"Name": "ShotgunAmmo",
@@ -93,7 +103,9 @@
 		"PistolAmmoValue": 0,
 		"RifleAmmoValue": 0,
 		"ShotgunAmmoValue": 8,
-		"GrenadeValue": 0
+		"GrenadeValue": 0,
+		"PickupGrenadeType": 0,
+		"PickupSFXPath": "SoundWave'/Game/Pickup_SFX/Wavs/weapons_and_ammo/Ammo_Pickup_12.Ammo_Pickup_12'"
 	},
 	"Armor": {
 		"Name": "Armor",
@@ -109,7 +121,9 @@
 		"PistolAmmoValue": 0,
 		"RifleAmmoValue": 0,
 		"ShotgunAmmoValue": 0,
-		"GrenadeValue": 0
+		"GrenadeValue": 0,
+		"PickupGrenadeType": 0,
+		"PickupSFXPath": "SoundWave'/Game/Pickup_SFX/Wavs/misc/Pickup_01_Wav.Pickup_01_Wav'"
 	},
 	"Frag_Grenade": {
 		"Name": "Frag_Grenade",
@@ -126,7 +140,8 @@
 		"PistolAmmoValue": 0,
 		"RifleAmmoValue": 0,
 		"ShotgunAmmoValue": 0,
-		"GrenadeValue": 1
+		"GrenadeValue": 1,
+		"PickupSFXPath": ""
 	},
 	"Incendary_Grenade": {
 		"Name": "Incendary_Grenade",
@@ -143,7 +158,8 @@
 		"PistolAmmoValue": 0,
 		"RifleAmmoValue": 0,
 		"ShotgunAmmoValue": 0,
-		"GrenadeValue": 1
+		"GrenadeValue": 1,
+		"PickupSFXPath": ""
 	},
 	"Electric_Grenade": {
 		"Name": "Frag_Grenade",
@@ -160,7 +176,8 @@
 		"PistolAmmoValue": 0,
 		"RifleAmmoValue": 0,
 		"ShotgunAmmoValue": 0,
-		"GrenadeValue": 1
+		"GrenadeValue": 1,
+		"PickupSFXPath": ""
 	},
 	"FlashBang_Grenade": {
 		"Name": "FlashBang_Grenade",
@@ -177,7 +194,8 @@
 		"PistolAmmoValue": 0,
 		"RifleAmmoValue": 0,
 		"ShotgunAmmoValue": 0,
-		"GrenadeValue": 1
+		"GrenadeValue": 1,
+		"PickupSFXPath": ""
 	},
 	"Corrosive_Grenade": {
 		"Name": "Corrosive_Grenade",
@@ -194,7 +212,8 @@
 		"PistolAmmoValue": 0,
 		"RifleAmmoValue": 0,
 		"ShotgunAmmoValue": 0,
-		"GrenadeValue": 1
+		"GrenadeValue": 1,
+		"PickupSFXPath": ""
 	},
 	"Smoke_Grenade": {
 		"Name": "Smoke_Grenade",
@@ -211,6 +230,7 @@
 		"PistolAmmoValue": 0,
 		"RifleAmmoValue": 0,
 		"ShotgunAmmoValue": 0,
-		"GrenadeValue": 1
+		"GrenadeValue": 1,
+		"PickupSFXPath": ""
 	}
 }

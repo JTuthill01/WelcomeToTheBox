@@ -43,6 +43,10 @@ public:
 
 	FString WidgetTextString;
 
+	FString PickupSoundFilePath;
+
+	FString WeaponBlueprintFilePathString;
+
 #pragma endregion
 
 #pragma region uints

@@ -7,9 +7,10 @@
 #include "Kismet/GameplayStatics.h"
 #include "Weapons/WeaponBase/WeaponBase.h"
 #include "Structs/HexColors/Str_CustomHexColors.h"
+#include <Weapons/BelgianAR/BelgianAR.h>
 
 // Sets default values
-APickupBase::APickupBase() : HealthValue(0.F), ArmorValue(0.F), MaxWeapons(4)
+APickupBase::APickupBase() : HealthValue(0.F), ArmorValue(0.F), MaxWeapons(4), BaseType(EPickupType::EPT_Weapon)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
@@ -159,12 +160,20 @@ void APickupBase::WeaponPickup(EWeaponName InWeaponName)
 {
 	bool bIsSuccessful;
 
+	FActorSpawnParameters Params;
+	Params.Owner = this;
+	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
 	if (!PlayerRef->GetWeaponMap().Find(InWeaponName) && PlayerRef->GetWeaponMap().Num() <= MaxWeapons)
 	{
 		PlayerRef->SpawnWeaponMap(WeaponToSpawn, bIsSuccessful);
 
 		if (bIsSuccessful)
+		{
+			UGameplayStatics::SpawnSoundAtLocation(GetWorld(), PickupSFX, GetActorLocation(), GetActorRotation());
+
 			Destroy();
+		}
 	}
 
 	else
@@ -318,6 +327,8 @@ void APickupBase::SetDataWeapon()
 {
 	TObjectPtr<UMaterialInstance> NewInstance = LoadObject<UMaterialInstance>(this, *PickupParser->IconFilePathString);
 	TObjectPtr<UStaticMesh> NewMesh = LoadObject<UStaticMesh>(this, *PickupParser->MeshFilePathString);
+
+	PickupSFX = LoadObject<USoundBase>(this, *PickupParser->PickupSoundFilePath);
 
 	BaseMesh->SetStaticMesh(NewMesh);
 
@@ -686,4 +697,3 @@ void APickupBase::SetGrenadeData(EPickupGrenadeType Grenade)
 		break;
 	}
 }
-
