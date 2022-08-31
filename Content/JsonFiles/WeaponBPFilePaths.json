@@ -1,0 +1,50 @@
+{
+    "TT33": {
+		"BPFilePath": "BlueprintGeneratedClass'/Game/_Main/Blueprints/Weapon/TT33/BP_TT33.BP_TT33_C'"
+    },
+    "AK47": {
+		"BPFilePath": "BlueprintGeneratedClass'/Game/_Main/Blueprints/Weapon/AK47/BP_AK47.BP_AK47_C'"
+    },
+    "AmericanShotgun": {
+		"BPFilePath": "BlueprintGeneratedClass'/Game/_Main/Blueprints/Weapon/AmericanShotgun/BP_AmericanShotgun.BP_AmericanShotgun_C'"
+    },
+    "BelgianAR": {
+		"BPFilePath": "BlueprintGeneratedClass'/Game/_Main/Blueprints/Weapon/BelgianAR/BP_BelgianAR.BP_BelgianAR_C'"
+    },
+    "GermanSMG": {
+		"BPFilePath": "BlueprintGeneratedClass'/Game/_Main/Blueprints/Weapon/GermanSMG/BP_GermanSMG.BP_GermanSMG_C'"
+    },
+    "HandCannon": {
+		"BPFilePath": "BlueprintGeneratedClass'/Game/_Main/Blueprints/Weapon/HandCannon/BP_HandCannon.BP_HandCannon_C'"
+    },
+    "SKS": {
+		"BPFilePath": "BlueprintGeneratedClass'/Game/_Main/Blueprints/Weapon/SKS/BP_SKS.BP_SKS_C'"
+    },
+    "XM82": {
+		"BPFilePath": "BlueprintGeneratedClass'/Game/_Main/Blueprints/Weapon/XM82/BP_XM82.BP_XM82_C'"
+    },
+    "Bulldog": {
+		"BPFilePath": "BlueprintGeneratedClass'/Game/_Main/Blueprints/Weapon/Bulldog/BP_Bulldog.BP_Bulldog_C'"
+    },
+    "L86": {
+		"BPFilePath": "BlueprintGeneratedClass'/Game/_Main/Blueprints/Weapon/L86/BP_L86.BP_L86_C'"
+    },
+    "AK74": {
+		"BPFilePath": "BlueprintGeneratedClass'/Game/_Main/Blueprints/Weapon/AK74/BP_AK74.BP_AK74_C'"
+    },
+    "M4A1": {
+		"BPFilePath": ""
+    },
+    "NavySMG": {
+		"BPFilePath": "BlueprintGeneratedClass'/Game/_Main/Blueprints/Weapon/NavySMG/BP_NavySMG.BP_NavySMG_C'"
+    },
+    "ItalianShotgun": {
+		"BPFilePath": "BlueprintGeneratedClass'/Game/_Main/Blueprints/Weapon/ItalianShotgun/BP_ItalianShotgun.BP_ItalianShotgun_C'"
+    },
+    "SVD": {
+		"BPFilePath": "BlueprintGeneratedClass'/Game/_Main/Blueprints/Weapon/SVD/BP_SVD.BP_SVD_C'"
+    },
+    "ShortStrokeAR": {
+		"BPFilePath": "BlueprintGeneratedClass'/Game/_Main/Blueprints/Weapon/ShortStrokeAR/BP_ShortStrokeAR.BP_ShortStrokeAR_C'"
+    }
+}

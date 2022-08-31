@@ -14,6 +14,7 @@ public:
 	UPickupComponent();
 
 	FORCEINLINE void SetObjectData(FString InObjectString) { ObjectString = InObjectString; }
+	FORCEINLINE void SetOutPathString(FString InFilePathString) { LoadString = InFilePathString; }
 
 public:
 	UFUNCTION()
@@ -21,6 +22,9 @@ public:
 
 	UFUNCTION()
 	void WeaponParser();
+
+	UFUNCTION()
+	void LoadParser(FString WeaponString, FString& OutPathString);
 
 protected:
 
@@ -85,4 +89,6 @@ public:
 
 private:
 	FString ObjectString;
+
+	FString LoadString; 
 };

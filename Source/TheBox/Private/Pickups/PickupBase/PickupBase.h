@@ -20,17 +20,11 @@ public:
 	APickupBase();
 
 public:
-	FORCEINLINE TSubclassOf<class AWeaponBase> GetWeaponSubClass() { return WeaponToSpawn; }
-
-public:
 	FORCEINLINE void SetPickupBaseType(EPickupType Base) { PickupBaseType = Base; }
 	FORCEINLINE void SetWeaponPickupName(EPickupWeaponType NewName) { PickupWeaponType = NewName; }
 	FORCEINLINE void SetHealthPickupType(EPickupHealthType NewHealth) { BaseHealthType = NewHealth; }
 	FORCEINLINE void SetGrenadePickupType(EPickupGrenadeType Type) { PickupGrenadeType = Type; }
 	FORCEINLINE void SetAmmoPickupType(EPickupAmmoType AmmoType) { PickupAmmoType = AmmoType; }
-
-	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void SetWeaponSpawn(TSubclassOf<class AWeaponBase> NewWeapon) { WeaponToSpawn = NewWeapon; }
 
 public:
 	// Called every frame
@@ -42,16 +36,9 @@ public:
 
 	virtual void InteractWithObject_Implementation() override;
 
-public:
-	void LoadBlueprintData(FString InFilePath);
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapon)
-	TSubclassOf<class AWeaponBase> WeaponToSpawn;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = PickupRoot)
@@ -98,6 +85,7 @@ private:
 	void SetWeaponData(EPickupWeaponType PickupWeapon);
 	void SetGrenadeData(EPickupGrenadeType Grenade);
 
+	void LoadBP();
 protected:
 	UFUNCTION()
 	void OnClearViewport();
@@ -116,15 +104,19 @@ protected:
 	TObjectPtr<class USoundBase> PickupSFX;
 
 	UPROPERTY()
-	TSubclassOf<class AWeaponBase> ToSpawn;
+	TObjectPtr<UClass> LoadedBpAsset;
+
+	UPROPERTY()
+	TSoftClassPtr<AActor> ActorBpClass;
 
 private:
 	float HealthValue;
 	float ArmorValue;
 
 	int32 MaxWeapons;
+	int32 SpawnIndex;
 
 	uint8 InName;
 
-	EPickupType BaseType;
+	FString WeaponBPFilePath;
 };

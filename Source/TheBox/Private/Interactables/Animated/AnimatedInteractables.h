@@ -5,8 +5,6 @@
 #include "Enums/PickupEnums/PickupEnums.h"
 #include "AnimatedInteractables.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWeaponSpawned, int32, OutGoingValue);
-
 UCLASS()
 class AAnimatedInteractables : public AInteractableBase
 {
@@ -14,10 +12,6 @@ class AAnimatedInteractables : public AInteractableBase
 	
 public:
 	AAnimatedInteractables();
-
-public:
-	UPROPERTY(BlueprintAssignable)
-	FOnWeaponSpawned OnWeaponSpawned;
 
 public:
 	virtual void InteractableFound_Implementation() override;

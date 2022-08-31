@@ -29,8 +29,7 @@
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_BelgianAR.MI_BelgianAR'",
 		"PickupType": 1,
 		"PickupWeaponType": 4,
-		"PickupSFXPath": "SoundWave'/Game/Pickup_SFX/Wavs/weapons_and_ammo/Weapons_Pickup_04.Weapons_Pickup_04'",
-		"WeaponBlueprintPath": "Blueprint'/Game/_Main/Blueprints/Weapon/BelgianAR/BP_BelgianAR.BP_BelgianAR'"
+		"PickupSFXPath": "SoundWave'/Game/Pickup_SFX/Wavs/weapons_and_ammo/Weapons_Pickup_04.Weapons_Pickup_04'"
 	},
 	"GermanSMG": {
 		"PickupMesh": "StaticMesh'/Game/_Main/CustomStaticMeshes/SM_Weapons/SM_GermanSMG.SM_GermanSMG'",

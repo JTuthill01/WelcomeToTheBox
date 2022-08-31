@@ -22,6 +22,14 @@ void AAnimatedInteractables::BeginPlay()
 {
 	Super::BeginPlay();
 
+	PickupEnum = static_cast<EPickupType>(FMath::RandRange(1, 5));
+
+	if (PickupEnum == EPickupType::EPT_Weapon)
+		MaxNumToSpawn = 15;
+
+	else
+		MaxNumToSpawn = 3;
+	
 	SpawnSetup();
 }
 
@@ -69,9 +77,6 @@ void AAnimatedInteractables::Open()
 	bHasBeenOpned = true;
 
 	GetWorldTimerManager().SetTimer(CaseOpenTimerHandle, this, &AAnimatedInteractables::Spawn, CaseOpenTimer, false);
-
-	if (bIsWeaponContainer)
-		OnWeaponSpawned.Broadcast(PickupIndex);
 }
 
 void AAnimatedInteractables::Spawn()
