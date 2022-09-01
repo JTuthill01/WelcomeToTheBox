@@ -100,7 +100,7 @@ public:
 	UFUNCTION()
 	void SetWeaponVisibility(bool ShouldBeHidden);
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, bool& IsSuccessful);
 
 protected:

@@ -84,8 +84,8 @@ private:
 	void SetAmmoData(EPickupAmmoType PickupAmmo);
 	void SetWeaponData(EPickupWeaponType PickupWeapon);
 	void SetGrenadeData(EPickupGrenadeType Grenade);
+	void LoadOnInteract(EWeaponName ObjectToLoadEnum);
 
-	void LoadBP();
 protected:
 	UFUNCTION()
 	void OnClearViewport();

@@ -46,6 +46,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Pickup, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class APickupBase> PickupToSpawn;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Pickup, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UNiagaraSystem> OpenFX;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Pickup, meta = (AllowPrivateAccess = "true"))
 	int32 MaxNumToSpawn;
 

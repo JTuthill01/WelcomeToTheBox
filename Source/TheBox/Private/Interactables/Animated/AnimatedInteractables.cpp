@@ -2,6 +2,7 @@
 #include "Character/Player/PlayerCharacter.h"
 #include "Pickups/PickupBase/PickupBase.h"
 #include "Kismet/GameplayStatics.h"
+#include "NiagaraFunctionLibrary.h"
 #include <Structs/HexColors/Str_CustomHexColors.h>
 
 AAnimatedInteractables::AAnimatedInteractables() : MaxNumToSpawn(0), PickupIndex(0), bIsWeaponContainer(false), bHasBeenOpned(false), CaseOpenTimer(0.6F)
@@ -81,6 +82,10 @@ void AAnimatedInteractables::Open()
 
 void AAnimatedInteractables::Spawn()
 {
+	FQuat SpawnQuat = SpawnTransform.GetRotation();
+
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), OpenFX, SpawnTransform.GetTranslation(), SpawnQuat.Rotator());
+
 	GetWorldTimerManager().ClearTimer(CaseOpenTimerHandle);
 
 	CaseOpenTimer = 0.6F;

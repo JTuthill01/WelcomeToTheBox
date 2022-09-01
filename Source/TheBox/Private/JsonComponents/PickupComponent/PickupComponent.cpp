@@ -97,8 +97,10 @@ void UPickupComponent::WeaponParser()
 	}
 }
 
-void UPickupComponent::LoadParser(FString WeaponString, FString& OutPathString)
+FString UPickupComponent::LoadParser(FString WeaponString)
 {
+	FString OutPathString;
+
 	/* Creates a string ref to wherever the json file(s) are */
 	const FString JsonFilePath = FPaths::ProjectContentDir() + "/JsonFiles/WeaponBPFilePaths.json";
 	FString JsonString; /* Json converted to FString */
@@ -120,8 +122,7 @@ void UPickupComponent::LoadParser(FString WeaponString, FString& OutPathString)
 		OutPathString = DataObject->GetStringField("BPFilePath");
 	}
 
-	else 
-		GEngine->AddOnScreenDebugMessage(-1, 6.F, FColor::Emerald, L"Something failed");
+	return OutPathString;
 }
 
 void UPickupComponent::InitializerList()

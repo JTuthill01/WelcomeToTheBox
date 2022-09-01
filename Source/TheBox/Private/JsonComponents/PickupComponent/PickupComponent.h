@@ -24,7 +24,7 @@ public:
 	void WeaponParser();
 
 	UFUNCTION()
-	void LoadParser(FString WeaponString, FString& OutPathString);
+	FString LoadParser(FString WeaponString);
 
 protected:
 
