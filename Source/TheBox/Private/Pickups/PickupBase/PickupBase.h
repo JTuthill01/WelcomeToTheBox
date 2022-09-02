@@ -50,6 +50,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Weapon)
 	EWeaponName WeaponName;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Temp)
+	TSubclassOf<class AWeaponBase> TempSub;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Data)
 	FPickupData PickupData;
 

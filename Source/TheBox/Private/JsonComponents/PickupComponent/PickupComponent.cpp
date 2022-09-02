@@ -38,8 +38,6 @@ void UPickupComponent::Parser()
 
 		WidgetTextString = DataObject->GetStringField("PickupWidgetText");
 
-		WeaponBlueprintFilePathString = DataObject->GetStringField("WeaponBlueprintPath");
-
 		PType = DataObject->GetIntegerField("PickupType");
 
 		PHealthType = DataObject->GetIntegerField("PickupHealthType");
@@ -88,8 +86,6 @@ void UPickupComponent::WeaponParser()
 		PickupNameString = DataObject->GetStringField("WeaponName");
 
 		PickupSoundFilePath = DataObject->GetStringField("PickupSFXPath");
-
-		WeaponBlueprintFilePathString = DataObject->GetStringField("WeaponBlueprintPath");
 
 		PType = DataObject->GetIntegerField("PickupType");
 

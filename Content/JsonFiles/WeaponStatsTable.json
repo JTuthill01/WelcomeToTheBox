@@ -88,7 +88,7 @@
 		"MagInSound": "SoundWave'/Game/WeaponSoundPack_Volume1-2-3-4-5/Automatic/Automatic_GravARM/Sfx_Grav_ClipIn_002.Sfx_Grav_ClipIn_002'",
 		"FireSound": "SoundWave'/Game/WeaponSoundPack_Volume1-2-3-4-5/Automatic/Automatic_GravARM/Sfx_Grav_Shoot_SingleShot004.Sfx_Grav_Shoot_SingleShot004'",
 		"AmmoEject": "NiagaraSystem'/Game/Gun_VFX/Niagara_FX/Bullet_ejection/NS_AR_Ejection_Effect.NS_AR_Ejection_Effect'",
-		"FireFX": "NiagaraSystem'/Game/Gun_VFX/Niagara_FX/Muzzle_Flashes/NS_AR_Muzzle_flashes_02.NS_AR_Muzzle_flashes_02'",
+		"FireFX": "NiagaraSystem'/Game/Muzzle_Master/PARTICLE_System/NS_MuzzleFlash_03.NS_MuzzleFlash_03'",
 		"WeaponType" : 2
 	},
 	"GermanSMG": {
@@ -111,7 +111,7 @@
 		"MagInSound": "SoundWave'/Game/WeaponSoundPack_Volume1-2-3-4-5/SubMachineGun/Smg_9MU/Sfx_Smg_9MU_Reload_ClipIn_003.Sfx_Smg_9MU_Reload_ClipIn_003'",
 		"FireSound": "SoundWave'/Game/WeaponSoundPack_Volume1-2-3-4-5/SubMachineGun/Smg_9MU/Sfx_Smg_9MU_Shoot_SingleShot_001.Sfx_Smg_9MU_Shoot_SingleShot_001'",
 		"AmmoEject": "NiagaraSystem'/Game/Gun_VFX/Niagara_FX/Bullet_ejection/NS_SMG_Ejection_Effect.NS_SMG_Ejection_Effect'",
-		"FireFX": "NiagaraSystem'/Game/100_MuzzleFlashes/Muzzle_Flash/MuzzleFlash_Niagara/P_MuzzleFlash50.P_MuzzleFlash50'",
+		"FireFX": "NiagaraSystem'/Game/Muzzle_Master/PARTICLE_System/NS_MuzzleFlash_03.NS_MuzzleFlash_03'",
 		"WeaponType" : 2
 	},
 	"HandCannon": {
