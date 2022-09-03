@@ -10,6 +10,7 @@
 #include "Grenades/Grenade.h"
 #include "Structs/HexColors/Str_CustomHexColors.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "JsonComponents/BPLoader/BPLoaderComponent.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter() : MaxGrenades(4), CurrentGrenades(MaxGrenades), InteractableTraceTimer(0.25F), WeaponIndexEnum(EWeaponSlot::EWS_Default_Slot), WeaponIndex(0), bIsFirstSlotFull(false),
@@ -27,6 +28,7 @@ APlayerCharacter::APlayerCharacter() : MaxGrenades(4), CurrentGrenades(MaxGrenad
 	Arms->SetCastShadow(false);
 
 	HealthComponent = CreateDefaultSubobject<UPlayerHealthComponent>(TEXT("Health Component"));
+	BPLoader = CreateDefaultSubobject<UBPLoaderComponent>(TEXT("BP File Loader"));
 }
 
 // Called when the game starts or when spawned
@@ -63,10 +65,22 @@ void APlayerCharacter::SpawnInitialWeapon()
 
 	FVector Location = Arms->GetComponentLocation();
 	FRotator Rotation = Arms->GetComponentRotation();
+	FVector Scale{ 1.F };
+
+	FTransform LocalTransform = UKismetMathLibrary::MakeTransform(Location, Rotation, Scale);
+
+	FString WeaponFilePath = "BlueprintGeneratedClass'/Game/_Main/Blueprints/Weapon/L86/BP_L86.BP_L86_C'";
+	FString WeaponDataString = "L86";
 
 	WeaponMap.Reserve(4);
 
-	WeaponSlot_01 = GetWorld()->SpawnActor<AWeaponBase>(InitialWeaponToSpawn, Location, Rotation, Params);
+	LoadWeaponBP(WeaponDataString);
+
+	WeaponSlot_01 = GetWorld()->SpawnActorDeferred<AWeaponBase>(LoadedBpAsset, LocalTransform);
+
+	WeaponSlot_01->SetData(WeaponDataString);
+
+	UGameplayStatics::FinishSpawningActor(WeaponSlot_01, LocalTransform);
 
 	if (IsValid(WeaponSlot_01))
 	{
@@ -87,6 +101,15 @@ void APlayerCharacter::SpawnInitialWeapon()
 
 		bIsFirstSlotFull = true;
 	}
+}
+
+void APlayerCharacter::LoadWeaponBP(FString WeaponNameString)
+{
+	FString ReturnPath = BPLoader->LoadParser(WeaponNameString);
+
+	ActorBpClass = TSoftClassPtr<AActor>(FSoftObjectPath(ReturnPath));
+
+	LoadedBpAsset = ActorBpClass.LoadSynchronous();
 }
 
 void APlayerCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -199,7 +222,7 @@ void APlayerCharacter::PlayerReloadWeapon()
 		return;
 }
 
-void APlayerCharacter::SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, bool& IsSuccessful)
+void APlayerCharacter::SpawnWeaponMap(FString WeaponDataString, bool& IsSuccessful)
 {
 	FActorSpawnParameters Params;
 	Params.Owner = this;
@@ -207,6 +230,9 @@ void APlayerCharacter::SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, b
 
 	FVector Location = Arms->GetComponentLocation();
 	FRotator Rotation = Arms->GetComponentRotation();
+	FVector Scale{ 1.F };
+
+	FTransform LocalTransform = UKismetMathLibrary::MakeTransform(Location, Rotation, Scale);
 
 	switch (WeaponIndexEnum)
 	{
@@ -214,7 +240,13 @@ void APlayerCharacter::SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, b
 
 		if (!bIsFirstSlotFull)
 		{
-			WeaponSlot_01 = GetWorld()->SpawnActor<AWeaponBase>(SpawnRef, Location, Rotation, Params);
+			LoadWeaponBP(WeaponDataString);
+
+			WeaponSlot_01 = GetWorld()->SpawnActorDeferred<AWeaponBase>(LoadedBpAsset, LocalTransform);
+
+			WeaponSlot_01->SetData(WeaponDataString);
+
+			UGameplayStatics::FinishSpawningActor(WeaponSlot_01, LocalTransform);
 
 			if (IsValid(WeaponSlot_01))
 			{
@@ -229,9 +261,9 @@ void APlayerCharacter::SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, b
 
 				PreviousWeapon_01 = WeaponSlot_01->GetCurrentWeaponEnumName();
 
-				IsSuccessful = true;
-
 				OnSwap.Broadcast();
+
+				IsSuccessful = true;
 
 				break;
 			}
@@ -248,7 +280,7 @@ void APlayerCharacter::SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, b
 		{
 			WeaponIndexEnum = EWeaponSlot::EWS_Second_Slot;
 
-			SpawnWeaponMap(SpawnRef, IsSuccessful);
+			SpawnWeaponMap(WeaponDataString, IsSuccessful);
 
 			break;
 		}
@@ -270,7 +302,13 @@ void APlayerCharacter::SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, b
 
 		if (!bIsSecondSlotFull)
 		{
-			WeaponSlot_02 = GetWorld()->SpawnActor<AWeaponBase>(SpawnRef, Location, Rotation, Params);
+			LoadWeaponBP(WeaponDataString);
+
+			WeaponSlot_02 = GetWorld()->SpawnActorDeferred<AWeaponBase>(LoadedBpAsset, LocalTransform);
+
+			WeaponSlot_02->SetData(WeaponDataString);
+
+			UGameplayStatics::FinishSpawningActor(WeaponSlot_02, LocalTransform);
 
 			if (IsValid(WeaponSlot_02))
 			{
@@ -285,8 +323,6 @@ void APlayerCharacter::SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, b
 
 				WeaponIndexEnum = EWeaponSlot::EWS_Second_Slot;
 
-				IsSuccessful = true;
-
 				WeaponMap[PreviousWeapon_01]->SetActorHiddenInGame(true);
 
 				WeaponMap[WeaponSlot_02->GetCurrentWeaponEnumName()]->SetActorHiddenInGame(false);
@@ -294,6 +330,8 @@ void APlayerCharacter::SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, b
 				PreviousWeapon_02 = WeaponSlot_02->GetCurrentWeaponEnumName();
 
 				OnSwap.Broadcast();
+
+				IsSuccessful = true;
 
 				break;
 			}
@@ -312,7 +350,7 @@ void APlayerCharacter::SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, b
 		{
 			WeaponIndexEnum = EWeaponSlot::EWS_Third_Slot;
 
-			SpawnWeaponMap(SpawnRef, IsSuccessful);
+			SpawnWeaponMap(WeaponDataString, IsSuccessful);
 
 			break;
 		}
@@ -332,7 +370,13 @@ void APlayerCharacter::SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, b
 
 		if (!bIsThirdSlotFull)
 		{
-			WeaponSlot_03 = GetWorld()->SpawnActor<AWeaponBase>(SpawnRef, Location, Rotation, Params);
+			LoadWeaponBP(WeaponDataString);
+
+			WeaponSlot_03 = GetWorld()->SpawnActorDeferred<AWeaponBase>(LoadedBpAsset, LocalTransform);
+
+			WeaponSlot_03->SetData(WeaponDataString);
+
+			UGameplayStatics::FinishSpawningActor(WeaponSlot_03, LocalTransform);
 
 			if (IsValid(WeaponSlot_03))
 			{
@@ -370,7 +414,7 @@ void APlayerCharacter::SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, b
 		{
 			WeaponIndexEnum = EWeaponSlot::EWS_Fourth_Slot;
 
-			SpawnWeaponMap(SpawnRef, IsSuccessful);
+			SpawnWeaponMap(WeaponDataString, IsSuccessful);
 		}
 
 		else
@@ -386,7 +430,13 @@ void APlayerCharacter::SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, b
 
 		if (!bIsFourthSlotFull)
 		{
-			WeaponSlot_04 = GetWorld()->SpawnActor<AWeaponBase>(SpawnRef, Location, Rotation, Params);
+			LoadWeaponBP(WeaponDataString);
+
+			WeaponSlot_04 = GetWorld()->SpawnActorDeferred<AWeaponBase>(LoadedBpAsset, LocalTransform);
+
+			WeaponSlot_04->SetData(WeaponDataString);
+
+			UGameplayStatics::FinishSpawningActor(WeaponSlot_04, LocalTransform);
 
 			if (IsValid(WeaponSlot_04))
 			{
@@ -401,8 +451,6 @@ void APlayerCharacter::SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, b
 
 				WeaponIndexEnum = EWeaponSlot::EWS_Fourth_Slot;
 
-				IsSuccessful = true;
-
 				WeaponMap[PreviousWeapon_03]->SetActorHiddenInGame(true);
 
 				WeaponMap[WeaponSlot_04->GetCurrentWeaponEnumName()]->SetActorHiddenInGame(false);
@@ -410,6 +458,8 @@ void APlayerCharacter::SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, b
 				PreviousWeapon_04 = WeaponSlot_04->GetCurrentWeaponEnumName();
 
 				OnSwap.Broadcast();
+
+				IsSuccessful = true;
 			}
 
 			else
@@ -424,7 +474,7 @@ void APlayerCharacter::SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, b
 		{
 			WeaponIndexEnum = EWeaponSlot::EWS_First_Slot;
 
-			SpawnWeaponMap(SpawnRef, IsSuccessful);
+			SpawnWeaponMap(WeaponDataString, IsSuccessful);
 		}
 
 		else

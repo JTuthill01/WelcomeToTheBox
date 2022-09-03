@@ -17,7 +17,7 @@
 	},
 	"AmericanShotgun": {
 		"PickupMesh": "StaticMesh'/Game/_Main/CustomStaticMeshes/SM_Weapons/SM_AmericanShotgun.SM_AmericanShotgun'",
-		"WeaponName": "American Shotgun",
+		"WeaponName": "AmericanShotgun",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_American.MI_American'",
 		"PickupType": 1,
 		"PickupWeaponType": 3,
@@ -25,7 +25,7 @@
 	},
 	"BelgianAR": {
 		"PickupMesh": "StaticMesh'/Game/_Main/CustomStaticMeshes/SM_Weapons/SM_BelgianAR.SM_BelgianAR'",
-		"WeaponName": "Belgian AR",
+		"WeaponName": "BelgianAR",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_BelgianAR.MI_BelgianAR'",
 		"PickupType": 1,
 		"PickupWeaponType": 4,
@@ -33,7 +33,7 @@
 	},
 	"GermanSMG": {
 		"PickupMesh": "StaticMesh'/Game/_Main/CustomStaticMeshes/SM_Weapons/SM_GermanSMG.SM_GermanSMG'",
-		"WeaponName": "German SMG",
+		"WeaponName": "GermanSMG",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_GermanSMG.MI_GermanSMG'",
 		"PickupType": 1,
 		"PickupWeaponType": 5,
@@ -41,7 +41,7 @@
 	},
 	"HandCannon": {
 		"PickupMesh": "StaticMesh'/Game/_Main/CustomStaticMeshes/SM_Weapons/SM_HandCannon.SM_HandCannon'",
-		"WeaponName": "Hand Cannon",
+		"WeaponName": "HandCannon",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_HandCannon.MI_HandCannon'",
 		"PickupType": 1,
 		"PickupWeaponType": 6,
@@ -81,7 +81,7 @@
 	},
 	"AK74": {
 		"PickupMesh": "StaticMesh'/Game/_Main/CustomStaticMeshes/SM_Weapons/SM_AK74U.SM_AK74U'",
-		"WeaponName": "AK74U",
+		"WeaponName": "AK74",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_AK74U.MI_AK74U'",
 		"PickupType": 1,
 		"PickupWeaponType": 11,
@@ -96,7 +96,7 @@
 	},
 	"NavySMG": {
 		"PickupMesh": "StaticMesh'/Game/_Main/CustomStaticMeshes/SM_Weapons/SM_NavySMG.SM_NavySMG'",
-		"WeaponName": "Navy SMG",
+		"WeaponName": "NavySMG",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_NavySMG.MI_NavySMG'",
 		"PickupType": 1,
 		"PickupWeaponType": 13,
@@ -120,7 +120,7 @@
 	},
 	"ShortStrokeAR": {
 		"PickupMesh": "StaticMesh'/Game/_Main/CustomStaticMeshes/SM_Weapons/SM_ShortStrokeAR.SM_ShortStrokeAR'",
-		"WeaponName": "Short Stroke AR",
+		"WeaponName": "ShortStrokeAR",
 		"Icon": "MaterialInstanceConstant'/Game/_Main/Material_Instances/Weapons/MI_ShortStroke.MI_ShortStroke'",
 		"PickupType": 1,
 		"PickupWeaponType": 16,

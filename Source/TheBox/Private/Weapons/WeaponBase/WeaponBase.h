@@ -82,7 +82,12 @@ public:
 	UFUNCTION()
 	virtual void ShotgunReloadStart();
 
+	UFUNCTION()
+	virtual void WeaponSetup();
+
 	void SetTotalAmmo(int32 NewAmmoValue);
+
+	void SetData(FString NewWeaponName);
 
 public:
 	bool MagHasAmmo();
@@ -118,9 +123,6 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	UFUNCTION()
-	virtual void WeaponSetup();
 
 	UFUNCTION()
 	virtual void ShotgunReloadLoop();

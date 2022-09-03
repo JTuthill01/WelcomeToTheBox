@@ -50,9 +50,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Weapon)
 	EWeaponName WeaponName;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Temp)
-	TSubclassOf<class AWeaponBase> TempSub;
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Data)
 	FPickupData PickupData;
 
@@ -87,7 +84,6 @@ private:
 	void SetAmmoData(EPickupAmmoType PickupAmmo);
 	void SetWeaponData(EPickupWeaponType PickupWeapon);
 	void SetGrenadeData(EPickupGrenadeType Grenade);
-	void LoadOnInteract(EWeaponName ObjectToLoadEnum);
 
 protected:
 	UFUNCTION()
@@ -106,12 +102,6 @@ protected:
 	UPROPERTY()
 	TObjectPtr<class USoundBase> PickupSFX;
 
-	UPROPERTY()
-	TObjectPtr<UClass> LoadedBpAsset;
-
-	UPROPERTY()
-	TSoftClassPtr<AActor> ActorBpClass;
-
 private:
 	float HealthValue;
 	float ArmorValue;
@@ -120,6 +110,4 @@ private:
 	int32 SpawnIndex;
 
 	uint8 InName;
-
-	FString WeaponBPFilePath;
 };

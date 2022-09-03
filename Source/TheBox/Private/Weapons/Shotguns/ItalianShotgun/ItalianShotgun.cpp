@@ -30,8 +30,6 @@ void AItalianShotgun::WeaponSetup()
 void AItalianShotgun::BeginPlay()
 {
 	Super::BeginPlay();
-
-	PlayerRef = IPlayerCharacterInterface::Execute_SetPlayerRef(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 }
 
 void AItalianShotgun::WeaponFire()

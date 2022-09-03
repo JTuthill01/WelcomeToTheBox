@@ -12,10 +12,10 @@ class AAK47 : public AWeaponBase
 public:
 	AAK47();
 
+	virtual void WeaponSetup() override;
+
 protected:
 	virtual void WeaponFire() override;
 
 	virtual void WeaponReload() override;
-
-	virtual void WeaponSetup() override;
 };

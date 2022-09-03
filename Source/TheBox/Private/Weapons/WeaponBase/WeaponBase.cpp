@@ -49,7 +49,7 @@ void AWeaponBase::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
 
-	WeaponSetup();
+	//WeaponSetup();
 }
 
 void AWeaponBase::InitializeVariables()
@@ -58,6 +58,23 @@ void AWeaponBase::InitializeVariables()
 		WeaponAnimInstance = WeaponMesh->GetAnimInstance();
 
 	PlayerRef = IPlayerCharacterInterface::Execute_SetPlayerRef(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+}
+
+void AWeaponBase::SetData(FString NewWeaponName)
+{
+	WeaponParser->SetObjectData(NewWeaponName);
+	WeaponParser->WeaponParser(WeapStats, WeaponFilePaths, InUintToEnum, InType);
+
+	WeapStats.Icon = LoadObject<class UTexture2D>(this, *WeaponFilePaths.IconPath);
+	WeapStats.RackSlideSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.RackSlideSoundPath);
+	WeapStats.MagOutSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.MagOutSoundPath);
+	WeapStats.MagInSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.MagInSoundPath);
+	WeapStats.FireSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.FireSoundPath);
+	WeapStats.AmmoEject = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.AmmoEjectPath);
+	WeapStats.FireFX = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.FireFXPath);
+
+	WeapStats.FireType = static_cast<EWeaponFireType>(InUintToEnum);
+	WeapStats.Type = static_cast<EWeaponType>(InType);
 }
 
 void AWeaponBase::BulletTrace()

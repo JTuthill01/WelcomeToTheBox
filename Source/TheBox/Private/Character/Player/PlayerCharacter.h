@@ -40,7 +40,7 @@ public:
 	FORCEINLINE TObjectPtr<class UCameraComponent> GetPlayerCamera() const { return Camera; }
 	FORCEINLINE TObjectPtr<class UPlayerHealthComponent> GetHealthComponent() const { return HealthComponent; }
 	FORCEINLINE TObjectPtr<UAnimInstance> GetPlayerAnimInstance() const { return PlayerAnimInstance; }
-	FORCEINLINE TMap<EWeaponName, TObjectPtr<AWeaponBase>> GetWeaponMap() const { return WeaponMap; }
+	FORCEINLINE TMap<EWeaponName, TObjectPtr<class AWeaponBase>> GetWeaponMap() const { return WeaponMap; }
 
 	FORCEINLINE EWeaponSlot GetCurrentSlotIndex() const { return WeaponIndexEnum; }
 
@@ -101,7 +101,7 @@ public:
 	void SetWeaponVisibility(bool ShouldBeHidden);
 
 	UFUNCTION(BlueprintCallable)
-	void SpawnWeaponMap(TSubclassOf<class AWeaponBase> SpawnRef, bool& IsSuccessful);
+	void SpawnWeaponMap(FString WeaponDataString, bool& IsSuccessful);
 
 protected:
 	//Called when the game starts or when spawned
@@ -118,6 +118,8 @@ private:
 	void Initialize();
 
 	void SpawnInitialWeapon();
+
+	void LoadWeaponBP(FString WeaponNameString);
 
 public:
 	UPROPERTY(BlueprintAssignable)
@@ -156,6 +158,21 @@ public:
 
 	UPROPERTY()
 	TObjectPtr<class AWeaponBase> WeaponSlot_04;
+
+#pragma endregion
+
+private:
+
+#pragma region Weapon Spawn 
+
+	UPROPERTY()
+	TObjectPtr<UClass> LoadedBpAsset;
+
+	UPROPERTY()
+	TSoftClassPtr<AActor> ActorBpClass;
+
+	UPROPERTY()
+	TObjectPtr<class UBPLoaderComponent> BPLoader;
 
 #pragma endregion
 

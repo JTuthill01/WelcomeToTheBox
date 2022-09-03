@@ -93,6 +93,7 @@ void APickupBase::Setup()
 
 void APickupBase::InteractableFound_Implementation()
 {
+	
 }
 
 void APickupBase::InteractWithObject_Implementation()
@@ -159,11 +160,9 @@ void APickupBase::WeaponPickup(EWeaponName InWeaponName)
 {
 	bool bIsSuccessful;
 
-	LoadOnInteract(InWeaponName);
-
 	if (!PlayerRef->GetWeaponMap().Find(InWeaponName) && PlayerRef->GetWeaponMap().Num() <= MaxWeapons)
 	{
-		PlayerRef->SpawnWeaponMap(LoadedBpAsset, bIsSuccessful);
+		PlayerRef->SpawnWeaponMap(PickupData.PickupName.ToString(), bIsSuccessful);
 
 		if (bIsSuccessful)
 		{
@@ -687,171 +686,6 @@ void APickupBase::SetGrenadeData(EPickupGrenadeType Grenade)
 		PickupParser->Parser();
 
 		SetData();
-
-		break;
-
-	default:
-		break;
-	}
-}
-
-void APickupBase::LoadOnInteract(EWeaponName ObjectToLoadEnum)
-{
-	switch (ObjectToLoadEnum)
-	{
-	case EWeaponName::EWN_NONE:
-		break;
-	
-	case EWeaponName::EWN_TT33:
-
-		WeaponBPFilePath = PickupParser->LoadParser("TT33");
-
-		ActorBpClass = TSoftClassPtr<AActor>(FSoftObjectPath(WeaponBPFilePath));
-
-		LoadedBpAsset = ActorBpClass.LoadSynchronous();
-
-		break;
-
-	case EWeaponName::EWN_AK47:
-
-		WeaponBPFilePath = PickupParser->LoadParser("AK47");
-
-		ActorBpClass = TSoftClassPtr<AActor>(FSoftObjectPath(WeaponBPFilePath));
-
-		LoadedBpAsset = ActorBpClass.LoadSynchronous();
-
-		break;
-
-	case EWeaponName::EWN_AmericanShotgun:
-
-		WeaponBPFilePath = PickupParser->LoadParser("AmericanShotgun");
-
-		ActorBpClass = TSoftClassPtr<AActor>(FSoftObjectPath(WeaponBPFilePath));
-
-		LoadedBpAsset = ActorBpClass.LoadSynchronous();
-
-		break;
-
-	case EWeaponName::EWN_BelgianAR:
-
-		WeaponBPFilePath = PickupParser->LoadParser("BelgianAR");
-
-		ActorBpClass = TSoftClassPtr<AActor>(FSoftObjectPath(WeaponBPFilePath));
-
-		LoadedBpAsset = ActorBpClass.LoadSynchronous();
-
-		break;
-
-	case EWeaponName::EWN_GermanSMG:
-
-		WeaponBPFilePath = PickupParser->LoadParser("GermanSMG");
-
-		ActorBpClass = TSoftClassPtr<AActor>(FSoftObjectPath(WeaponBPFilePath));
-
-		LoadedBpAsset = ActorBpClass.LoadSynchronous();
-
-		break;
-
-	case EWeaponName::EWN_HandCannon:
-
-		WeaponBPFilePath = PickupParser->LoadParser("HandCannon");
-
-		ActorBpClass = TSoftClassPtr<AActor>(FSoftObjectPath(WeaponBPFilePath));
-
-		LoadedBpAsset = ActorBpClass.LoadSynchronous();
-
-		break;
-
-	case EWeaponName::EWN_SKS:
-
-		WeaponBPFilePath = PickupParser->LoadParser("SKS");
-
-		ActorBpClass = TSoftClassPtr<AActor>(FSoftObjectPath(WeaponBPFilePath));
-
-		LoadedBpAsset = ActorBpClass.LoadSynchronous();
-
-		break;
-
-	case EWeaponName::EWN_XM82:
-
-		WeaponBPFilePath = PickupParser->LoadParser("XM82");
-
-		ActorBpClass = TSoftClassPtr<AActor>(FSoftObjectPath(WeaponBPFilePath));
-
-		LoadedBpAsset = ActorBpClass.LoadSynchronous();
-
-		break;
-
-	case EWeaponName::EWN_Bulldog:
-
-		WeaponBPFilePath = PickupParser->LoadParser("Bulldog");
-
-		ActorBpClass = TSoftClassPtr<AActor>(FSoftObjectPath(WeaponBPFilePath));
-
-		LoadedBpAsset = ActorBpClass.LoadSynchronous();
-
-		break;
-
-	case EWeaponName::EWN_L86:
-
-		WeaponBPFilePath = PickupParser->LoadParser("L86");
-
-		ActorBpClass = TSoftClassPtr<AActor>(FSoftObjectPath(WeaponBPFilePath));
-
-		LoadedBpAsset = ActorBpClass.LoadSynchronous();
-
-		break;
-
-	case EWeaponName::EWN_AK74:
-
-		WeaponBPFilePath = PickupParser->LoadParser("AK74");
-
-		ActorBpClass = TSoftClassPtr<AActor>(FSoftObjectPath(WeaponBPFilePath));
-
-		LoadedBpAsset = ActorBpClass.LoadSynchronous();
-
-		break;
-
-	case EWeaponName::EWN_M4A1:
-		break;
-
-	case EWeaponName::EWN_NavySMG:
-
-		WeaponBPFilePath = PickupParser->LoadParser("NavySMG");
-
-		ActorBpClass = TSoftClassPtr<AActor>(FSoftObjectPath(WeaponBPFilePath));
-
-		LoadedBpAsset = ActorBpClass.LoadSynchronous();
-
-		break;
-
-	case EWeaponName::EWN_ItalianShotgun:
-
-		WeaponBPFilePath = PickupParser->LoadParser("ItalianShotgun");
-
-		ActorBpClass = TSoftClassPtr<AActor>(FSoftObjectPath(WeaponBPFilePath));
-
-		LoadedBpAsset = ActorBpClass.LoadSynchronous();
-
-		break;
-
-	case EWeaponName::EWN_SVD:
-
-		WeaponBPFilePath = PickupParser->LoadParser("SVD");
-
-		ActorBpClass = TSoftClassPtr<AActor>(FSoftObjectPath(WeaponBPFilePath));
-
-		LoadedBpAsset = ActorBpClass.LoadSynchronous();
-
-		break;
-
-	case EWeaponName::EWN_ShortStrokeAR:
-
-		WeaponBPFilePath = PickupParser->LoadParser("ShortStrokeAR");
-
-		ActorBpClass = TSoftClassPtr<AActor>(FSoftObjectPath(WeaponBPFilePath));
-
-		LoadedBpAsset = ActorBpClass.LoadSynchronous();
 
 		break;
 
