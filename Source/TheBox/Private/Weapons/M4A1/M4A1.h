@@ -13,5 +13,7 @@ UCLASS()
 class AM4A1 : public AWeaponBase
 {
 	GENERATED_BODY()
-	
+
+protected:
+	virtual void SetData() override;
 };

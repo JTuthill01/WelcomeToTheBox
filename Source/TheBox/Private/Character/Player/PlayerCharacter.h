@@ -43,6 +43,7 @@ public:
 	FORCEINLINE TMap<EWeaponName, TObjectPtr<class AWeaponBase>> GetWeaponMap() const { return WeaponMap; }
 
 	FORCEINLINE EWeaponSlot GetCurrentSlotIndex() const { return WeaponIndexEnum; }
+	FORCEINLINE EWeaponName GetCurrentWeaponSpawnEnum() const { return WeaponSpawnEnum; }
 
 	FORCEINLINE int32 GetWeaponIndex() const { return WeaponIndex; }
 	FORCEINLINE int32 GetGrenadeCount() const { return CurrentGrenades; }
@@ -60,6 +61,8 @@ public:
 
 	/** Setter for the EWeaponSlot Enum, used in PlayerCharacterController for switching weapons */
 	FORCEINLINE void SetWeaponSlotIndex(EWeaponSlot NewValue) { WeaponIndexEnum = NewValue; }
+
+	FORCEINLINE void SetWeaponSpawnEnum(EWeaponName SpawnName) { WeaponSpawnEnum = SpawnName; }
 
 	FORCEINLINE void SetWeaponName(EWeaponName NewName) { CurrentNameOfWeapon = NewName; }
 
@@ -101,7 +104,10 @@ public:
 	void SetWeaponVisibility(bool ShouldBeHidden);
 
 	UFUNCTION(BlueprintCallable)
-	void SpawnWeaponMap(FString WeaponDataString, bool& IsSuccessful);
+	void SpawnWeaponMap(TSubclassOf<class AWeaponBase> WeaponSub, EWeaponName WeaponEnumName, bool& IsSuccessful);
+
+	UFUNCTION()
+	void LoadWeaponBP(FString WeaponNameString);
 
 protected:
 	//Called when the game starts or when spawned
@@ -118,8 +124,6 @@ private:
 	void Initialize();
 
 	void SpawnInitialWeapon();
-
-	void LoadWeaponBP(FString WeaponNameString);
 
 public:
 	UPROPERTY(BlueprintAssignable)
@@ -180,6 +184,9 @@ private:
 	UPROPERTY()
 	TObjectPtr<UAnimInstance> PlayerAnimInstance;
 
+	UPROPERTY()
+	TObjectPtr<class UTheBoxGameInstance> BoxedInstance;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Grenades, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class AGrenade> Grenade;
 
@@ -237,6 +244,7 @@ private:
 
 private:
 	EWeaponSlot WeaponIndexEnum;
+	EWeaponName WeaponSpawnEnum;
 
 	int32 WeaponIndex;
 

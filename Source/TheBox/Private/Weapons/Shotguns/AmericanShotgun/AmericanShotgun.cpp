@@ -7,30 +7,20 @@
 
 AAmericanShotgun::AAmericanShotgun() = default;
 
-void AAmericanShotgun::WeaponSetup()
-{
-	Super::WeaponSetup();
-
-	WeaponParser->SetObjectData("AmericanShotgun");
-	WeaponParser->WeaponParser(WeapStats, WeaponFilePaths, InUintToEnum, InType);
-
-	WeapStats.Icon = LoadObject<class UTexture2D>(this, *WeaponFilePaths.IconPath);
-	WeapStats.RackSlideSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.RackSlideSoundPath);
-	WeapStats.MagOutSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.MagOutSoundPath);
-	WeapStats.MagInSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.MagInSoundPath);
-	WeapStats.FireSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.FireSoundPath);
-	WeapStats.AmmoEject = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.AmmoEjectPath);
-	WeapStats.FireFX = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.FireFXPath);
-
-	WeapStats.FireType = static_cast<EWeaponFireType>(InUintToEnum);
-	WeapStats.Type = static_cast<EWeaponType>(InType);
-}
-
 void AAmericanShotgun::BeginPlay()
 {
 	Super::BeginPlay();
 
 	PlayerRef = IPlayerCharacterInterface::Execute_SetPlayerRef(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	
+	SetData();
+
+	/*WeapStats.RackSlideSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.RackSlideSoundPath);
+	WeapStats.MagOutSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.MagOutSoundPath);
+	WeapStats.MagInSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.MagInSoundPath);
+	WeapStats.FireSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.FireSoundPath);
+	WeapStats.AmmoEject = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.AmmoEjectPath);
+	WeapStats.FireFX = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.FireFXPath);*/
 }
 
 void AAmericanShotgun::WeaponFire()
@@ -89,6 +79,17 @@ void AAmericanShotgun::ShotgunReloadEnd()
 	PlayerRef->GetPlayerAnimInstance()->Montage_Play(PlayerRef->AmericanReloadMonatge[ShotgunReloadEndIndex]);
 
 	GetWorldTimerManager().ClearTimer(ShotgunReloadTimerHandle);
+}
+
+void AAmericanShotgun::SetData()
+{
+	WeaponParser->SetObjectData("AmericanShotgun");
+	WeaponParser->WeaponParser(WeapStats, WeaponFilePaths, InUintToEnum, InType);
+
+	WeapStats.FireType = static_cast<EWeaponFireType>(InUintToEnum);
+	WeapStats.Type = static_cast<EWeaponType>(InType);
+
+	WeapStats.Icon = LoadObject<class UTexture2D>(this, *WeaponFilePaths.IconPath);
 }
 
 void AAmericanShotgun::UpdateReloadAmmo()

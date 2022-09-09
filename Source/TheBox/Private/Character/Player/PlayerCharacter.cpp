@@ -11,6 +11,7 @@
 #include "Structs/HexColors/Str_CustomHexColors.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "JsonComponents/BPLoader/BPLoaderComponent.h"
+#include "Misc/GameInstance/TheBoxGameInstance.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter() : MaxGrenades(4), CurrentGrenades(MaxGrenades), InteractableTraceTimer(0.25F), WeaponIndexEnum(EWeaponSlot::EWS_Default_Slot), WeaponIndex(0), bIsFirstSlotFull(false),
@@ -36,6 +37,8 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	BoxedInstance = Cast<UTheBoxGameInstance>(GetGameInstance());
+
 	Initialize();
 }
 
@@ -54,6 +57,8 @@ void APlayerCharacter::Initialize()
 
 	HealthComponent->PlayerDeath.AddDynamic(this, &APlayerCharacter::PlayerDeath);
 
+	LoadWeaponBP("L86");
+
 	SpawnInitialWeapon();
 }
 
@@ -69,18 +74,9 @@ void APlayerCharacter::SpawnInitialWeapon()
 
 	FTransform LocalTransform = UKismetMathLibrary::MakeTransform(Location, Rotation, Scale);
 
-	FString WeaponFilePath = "BlueprintGeneratedClass'/Game/_Main/Blueprints/Weapon/L86/BP_L86.BP_L86_C'";
-	FString WeaponDataString = "L86";
-
 	WeaponMap.Reserve(4);
 
-	LoadWeaponBP(WeaponDataString);
-
-	WeaponSlot_01 = GetWorld()->SpawnActorDeferred<AWeaponBase>(LoadedBpAsset, LocalTransform);
-
-	WeaponSlot_01->SetData(WeaponDataString);
-
-	UGameplayStatics::FinishSpawningActor(WeaponSlot_01, LocalTransform);
+	WeaponSlot_01 = GetWorld()->SpawnActor<AWeaponBase>(LoadedBpAsset, LocalTransform);
 
 	if (IsValid(WeaponSlot_01))
 	{
@@ -97,7 +93,7 @@ void APlayerCharacter::SpawnInitialWeapon()
 
 		WeaponMap[WeaponSlot_01->GetCurrentWeaponEnumName()]->GetCurrentTotalAmmo();
 
-		WeaponIndexEnum = EWeaponSlot::EWS_First_Slot;
+		WeaponIndexEnum = EWeaponSlot::EWS_Second_Slot;
 
 		bIsFirstSlotFull = true;
 	}
@@ -105,7 +101,10 @@ void APlayerCharacter::SpawnInitialWeapon()
 
 void APlayerCharacter::LoadWeaponBP(FString WeaponNameString)
 {
-	FString ReturnPath = BPLoader->LoadParser(WeaponNameString);
+	FString ReturnPath = FString("");
+
+	if (IsValid(BoxedInstance))
+		ReturnPath = BoxedInstance->LoadParser(WeaponNameString);
 
 	ActorBpClass = TSoftClassPtr<AActor>(FSoftObjectPath(ReturnPath));
 
@@ -222,7 +221,7 @@ void APlayerCharacter::PlayerReloadWeapon()
 		return;
 }
 
-void APlayerCharacter::SpawnWeaponMap(FString WeaponDataString, bool& IsSuccessful)
+void APlayerCharacter::SpawnWeaponMap(TSubclassOf<class AWeaponBase> WeaponSub, EWeaponName WeaponEnumName, bool& IsSuccessful)
 {
 	FActorSpawnParameters Params;
 	Params.Owner = this;
@@ -240,13 +239,7 @@ void APlayerCharacter::SpawnWeaponMap(FString WeaponDataString, bool& IsSuccessf
 
 		if (!bIsFirstSlotFull)
 		{
-			LoadWeaponBP(WeaponDataString);
-
-			WeaponSlot_01 = GetWorld()->SpawnActorDeferred<AWeaponBase>(LoadedBpAsset, LocalTransform);
-
-			WeaponSlot_01->SetData(WeaponDataString);
-
-			UGameplayStatics::FinishSpawningActor(WeaponSlot_01, LocalTransform);
+			WeaponSlot_01 = GetWorld()->SpawnActor<AWeaponBase>(WeaponSub, LocalTransform, Params);
 
 			if (IsValid(WeaponSlot_01))
 			{
@@ -280,7 +273,7 @@ void APlayerCharacter::SpawnWeaponMap(FString WeaponDataString, bool& IsSuccessf
 		{
 			WeaponIndexEnum = EWeaponSlot::EWS_Second_Slot;
 
-			SpawnWeaponMap(WeaponDataString, IsSuccessful);
+			SpawnWeaponMap(WeaponSub, WeaponEnumName, IsSuccessful);
 
 			break;
 		}
@@ -302,26 +295,24 @@ void APlayerCharacter::SpawnWeaponMap(FString WeaponDataString, bool& IsSuccessf
 
 		if (!bIsSecondSlotFull)
 		{
-			LoadWeaponBP(WeaponDataString);
-
-			WeaponSlot_02 = GetWorld()->SpawnActorDeferred<AWeaponBase>(LoadedBpAsset, LocalTransform);
-
-			WeaponSlot_02->SetData(WeaponDataString);
-
-			UGameplayStatics::FinishSpawningActor(WeaponSlot_02, LocalTransform);
+			WeaponSlot_02 = GetWorld()->SpawnActor<AWeaponBase>(WeaponSub, LocalTransform, Params);
 
 			if (IsValid(WeaponSlot_02))
 			{
-				WeaponMap.Emplace(WeaponSlot_02->GetCurrentWeaponEnumName(), WeaponSlot_02);
+				//WeaponMap.Emplace(WeaponSlot_02->GetCurrentWeaponEnumName(), WeaponSlot_02);
+
+				WeaponMap.Emplace(WeaponEnumName, WeaponSlot_02);
 
 				WeaponMap[WeaponSlot_02->GetCurrentWeaponEnumName()]->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
 					WeaponMap[WeaponSlot_02->GetCurrentWeaponEnumName()]->GetSocketName());
 
 				CurrentNameOfWeapon = WeaponSlot_02->GetCurrentWeaponEnumName();
 
+				CurrentNameOfWeapon = WeaponEnumName;
+
 				bIsSecondSlotFull = true;
 
-				WeaponIndexEnum = EWeaponSlot::EWS_Second_Slot;
+				WeaponIndexEnum = EWeaponSlot::EWS_Third_Slot;
 
 				WeaponMap[PreviousWeapon_01]->SetActorHiddenInGame(true);
 
@@ -340,8 +331,6 @@ void APlayerCharacter::SpawnWeaponMap(FString WeaponDataString, bool& IsSuccessf
 			{
 				IsSuccessful = false;
 
-				WeaponIndexEnum = EWeaponSlot::EWS_First_Slot;
-
 				break;
 			}
 		}
@@ -350,7 +339,7 @@ void APlayerCharacter::SpawnWeaponMap(FString WeaponDataString, bool& IsSuccessf
 		{
 			WeaponIndexEnum = EWeaponSlot::EWS_Third_Slot;
 
-			SpawnWeaponMap(WeaponDataString, IsSuccessful);
+			SpawnWeaponMap(WeaponSub, WeaponEnumName, IsSuccessful);
 
 			break;
 		}
@@ -370,17 +359,13 @@ void APlayerCharacter::SpawnWeaponMap(FString WeaponDataString, bool& IsSuccessf
 
 		if (!bIsThirdSlotFull)
 		{
-			LoadWeaponBP(WeaponDataString);
-
-			WeaponSlot_03 = GetWorld()->SpawnActorDeferred<AWeaponBase>(LoadedBpAsset, LocalTransform);
-
-			WeaponSlot_03->SetData(WeaponDataString);
-
-			UGameplayStatics::FinishSpawningActor(WeaponSlot_03, LocalTransform);
+			WeaponSlot_03 = GetWorld()->SpawnActor<AWeaponBase>(WeaponSub, LocalTransform, Params);
 
 			if (IsValid(WeaponSlot_03))
 			{
-				WeaponMap.Emplace(WeaponSlot_03->GetCurrentWeaponEnumName(), WeaponSlot_03);
+				//WeaponMap.Emplace(WeaponSlot_03->GetCurrentWeaponEnumName(), WeaponSlot_03);
+
+				WeaponMap.Emplace(WeaponEnumName, WeaponSlot_03);
 
 				WeaponMap[WeaponSlot_03->GetCurrentWeaponEnumName()]->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
 					WeaponMap[WeaponSlot_03->GetCurrentWeaponEnumName()]->GetSocketName());
@@ -400,6 +385,8 @@ void APlayerCharacter::SpawnWeaponMap(FString WeaponDataString, bool& IsSuccessf
 				PreviousWeapon_03 = WeaponSlot_03->GetCurrentWeaponEnumName();
 
 				OnSwap.Broadcast();
+
+				break;
 			}
 
 			else
@@ -414,7 +401,9 @@ void APlayerCharacter::SpawnWeaponMap(FString WeaponDataString, bool& IsSuccessf
 		{
 			WeaponIndexEnum = EWeaponSlot::EWS_Fourth_Slot;
 
-			SpawnWeaponMap(WeaponDataString, IsSuccessful);
+			SpawnWeaponMap(WeaponSub, WeaponEnumName, IsSuccessful);
+
+			break;
 		}
 
 		else
@@ -422,6 +411,8 @@ void APlayerCharacter::SpawnWeaponMap(FString WeaponDataString, bool& IsSuccessf
 			IsSuccessful = false;
 
 			bHasOpenSlot = false;
+
+			break;
 		}
 
 		break;
@@ -430,17 +421,13 @@ void APlayerCharacter::SpawnWeaponMap(FString WeaponDataString, bool& IsSuccessf
 
 		if (!bIsFourthSlotFull)
 		{
-			LoadWeaponBP(WeaponDataString);
-
-			WeaponSlot_04 = GetWorld()->SpawnActorDeferred<AWeaponBase>(LoadedBpAsset, LocalTransform);
-
-			WeaponSlot_04->SetData(WeaponDataString);
-
-			UGameplayStatics::FinishSpawningActor(WeaponSlot_04, LocalTransform);
+			WeaponSlot_04 = GetWorld()->SpawnActor<AWeaponBase>(WeaponSub, LocalTransform, Params);
 
 			if (IsValid(WeaponSlot_04))
 			{
-				WeaponMap.Emplace(WeaponSlot_04->GetCurrentWeaponEnumName(), WeaponSlot_04);
+				//WeaponMap.Emplace(WeaponSlot_04->GetCurrentWeaponEnumName(), WeaponSlot_04);
+
+				WeaponMap.Emplace(WeaponEnumName, WeaponSlot_04);
 
 				WeaponMap[WeaponSlot_04->GetCurrentWeaponEnumName()]->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
 					WeaponMap[WeaponSlot_04->GetCurrentWeaponEnumName()]->GetSocketName());
@@ -460,6 +447,8 @@ void APlayerCharacter::SpawnWeaponMap(FString WeaponDataString, bool& IsSuccessf
 				OnSwap.Broadcast();
 
 				IsSuccessful = true;
+
+				break;
 			}
 
 			else
@@ -474,7 +463,9 @@ void APlayerCharacter::SpawnWeaponMap(FString WeaponDataString, bool& IsSuccessf
 		{
 			WeaponIndexEnum = EWeaponSlot::EWS_First_Slot;
 
-			SpawnWeaponMap(WeaponDataString, IsSuccessful);
+			SpawnWeaponMap(WeaponSub, WeaponEnumName, IsSuccessful);
+
+			break;
 		}
 
 		else
@@ -482,6 +473,8 @@ void APlayerCharacter::SpawnWeaponMap(FString WeaponDataString, bool& IsSuccessf
 			IsSuccessful = false;
 
 			bHasOpenSlot = false;
+
+			break;
 		}
 
 		break;

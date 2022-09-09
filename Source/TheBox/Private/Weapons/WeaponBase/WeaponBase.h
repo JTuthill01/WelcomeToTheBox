@@ -67,8 +67,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void OnConstruction(const FTransform& Transform) override;
-
 public:
 	UFUNCTION(BlueprintCallable)
 	virtual void StopFire();
@@ -83,11 +81,10 @@ public:
 	virtual void ShotgunReloadStart();
 
 	UFUNCTION()
-	virtual void WeaponSetup();
+	virtual void SetData();
 
+public:
 	void SetTotalAmmo(int32 NewAmmoValue);
-
-	void SetData(FString NewWeaponName);
 
 public:
 	bool MagHasAmmo();
@@ -219,4 +216,8 @@ private:
 	void SpawnReloadWidget();
 
 	void HideReloadWidget();
+
+private:
+	UPROPERTY()
+	TObjectPtr<class UTheBoxGameInstance> BoxerInstance;
 };

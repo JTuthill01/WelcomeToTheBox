@@ -3,3 +3,6 @@
 
 #include "Weapons/M4A1/M4A1.h"
 
+void AM4A1::SetData()
+{
+}

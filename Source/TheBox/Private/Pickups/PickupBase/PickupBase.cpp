@@ -7,6 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Weapons/WeaponBase/WeaponBase.h"
 #include "Structs/HexColors/Str_CustomHexColors.h"
+#include "Misc/GameInstance/TheBoxGameInstance.h"
 
 // Sets default values
 APickupBase::APickupBase() : HealthValue(0.F), ArmorValue(0.F), MaxWeapons(4)
@@ -87,6 +88,8 @@ void APickupBase::Setup()
 {
 	PlayerRef = IPlayerCharacterInterface::Execute_SetPlayerRef(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 
+	BoxerInstance = Cast<UTheBoxGameInstance>(GetGameInstance());
+
 	if (IsValid(PlayerRef))
 		PlayerRef->Clear.AddDynamic(this, &APickupBase::OnClearViewport);
 }
@@ -160,9 +163,13 @@ void APickupBase::WeaponPickup(EWeaponName InWeaponName)
 {
 	bool bIsSuccessful;
 
+	LoadWeaponBP(PickupData.PickupName.ToString());
+
+	GEngine->AddOnScreenDebugMessage(-1, 6.F, FCustomColorsFromHex::SaffronRed(), PickupData.PickupName.ToString());
+
 	if (!PlayerRef->GetWeaponMap().Find(InWeaponName) && PlayerRef->GetWeaponMap().Num() <= MaxWeapons)
 	{
-		PlayerRef->SpawnWeaponMap(PickupData.PickupName.ToString(), bIsSuccessful);
+		PlayerRef->SpawnWeaponMap(LoadedBpAsset, WeaponName, bIsSuccessful);
 
 		if (bIsSuccessful)
 		{
@@ -692,5 +699,17 @@ void APickupBase::SetGrenadeData(EPickupGrenadeType Grenade)
 	default:
 		break;
 	}
+}
+
+void APickupBase::LoadWeaponBP(FString WeaponNameString)
+{
+	FString ReturnPath = FString("");
+
+	if (IsValid(BoxerInstance))
+		ReturnPath = BoxerInstance->LoadParser(WeaponNameString);
+
+	ActorBpClass = TSoftClassPtr<AActor>(FSoftObjectPath(ReturnPath));
+
+	LoadedBpAsset = ActorBpClass.LoadSynchronous();
 }
 

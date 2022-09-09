@@ -17,13 +17,13 @@ protected:
 
 	virtual void WeaponFire() override;
 
-	virtual void WeaponSetup() override;
-
 	virtual void ShotgunReloadStart() override;
 
 	virtual void ShotgunReloadLoop() override;
 
 	virtual void ShotgunReloadEnd() override;
+
+	virtual void SetData() override;
 
 private:
 	void UpdateReloadAmmo();

@@ -5,23 +5,18 @@
 
 ATT33::ATT33() = default;
 
-void ATT33::WeaponSetup()
+void ATT33::BeginPlay()
 {
-	Super::WeaponSetup();
+	Super::BeginPlay();
 
-	WeaponParser->SetObjectData("TT33");
-	WeaponParser->WeaponParser(WeapStats, WeaponFilePaths, InUintToEnum, InType);
+	SetData();
 
-	WeapStats.Icon = LoadObject<class UTexture2D>(this, *WeaponFilePaths.IconPath);
-	WeapStats.RackSlideSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.RackSlideSoundPath);
+	/*WeapStats.RackSlideSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.RackSlideSoundPath);
 	WeapStats.MagOutSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.MagOutSoundPath);
 	WeapStats.MagInSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.MagInSoundPath);
 	WeapStats.FireSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.FireSoundPath);
 	WeapStats.AmmoEject = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.AmmoEjectPath);
-	WeapStats.FireFX = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.FireFXPath);
-
-	WeapStats.FireType = static_cast<EWeaponFireType>(InUintToEnum);
-	WeapStats.Type = static_cast<EWeaponType>(InType);
+	WeapStats.FireFX = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.FireFXPath);*/
 }
 
 void ATT33::WeaponFire()
@@ -57,4 +52,16 @@ void ATT33::WeaponReload()
 	else
 		return;
 }
+
+void ATT33::SetData()
+{
+	WeaponParser->SetObjectData("TT33");
+	WeaponParser->WeaponParser(WeapStats, WeaponFilePaths, InUintToEnum, InType);
+
+	WeapStats.FireType = static_cast<EWeaponFireType>(InUintToEnum);
+	WeapStats.Type = static_cast<EWeaponType>(InType);
+
+	WeapStats.Icon = LoadObject<class UTexture2D>(this, *WeaponFilePaths.IconPath);
+}
+
 

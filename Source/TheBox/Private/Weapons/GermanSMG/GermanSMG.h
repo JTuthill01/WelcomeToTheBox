@@ -13,9 +13,11 @@ public:
 	AGermanSMG();
 
 protected:
-	virtual void WeaponSetup() override;
+	virtual void BeginPlay() override;
 
 	virtual void WeaponFire() override;
 
 	virtual void WeaponReload() override;
+
+	virtual void SetData() override;
 };

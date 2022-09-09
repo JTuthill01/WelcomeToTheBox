@@ -5,23 +5,18 @@
 
 AAK47::AAK47() = default;
 
-void AAK47::WeaponSetup()
+void AAK47::BeginPlay()
 {
-	Super::WeaponSetup();
+	Super::BeginPlay();
 
-	WeaponParser->SetObjectData("AK47");
-	WeaponParser->WeaponParser(WeapStats, WeaponFilePaths, InUintToEnum, InType);
+	SetData();
 
-	WeapStats.Icon = LoadObject<class UTexture2D>(this, *WeaponFilePaths.IconPath);
-	WeapStats.RackSlideSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.RackSlideSoundPath);
+	/*WeapStats.RackSlideSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.RackSlideSoundPath);
 	WeapStats.MagOutSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.MagOutSoundPath);
 	WeapStats.MagInSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.MagInSoundPath);
 	WeapStats.FireSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.FireSoundPath);
 	WeapStats.AmmoEject = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.AmmoEjectPath);
-	WeapStats.FireFX = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.FireFXPath);
-
-	WeapStats.FireType = static_cast<EWeaponFireType>(InUintToEnum);
-	WeapStats.Type = static_cast<EWeaponType>(InType);
+	WeapStats.FireFX = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.FireFXPath);*/
 }
 
 void AAK47::WeaponFire()
@@ -56,4 +51,15 @@ void AAK47::WeaponReload()
 
 	else
 		return;
+}
+
+void AAK47::SetData()
+{
+	WeaponParser->SetObjectData("AK47");
+	WeaponParser->WeaponParser(WeapStats, WeaponFilePaths, InUintToEnum, InType);
+
+	WeapStats.FireType = static_cast<EWeaponFireType>(InUintToEnum);
+	WeapStats.Type = static_cast<EWeaponType>(InType);
+
+	WeapStats.Icon = LoadObject<class UTexture2D>(this, *WeaponFilePaths.IconPath);
 }

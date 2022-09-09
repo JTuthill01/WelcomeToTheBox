@@ -5,23 +5,18 @@
 
 AL86::AL86() = default;
 
-void AL86::WeaponSetup()
+void AL86::BeginPlay()
 {
-	Super::WeaponSetup();
+	Super::BeginPlay();
 
-	WeaponParser->SetObjectData("L86");
-	WeaponParser->WeaponParser(WeapStats, WeaponFilePaths, InUintToEnum, InType);
+	SetData();
 
-	WeapStats.Icon = LoadObject<class UTexture2D>(this, *WeaponFilePaths.IconPath);
-	WeapStats.RackSlideSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.RackSlideSoundPath);
+	/*WeapStats.RackSlideSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.RackSlideSoundPath);
 	WeapStats.MagOutSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.MagOutSoundPath);
 	WeapStats.MagInSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.MagInSoundPath);
 	WeapStats.FireSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.FireSoundPath);
 	WeapStats.AmmoEject = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.AmmoEjectPath);
-	WeapStats.FireFX = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.FireFXPath);
-
-	WeapStats.FireType = static_cast<EWeaponFireType>(InUintToEnum);
-	WeapStats.Type = static_cast<EWeaponType>(InType);
+	WeapStats.FireFX = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.FireFXPath);*/
 }
 
 void AL86::WeaponFire()
@@ -60,3 +55,15 @@ void AL86::WeaponReload()
 	else
 		return;
 }
+
+void AL86::SetData()
+{
+	WeaponParser->SetObjectData("L86");
+	WeaponParser->WeaponParser(WeapStats, WeaponFilePaths, InUintToEnum, InType);
+
+	WeapStats.FireType = static_cast<EWeaponFireType>(InUintToEnum);
+	WeapStats.Type = static_cast<EWeaponType>(InType);
+
+	WeapStats.Icon = LoadObject<class UTexture2D>(nullptr, *WeaponFilePaths.IconPath, nullptr, LOAD_Async);
+}
+

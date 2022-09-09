@@ -12,10 +12,12 @@ class AAK74 : public AWeaponBase
 public:
 	AAK74();
 
-	virtual void WeaponSetup() override;
-
 protected:
+	virtual void BeginPlay() override;
+
 	virtual void WeaponFire() override;
 
 	virtual void WeaponReload() override;
+
+	virtual void SetData() override;
 };

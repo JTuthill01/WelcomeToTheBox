@@ -11,6 +11,7 @@
 #include "Structs/HexColors/Str_CustomHexColors.h"
 #include "Projectiles/ProjectileBase.h"
 #include "Widgets/Reload/ReloadWidget.h"
+#include "Misc/GameInstance/TheBoxGameInstance.h"
 
 // Sets default values
 AWeaponBase::AWeaponBase() : SocketName(NAME_None), ShotgunPellets(6), Range(4'500), SpreadAngle(8.89F), bCanShotgunFireOrReload(true), EjectQuat(FQuat(0.F)),
@@ -45,37 +46,32 @@ void AWeaponBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AWeaponBase::OnConstruction(const FTransform& Transform)
-{
-	Super::OnConstruction(Transform);
-
-	//WeaponSetup();
-}
-
 void AWeaponBase::InitializeVariables()
 {
 	if (IsValid(WeaponMesh))
 		WeaponAnimInstance = WeaponMesh->GetAnimInstance();
 
 	PlayerRef = IPlayerCharacterInterface::Execute_SetPlayerRef(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+
+	BoxerInstance = Cast<UTheBoxGameInstance>(GetGameInstance());
 }
 
-void AWeaponBase::SetData(FString NewWeaponName)
-{
-	WeaponParser->SetObjectData(NewWeaponName);
-	WeaponParser->WeaponParser(WeapStats, WeaponFilePaths, InUintToEnum, InType);
-
-	WeapStats.Icon = LoadObject<class UTexture2D>(this, *WeaponFilePaths.IconPath);
-	WeapStats.RackSlideSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.RackSlideSoundPath);
-	WeapStats.MagOutSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.MagOutSoundPath);
-	WeapStats.MagInSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.MagInSoundPath);
-	WeapStats.FireSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.FireSoundPath);
-	WeapStats.AmmoEject = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.AmmoEjectPath);
-	WeapStats.FireFX = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.FireFXPath);
-
-	WeapStats.FireType = static_cast<EWeaponFireType>(InUintToEnum);
-	WeapStats.Type = static_cast<EWeaponType>(InType);
-}
+//void AWeaponBase::SetData(FString NewWeaponName)
+//{
+//	WeaponParser->SetObjectData(NewWeaponName);
+//	WeaponParser->WeaponParser(WeapStats, WeaponFilePaths, InUintToEnum, InType);
+//
+//	WeapStats.Icon = LoadObject<class UTexture2D>(this, *WeaponFilePaths.IconPath);
+//	WeapStats.RackSlideSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.RackSlideSoundPath);
+//	WeapStats.MagOutSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.MagOutSoundPath);
+//	WeapStats.MagInSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.MagInSoundPath);
+//	WeapStats.FireSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.FireSoundPath);
+//	WeapStats.AmmoEject = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.AmmoEjectPath);
+//	WeapStats.FireFX = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.FireFXPath);
+//
+//	WeapStats.FireType = static_cast<EWeaponFireType>(InUintToEnum);
+//	WeapStats.Type = static_cast<EWeaponType>(InType);
+//}
 
 void AWeaponBase::BulletTrace()
 {
@@ -308,6 +304,10 @@ void AWeaponBase::HideReloadWidget()
 
 void AWeaponBase::ShotgunReloadStart() {}
 
+void AWeaponBase::SetData()
+{
+}
+
 void AWeaponBase::ShotgunReloadLoop() {}
 
 void AWeaponBase::ShotgunReloadEnd() {}
@@ -325,8 +325,6 @@ bool AWeaponBase::IsAmmoFull() { return WeapStats.CurrentTotalAmmo >= WeapStats.
 bool AWeaponBase::CanShotgunFireOrReload() { return !WeaponAnimInstance->Montage_IsPlaying(WeaponFireMontage) && bCanShotgunFireOrReload && HasAmmoForReload() && !IsMagFull(); }
 
 bool AWeaponBase::IsWeaponFiringOrReloading() { return WeaponAnimInstance->Montage_IsPlaying(WeaponFireMontage) || WeaponAnimInstance->Montage_IsPlaying(WeaponReloadMontage); }
-
-void AWeaponBase::WeaponSetup() {}
 
 void AWeaponBase::StopFire() {}
 

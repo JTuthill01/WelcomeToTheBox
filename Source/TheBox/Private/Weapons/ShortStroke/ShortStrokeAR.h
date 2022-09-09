@@ -13,9 +13,11 @@ public:
 	AShortStrokeAR();
 
 protected:
+	virtual void BeginPlay() override;
+
 	virtual void WeaponFire() override;
 
 	virtual void WeaponReload() override;
 
-	virtual void WeaponSetup() override;
+	virtual void SetData() override;
 };

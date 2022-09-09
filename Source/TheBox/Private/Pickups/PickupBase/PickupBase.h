@@ -84,6 +84,7 @@ private:
 	void SetAmmoData(EPickupAmmoType PickupAmmo);
 	void SetWeaponData(EPickupWeaponType PickupWeapon);
 	void SetGrenadeData(EPickupGrenadeType Grenade);
+	void LoadWeaponBP(FString WeaponNameString);
 
 protected:
 	UFUNCTION()
@@ -101,6 +102,16 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<class USoundBase> PickupSFX;
+
+private:
+	UPROPERTY()
+	TObjectPtr<class UTheBoxGameInstance> BoxerInstance;
+
+	UPROPERTY()
+	TObjectPtr<UClass> LoadedBpAsset;
+
+	UPROPERTY()
+	TSoftClassPtr<AActor> ActorBpClass;
 
 private:
 	float HealthValue;

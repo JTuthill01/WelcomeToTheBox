@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "Structs/WeaponData/Str_WeaponStats.h"
 #include "TheBoxGameInstance.generated.h"
 
 UCLASS()
@@ -12,19 +13,11 @@ class UTheBoxGameInstance : public UGameInstance
 public:
 	UTheBoxGameInstance(const FObjectInitializer& ObjectInitializer);
 
-public:
-	void LoadOnSpawn(TObjectPtr<UClass>& LoadedBpAsset, FString Path);
+	UTheBoxGameInstance();
+
+	UFUNCTION()
+	FString LoadParser(FString WeaponString);
 
 protected:
 	void Init() override;
-
-public:
-	FString ReturnPath;
-
-private:
-	UPROPERTY()
-	TObjectPtr<class UBPLoaderComponent> Loader;
-
-	UPROPERTY()
-	TSoftClassPtr<AActor> ActorBpClass;
 };

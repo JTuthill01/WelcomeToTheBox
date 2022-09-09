@@ -17,6 +17,8 @@ public:
 
 	virtual void WeaponReload() override; 
 
+	virtual void SetData() override;
+
 protected:
-	virtual void WeaponSetup() override;
+	virtual void BeginPlay() override;
 };
