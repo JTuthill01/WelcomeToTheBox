@@ -141,6 +141,9 @@ protected:
 	TObjectPtr<class UReloadWidget> ReloadWidget;
 
 	UPROPERTY()
+	TObjectPtr<class UTheBoxGameInstance> BoxerInstance;
+
+	UPROPERTY()
 	FWeaponStringData WeaponFilePaths;
 
 	UPROPERTY()
@@ -216,8 +219,4 @@ private:
 	void SpawnReloadWidget();
 
 	void HideReloadWidget();
-
-private:
-	UPROPERTY()
-	TObjectPtr<class UTheBoxGameInstance> BoxerInstance;
 };

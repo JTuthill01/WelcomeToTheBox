@@ -8,6 +8,11 @@
 #include "Weapons/WeaponBase/WeaponBase.h"
 #include "Structs/HexColors/Str_CustomHexColors.h"
 #include "Misc/GameInstance/TheBoxGameInstance.h"
+#include "Interfaces/Instance/SetGameInstnaceInterface.h"
+#include "Components/WidgetComponent.h"
+#include "Components/Image.h"
+#include "Components/TextBlock.h"
+#include "Widgets/Pickups/PickupWidget.h"
 
 // Sets default values
 APickupBase::APickupBase() : HealthValue(0.F), ArmorValue(0.F), MaxWeapons(4)
@@ -24,6 +29,17 @@ APickupBase::APickupBase() : HealthValue(0.F), ArmorValue(0.F), MaxWeapons(4)
 	BaseMesh->SetCollisionObjectType(ECollisionChannel::ECC_WorldStatic);
 
 	PickupParser = CreateDefaultSubobject<UPickupComponent>(TEXT("Pickup Parser"));
+
+	PickupWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("Pickup Widget Component"));
+
+	static ConstructorHelpers::FClassFinder<UUserWidget> PickupWidgetClassFinder(TEXT("WidgetBlueprint'/Game/_Main/Blueprints/Widgets/WBP_Pickup.WBP_Pickup_C'"));
+
+	PickupWidgetComponent->SetWidgetClass(PickupWidgetClassFinder.Class);
+	PickupWidgetComponent->AttachToComponent(PickupRoot, FAttachmentTransformRules::KeepRelativeTransform);
+	PickupWidgetComponent->SetDrawSize(FVector2D(600, 400));
+	PickupWidgetComponent->SetDrawAtDesiredSize(false);
+	PickupWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
+	PickupWidgetComponent->SetVisibility(false);
 }
 
 // Called when the game starts or when spawned
@@ -32,6 +48,8 @@ void APickupBase::BeginPlay()
 	Super::BeginPlay();
 
 	Setup();
+
+	WidgetSetup();
 }
 
 // Called every frame
@@ -88,15 +106,19 @@ void APickupBase::Setup()
 {
 	PlayerRef = IPlayerCharacterInterface::Execute_SetPlayerRef(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 
-	BoxerInstance = Cast<UTheBoxGameInstance>(GetGameInstance());
-
 	if (IsValid(PlayerRef))
 		PlayerRef->Clear.AddDynamic(this, &APickupBase::OnClearViewport);
+
+	BoxerInstance = ISetGameInstnaceInterface::Execute_SetInstance(GetGameInstance());
 }
 
 void APickupBase::InteractableFound_Implementation()
 {
+	if (IsValid(PickupWidgetComponent))
+		PickupWidgetComponent->SetVisibility(true);
 	
+	else
+		return;
 }
 
 void APickupBase::InteractWithObject_Implementation()
@@ -156,7 +178,11 @@ void APickupBase::InteractWithObject_Implementation()
 
 void APickupBase::OnClearViewport()
 {
-	
+	if (IsValid(PickupWidgetComponent))
+		PickupWidgetComponent->SetVisibility(false);
+
+	else
+		return;
 }
 
 void APickupBase::WeaponPickup(EWeaponName InWeaponName)
@@ -164,8 +190,6 @@ void APickupBase::WeaponPickup(EWeaponName InWeaponName)
 	bool bIsSuccessful;
 
 	LoadWeaponBP(PickupData.PickupName.ToString());
-
-	GEngine->AddOnScreenDebugMessage(-1, 6.F, FCustomColorsFromHex::SaffronRed(), PickupData.PickupName.ToString());
 
 	if (!PlayerRef->GetWeaponMap().Find(InWeaponName) && PlayerRef->GetWeaponMap().Num() <= MaxWeapons)
 	{
@@ -177,6 +201,9 @@ void APickupBase::WeaponPickup(EWeaponName InWeaponName)
 
 			Destroy();
 		}
+
+		else
+			return;
 	}
 
 	else
@@ -200,6 +227,18 @@ void APickupBase::GrenadePickup()
 
 	else
 		return;
+}
+
+void APickupBase::WidgetSetup()
+{
+	PickupWidget = Cast<UPickupWidget>(PickupWidgetComponent->GetUserWidgetObject());
+
+	if (!IsValid(PickupWidget))
+		return;
+
+	PickupWidget->PickupIcon->SetBrushFromMaterial(PickupData.Icon);
+
+	PickupWidget->PickupText->SetText(PickupData.PickupWidgetText);
 }
 
 void APickupBase::HealthPickup(EPickupHealthType InHealthType)
@@ -306,13 +345,13 @@ void APickupBase::AmmoPickup(EPickupAmmoType InAmmoType)
 
 void APickupBase::SetData()
 {
-	TObjectPtr<UMaterialInstance> NewInstance = LoadObject<UMaterialInstance>(this, *PickupParser->IconFilePathString);
+	//TObjectPtr<UMaterialInstance> NewInstance = LoadObject<UMaterialInstance>(this, *PickupParser->IconFilePathString);
 	TObjectPtr<UStaticMesh> NewMesh = LoadObject<UStaticMesh>(this, *PickupParser->MeshFilePathString);
 
 	BaseMesh->SetStaticMesh(NewMesh);
 
 	PickupData.PickupName = FName(*PickupParser->PickupNameString);
-	PickupData.Icon = NewInstance;
+	PickupData.Icon = LoadObject<UMaterialInstance>(this, *PickupParser->IconFilePathString);
 	PickupData.PickupWidgetText = FText::FromString(PickupParser->WidgetTextString);
 	PickupData.PickupType = static_cast<EPickupType>(PickupParser->PType);
 	PickupData.PickupHealthType = static_cast<EPickupHealthType>(PickupParser->PHealthType);
@@ -328,15 +367,15 @@ void APickupBase::SetData()
 
 void APickupBase::SetDataWeapon()
 {
-	TObjectPtr<UMaterialInstance> NewInstance = LoadObject<UMaterialInstance>(this, *PickupParser->IconFilePathString);
 	TObjectPtr<UStaticMesh> NewMesh = LoadObject<UStaticMesh>(this, *PickupParser->MeshFilePathString);
+
+	PickupData.Icon = LoadObject<UMaterialInstance>(this, *PickupParser->IconFilePathString);
 
 	PickupSFX = LoadObject<USoundBase>(this, *PickupParser->PickupSoundFilePath);
 
 	BaseMesh->SetStaticMesh(NewMesh);
 
 	PickupData.PickupName = FName(*PickupParser->PickupNameString);
-	PickupData.Icon = NewInstance;
 	PickupData.PickupType = static_cast<EPickupType>(PickupParser->PType);
 	PickupWeaponType = static_cast<EPickupWeaponType>(PickupParser->PWeaponType);
 }

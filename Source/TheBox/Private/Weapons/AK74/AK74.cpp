@@ -2,6 +2,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "JsonComponents/WeaponComponent/WeaponComponentParser.h"
+#include "Misc/GameInstance/TheBoxGameInstance.h"
 
 AAK74::AAK74() = default;
 
@@ -10,13 +11,6 @@ void AAK74::BeginPlay()
 	Super::BeginPlay();
 
 	SetData();
-
-	/*WeapStats.RackSlideSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.RackSlideSoundPath);
-	WeapStats.MagOutSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.MagOutSoundPath);
-	WeapStats.MagInSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.MagInSoundPath);
-	WeapStats.FireSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.FireSoundPath);
-	WeapStats.AmmoEject = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.AmmoEjectPath);
-	WeapStats.FireFX = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.FireFXPath);*/
 }
 
 void AAK74::WeaponFire()
@@ -35,8 +29,8 @@ void AAK74::WeaponFire()
 	{
 		UGameplayStatics::SpawnSoundAttached(WeapStats.FireSound, WeaponMesh);
 
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.AmmoEject, EjectTransform.GetTranslation(), EjectQuat.Rotator());
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.FireFX, FireTransform.GetTranslation(), FireQuat.Rotator());
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), BoxerInstance->AmmoEjectFXMap[EWeaponName::EWN_AK74], EjectTransform.GetTranslation(), EjectQuat.Rotator());
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), BoxerInstance->FireFXMap[EWeaponName::EWN_AK74], FireTransform.GetTranslation(), FireQuat.Rotator());
 
 		WeaponMesh->GetAnimInstance()->Montage_Play(WeaponFireMontage);
 	}
@@ -63,6 +57,4 @@ void AAK74::SetData()
 
 	WeapStats.FireType = static_cast<EWeaponFireType>(InUintToEnum);
 	WeapStats.Type = static_cast<EWeaponType>(InType);
-
-	WeapStats.Icon = LoadObject<class UTexture2D>(this, *WeaponFilePaths.IconPath);
 }

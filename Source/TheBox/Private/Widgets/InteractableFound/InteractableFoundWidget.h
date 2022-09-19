@@ -19,9 +19,6 @@ protected:
 
 public:
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<class UImage> InteractableIcon;
-
-	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UTextBlock> InteractText;
 
 private:

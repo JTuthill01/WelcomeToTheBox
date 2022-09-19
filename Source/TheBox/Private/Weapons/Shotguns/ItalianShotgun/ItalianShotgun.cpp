@@ -13,13 +13,6 @@ void AItalianShotgun::BeginPlay()
 	Super::BeginPlay();
 
 	SetData();
-
-	/*WeapStats.RackSlideSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.RackSlideSoundPath);
-	WeapStats.MagOutSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.MagOutSoundPath);
-	WeapStats.MagInSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.MagInSoundPath);
-	WeapStats.FireSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.FireSoundPath);
-	WeapStats.AmmoEject = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.AmmoEjectPath);
-	WeapStats.FireFX = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.FireFXPath);*/
 }
 
 void AItalianShotgun::WeaponFire()
@@ -87,8 +80,6 @@ void AItalianShotgun::SetData()
 
 	WeapStats.FireType = static_cast<EWeaponFireType>(InUintToEnum);
 	WeapStats.Type = static_cast<EWeaponType>(InType);
-
-	WeapStats.Icon = LoadObject<class UTexture2D>(this, *WeaponFilePaths.IconPath);
 }
 
 void AItalianShotgun::UpdateReloadAmmo()

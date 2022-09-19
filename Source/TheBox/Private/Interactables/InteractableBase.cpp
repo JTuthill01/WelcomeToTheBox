@@ -46,7 +46,6 @@ void AInteractableBase::InteractableFound_Implementation()
 		if (IsValid(InteractableFoundWidget))
 		{
 			InteractableFoundWidget->InteractText->SetText(WidgetText);
-			InteractableFoundWidget->InteractableIcon->SetBrushFromTexture(IconTexture);
 			InteractableFoundWidget->AddToViewport(-1);
 		}
 	}

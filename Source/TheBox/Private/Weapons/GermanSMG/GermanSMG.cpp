@@ -2,6 +2,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
 #include "JsonComponents/WeaponComponent/WeaponComponentParser.h"
+#include "Misc/GameInstance/TheBoxGameInstance.h"
 
 AGermanSMG::AGermanSMG() = default;
 
@@ -37,8 +38,8 @@ void AGermanSMG::WeaponFire()
 
 		UGameplayStatics::SpawnSoundAttached(WeapStats.FireSound, WeaponMesh);
 
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.AmmoEject, EjectTransform.GetTranslation(), EjectQuat.Rotator());
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.FireFX, FireTransform.GetTranslation(), FireQuat.Rotator());
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), BoxerInstance->AmmoEjectFXMap[EWeaponName::EWN_GermanSMG], EjectTransform.GetTranslation(), EjectQuat.Rotator());
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), BoxerInstance->FireFXMap[EWeaponName::EWN_GermanSMG], FireTransform.GetTranslation(), FireQuat.Rotator());
 	}
 
 	else
@@ -63,6 +64,4 @@ void AGermanSMG::SetData()
 
 	WeapStats.FireType = static_cast<EWeaponFireType>(InUintToEnum);
 	WeapStats.Type = static_cast<EWeaponType>(InType);
-
-	WeapStats.Icon = LoadObject<class UTexture2D>(this, *WeaponFilePaths.IconPath);
 }

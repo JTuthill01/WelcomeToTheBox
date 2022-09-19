@@ -243,7 +243,7 @@ void APlayerCharacter::SpawnWeaponMap(TSubclassOf<class AWeaponBase> WeaponSub, 
 
 			if (IsValid(WeaponSlot_01))
 			{
-				WeaponMap.Emplace(WeaponSlot_01->GetCurrentWeaponEnumName(), WeaponSlot_01);
+				WeaponMap.Emplace(WeaponEnumName, WeaponSlot_01);
 
 				WeaponMap[WeaponSlot_01->GetCurrentWeaponEnumName()]->AttachToComponent(Arms, FAttachmentTransformRules::SnapToTargetIncludingScale,
 					WeaponMap[WeaponSlot_01->GetCurrentWeaponEnumName()]->GetSocketName());
@@ -538,6 +538,11 @@ void APlayerCharacter::OnGrenadeReleased()
 {
 	if (IsValid(Grenade))
 		Grenade->OnGrenadeThrow(UKismetMathLibrary::GetForwardVector(GetControlRotation()));
+}
+
+void APlayerCharacter::AddToInventory(AActor* Item)
+{
+	Inventory.Emplace(Item);
 }
 
 void APlayerCharacter::SetWeaponVisibility(bool ShouldBeHidden) { WeaponMap[CurrentNameOfWeapon]->SetActorHiddenInGame(ShouldBeHidden); }

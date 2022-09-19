@@ -2,6 +2,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
 #include "JsonComponents/WeaponComponent/WeaponComponentParser.h"
+#include "Misc/GameInstance/TheBoxGameInstance.h"
 
 AXM82::AXM82() = default;
 
@@ -10,13 +11,6 @@ void AXM82::BeginPlay()
 	Super::BeginPlay();
 
 	SetData();
-
-	/*WeapStats.RackSlideSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.RackSlideSoundPath);
-	WeapStats.MagOutSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.MagOutSoundPath);
-	WeapStats.MagInSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.MagInSoundPath);
-	WeapStats.FireSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.FireSoundPath);
-	WeapStats.AmmoEject = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.AmmoEjectPath);
-	WeapStats.FireFX = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.FireFXPath);*/
 }
 
 void AXM82::WeaponFire()
@@ -37,8 +31,8 @@ void AXM82::WeaponFire()
 
 		UGameplayStatics::SpawnSoundAttached(WeapStats.FireSound, WeaponMesh);
 
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.AmmoEject, EjectTransform.GetTranslation(), EjectQuat.Rotator());
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.FireFX, FireTransform.GetTranslation(), FireQuat.Rotator());
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), BoxerInstance->AmmoEjectFXMap[EWeaponName::EWN_XM82], EjectTransform.GetTranslation(), EjectQuat.Rotator());
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), BoxerInstance->FireFXMap[EWeaponName::EWN_XM82], FireTransform.GetTranslation(), FireQuat.Rotator());
 
 	}
 

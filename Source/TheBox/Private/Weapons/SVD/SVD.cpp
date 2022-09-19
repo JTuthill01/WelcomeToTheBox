@@ -2,6 +2,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "JsonComponents/WeaponComponent/WeaponComponentParser.h"
+#include "Misc/GameInstance/TheBoxGameInstance.h"
 
 ASVD::ASVD() = default;
 
@@ -10,13 +11,6 @@ void ASVD::BeginPlay()
 	Super::BeginPlay();
 
 	SetData();
-
-/*	WeapStats.RackSlideSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.RackSlideSoundPath);
-	WeapStats.MagOutSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.MagOutSoundPath);
-	WeapStats.MagInSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.MagInSoundPath);
-	WeapStats.FireSound = LoadObject<class USoundBase>(this, *WeaponFilePaths.FireSoundPath);
-	WeapStats.AmmoEject = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.AmmoEjectPath);
-	WeapStats.FireFX = LoadObject<class UNiagaraSystem>(this, *WeaponFilePaths.FireFXPath)*/;
 }
 
 void ASVD::SetData()
@@ -26,8 +20,6 @@ void ASVD::SetData()
 
 	WeapStats.FireType = static_cast<EWeaponFireType>(InUintToEnum);
 	WeapStats.Type = static_cast<EWeaponType>(InType);
-
-	WeapStats.Icon = LoadObject<class UTexture2D>(this, *WeaponFilePaths.IconPath);
 }
 
 void ASVD::WeaponFire()
@@ -46,8 +38,8 @@ void ASVD::WeaponFire()
 	{
 		UGameplayStatics::SpawnSoundAttached(WeapStats.FireSound, WeaponMesh);
 
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.AmmoEject, EjectTransform.GetTranslation(), EjectQuat.Rotator());
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), WeapStats.FireFX, FireTransform.GetTranslation(), FireQuat.Rotator());
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), BoxerInstance->AmmoEjectFXMap[EWeaponName::EWN_SVD], EjectTransform.GetTranslation(), EjectQuat.Rotator());
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), BoxerInstance->FireFXMap[EWeaponName::EWN_SVD], FireTransform.GetTranslation(), FireQuat.Rotator());
 
 		WeaponMesh->GetAnimInstance()->Montage_Play(WeaponFireMontage);
 	}

@@ -77,6 +77,7 @@ private:
 	 void WeaponPickup(EWeaponName InWeaponName);
 	 void GrenadePickup();
 
+	void WidgetSetup();
 	void SetData();
 	void SetDataWeapon();
 	void SetArmorData();
@@ -96,6 +97,12 @@ protected:
 protected:
 	UPROPERTY()
 	TObjectPtr<class APlayerCharacter> PlayerRef;
+
+	UPROPERTY()
+	TObjectPtr<class UWidgetComponent> PickupWidgetComponent;
+
+	UPROPERTY()
+	TObjectPtr<class UPickupWidget> PickupWidget;
 
 	UPROPERTY()
 	TObjectPtr<class UPickupComponent> PickupParser;

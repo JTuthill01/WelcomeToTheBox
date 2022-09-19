@@ -59,6 +59,8 @@ public:
 
 #pragma endregion
 
+#pragma region Setters
+
 	/** Setter for the EWeaponSlot Enum, used in PlayerCharacterController for switching weapons */
 	FORCEINLINE void SetWeaponSlotIndex(EWeaponSlot NewValue) { WeaponIndexEnum = NewValue; }
 
@@ -67,6 +69,8 @@ public:
 	FORCEINLINE void SetWeaponName(EWeaponName NewName) { CurrentNameOfWeapon = NewName; }
 
 	FORCEINLINE bool HasMaxGrenades() { return CurrentGrenades >= MaxGrenades; }
+
+#pragma endregion
 
 public:	
 	//Called every frame
@@ -96,6 +100,9 @@ public:
 
 	UFUNCTION()
 	void OnGrenadeReleased();
+
+	UFUNCTION()
+	void AddToInventory(AActor* Item);
 
 	UFUNCTION()
 	void SetGrenadeCount(int32 NewCount);
@@ -184,7 +191,7 @@ private:
 	UPROPERTY()
 	TObjectPtr<UAnimInstance> PlayerAnimInstance;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Instance, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UTheBoxGameInstance> BoxedInstance;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Grenades, meta = (AllowPrivateAccess = "true"))
@@ -210,6 +217,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Grenades, meta = (AllowPrivateAccess = "true"))
 	FName GrenadeSocketName;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Items, meta = (AllowPrivateAccess = "true"))
+	TArray<TObjectPtr<AActor>> Inventory;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Montages, meta = (AllowPrivateAccess = "true"))
 	TArray<TObjectPtr<UAnimMontage>> PlayerWeaponFireMontage;
