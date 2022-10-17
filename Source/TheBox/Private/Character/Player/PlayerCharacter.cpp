@@ -24,6 +24,10 @@ APlayerCharacter::APlayerCharacter() : MaxGrenades(4), CurrentGrenades(MaxGrenad
 	Camera->SetupAttachment(RootComponent);
 	Camera->bUsePawnControlRotation = true;
 
+	Camera1 = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera 1"));
+	Camera1->SetupAttachment(RootComponent);
+	Camera1->bUsePawnControlRotation = true;
+
 	Arms = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Arms"));
 	Arms->SetupAttachment(Camera);
 	Arms->SetCastShadow(false);
@@ -50,6 +54,10 @@ void APlayerCharacter::Tick(float DeltaTime)
 
 void APlayerCharacter::Initialize()
 {
+	Camera->SetActive(true);
+
+	Camera1->SetActive(false);
+
 	if (IsValid(Arms))
 		PlayerAnimInstance = Arms->GetAnimInstance();
 

@@ -38,6 +38,7 @@ public:
 
 	FORCEINLINE TObjectPtr<USkeletalMeshComponent> GetPlayerArms() const { return Arms; }
 	FORCEINLINE TObjectPtr<class UCameraComponent> GetPlayerCamera() const { return Camera; }
+	FORCEINLINE TObjectPtr<class UCameraComponent> GetCamera1() const { return Camera1; }
 	FORCEINLINE TObjectPtr<class UPlayerHealthComponent> GetHealthComponent() const { return HealthComponent; }
 	FORCEINLINE TObjectPtr<UAnimInstance> GetPlayerAnimInstance() const { return PlayerAnimInstance; }
 	FORCEINLINE TMap<EWeaponName, TObjectPtr<class AWeaponBase>> GetWeaponMap() const { return WeaponMap; }
@@ -199,6 +200,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UCameraComponent> Camera;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UCameraComponent> Camera1;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = SK_Mesh, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USkeletalMeshComponent> Arms;

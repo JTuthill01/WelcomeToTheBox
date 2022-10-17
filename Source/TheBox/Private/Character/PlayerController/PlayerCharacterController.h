@@ -7,6 +7,8 @@
 #include "Enums/WeaponEnums/WeaponEnums.h"
 #include "PlayerCharacterController.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActivateWidget);
+
 class UInputAction;
 class UInputMappingContext;
 
@@ -26,6 +28,10 @@ public:
 	virtual void PlayerTick(float DeltaTime) override;
 
 	virtual APlayerCharacterController* SetControllerRef_Implementation() override;
+
+public:
+	UPROPERTY(BlueprintAssignable)
+	FOnActivateWidget OnActivateWidget;
 
 protected:
 	virtual void BeginPlay() override;
@@ -65,6 +71,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Input)
 	UInputAction* PrimairyWeaponSwitchAction;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Input)
+	UInputAction* WidgetAction;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Input)
+	UInputAction* CameraAction;
+
 	//Mapping Contexts//
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = InputMappings)
 	UInputMappingContext* BaseMappingContext;
@@ -86,8 +98,11 @@ protected:
 	void ThrowGrenade();
 	void SwapWeapon();
 	void SwitchPrimairyWeapon();
+	void SwitchCamera();
 
 #pragma endregion
+
+	void WidgetsStuff();
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CharacterSpeed, meta = (AllowPrivateAccess = "true"))

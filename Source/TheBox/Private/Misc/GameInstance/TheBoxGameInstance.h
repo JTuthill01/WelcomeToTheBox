@@ -29,19 +29,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TMap<EWeaponName, TObjectPtr<class UTexture2D>> IconMap;
 
-	UPROPERTY()
-	TMap<EWeaponName, TObjectPtr<class UNiagaraSystem>> FireFXMap;
-
-	UPROPERTY()
-	TMap<EWeaponName, TObjectPtr<class UNiagaraSystem>> AmmoEjectFXMap;
-
 protected:
 	void Init() override;
 
 private:
 	void IconLoader();
-
-	void FireFXLoader();
-
-	void AmmoEjectFXLoader();
 };

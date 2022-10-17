@@ -88,7 +88,13 @@ void APlayerCharacterController::SetupInputComponent()
 			PlayerEnhancedInputComponent->BindAction(PrimairyWeaponSwitchAction, ETriggerEvent::Triggered, this, &APlayerCharacterController::SwitchPrimairyWeapon);
 
 		if (GrenadeThrowAction)
-			PlayerEnhancedInputComponent->BindAction(GrenadeThrowAction, ETriggerEvent::Started, this, &APlayerCharacterController::ThrowGrenade);
+			PlayerEnhancedInputComponent->BindAction(GrenadeThrowAction, ETriggerEvent::Triggered, this, &APlayerCharacterController::ThrowGrenade);
+
+		if (WidgetAction)
+			PlayerEnhancedInputComponent->BindAction(WidgetAction, ETriggerEvent::Triggered, this, &APlayerCharacterController::WidgetsStuff);
+
+		if (CameraAction)
+			PlayerEnhancedInputComponent->BindAction(CameraAction, ETriggerEvent::Triggered, this, &APlayerCharacterController::SwitchCamera);
 	}
 }
 
@@ -180,6 +186,7 @@ void APlayerCharacterController::ThrowGrenade()
 
 void APlayerCharacterController::SwapWeapon()
 {
+	
 }
 
 void APlayerCharacterController::SwitchPrimairyWeapon()
@@ -215,6 +222,17 @@ void APlayerCharacterController::SwitchPrimairyWeapon()
 		PlayerRef->SetWeaponName(PlayerRef->PreviousWeapon_01);
 	}
 }
+
+void APlayerCharacterController::SwitchCamera()
+{
+	/*PlayerRef->GetPlayerCamera()->SetActive(false);
+
+	PlayerRef->GetCamera1()->SetActive(true);*/
+
+	GEngine->AddOnScreenDebugMessage(-1, 6.F, FColor::Purple, __FUNCTION__);
+}
+
+void APlayerCharacterController::WidgetsStuff() { OnActivateWidget.Broadcast(); }
 
 void APlayerCharacterController::StopFiringWeapon() { PlayerRef->GetWeaponMap()[PlayerRef->GetCurrentWeaponName()]->StopFire(); }
 
